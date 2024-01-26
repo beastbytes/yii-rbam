@@ -93,10 +93,10 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
         ),
         new ActionColumn(
             template: '{view} {update}',
-            urlCreator: static function($action, $context) use ($urlGenerator)
+            urlCreator: static function($action, $context) use ($inflector, $urlGenerator)
             {
                 return $urlGenerator->generate('rbam.' . $action . 'Item', [
-                    'name' => strtolower($context->key),
+                    'name' => $inflector->toSnakeCase($context->key),
                     'type' => $context->data->getType()
                 ]);
             },
