@@ -36,5 +36,67 @@ return [
         ],
         'datetimeFormat' => 'Y-m-d H:i:s',
         'defaultRoles' => [],
+        'mermaidDiagramStyles' => [
+            'ancestor_permission' => [
+                'line.divider' => [
+                    'stroke' => '#1A6256',
+                ],
+                'rect' => [
+                    'fill' => '#C0DCD7',
+                    'stroke' => '#1A6256',
+                    'stroke-width' => '1',
+                ],
+            ],
+            'ancestor_role' => [
+                'line.divider' => [
+                    'stroke' => '#1A6256',
+                ],
+                'rect' => [
+                    'fill' => '#C0DCD7',
+                    'stroke' => '#1A6256',
+                    'stroke-width' => '2',
+                ],
+            ],
+            'current_permission' => [
+                'line.divider' => [
+                    'stroke' => '#378223',
+                ],
+                'rect' => [
+                    'fill' => '#D8F0D1',
+                    'stroke' => '#378223',
+                    'stroke-width' => '1',
+                ],
+            ],
+            'current_role' => [
+                'line.divider' => [
+                    'stroke' => '#378223',
+                ],
+                'rect' => [
+                    'fill' => '#D8F0D1',
+                    'stroke' => '#378223',
+                    'stroke-width' => '2',
+                ],
+            ],
+            'descendant_permission' => [
+                'line.divider' => [
+                    'stroke' => '#761F5A',
+                ],
+                'rect' => [
+                    'fill' => '#E8CBDF',
+                    'stroke' => '#761F5A',
+                    'stroke-width' => '1',
+                ],
+            ],
+            'descendant_role' => [
+                'line.divider' => [
+                    'stroke' => '#761F5A',
+                ],
+                'rect' => [
+                    'fill' => '#E8CBDF',
+                    'stroke' => '#761F5A',
+                    'stroke-width' => '2',
+                ],
+            ],
+        ]
     ]
 ];

@@ -31,4 +31,9 @@ final class RbamParameters
     {
         return $this->parameters['defaultRoles'];
     }
+
+    public function getMermaidDiagramStyles(): array
+    {
+        return $this->parameters['mermaidDiagramStyles'];
+    }
 }
