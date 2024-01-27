@@ -47,6 +47,18 @@ $this->registerScriptTag(
         ->content(Mermaid::js(['startOnLoad' => true]))
 );
 
+$css = '';
+foreach ($rbamParameters->getMermaidDiagramStyles() as $class => $styles):
+    foreach ($styles as $element => $attributes):
+        $css .= "#mermaid g.$class $element {";
+        foreach ($attributes as $attribute => $style):
+            $css .= "$attribute:$style;";
+        endforeach;
+        $css .= "}\n";
+    endforeach;
+endforeach;
+$this->registerCss($css);
+
 $this->setTitle(
     $item->getName() . ' ' . ucfirst($item->getType())
 );
@@ -156,7 +168,7 @@ getDescendants($currentItem, $itemStorage, $classes, $relationships, $inflector,
 echo (new ClassDiagram())
     ->withClass(...$classes)
     ->withRelationship(...$relationships)
-    ->render()
+    ->render(['id' => 'mermaid'])
 ;
 
 function getDescendants(
