@@ -52,5 +52,12 @@ package-lock.json
 # phpDocumentor cache
 /docs/cache
 
+/dev
+/runtime
+/config/environments
+/rbac/*.php
+/rbac/rules/*.php
+.merge-plan.php
+
 .env.example
 autoload.php
