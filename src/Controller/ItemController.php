@@ -18,6 +18,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Http\Status;
+use Yiisoft\Rbac\AssignmentsStorageInterface;
 use Yiisoft\Rbac\Item;
 use Yiisoft\Rbac\ItemsStorageInterface;
 use Yiisoft\Rbac\ManagerInterface;
@@ -35,9 +36,9 @@ class ItemController
 
     public function __construct(
         private FlashInterface $flash,
-        private Inflector $inflector,
-        private ItemsStorageInterface $itemsStorage,
-        private ManagerInterface $manager,
+        private readonly Inflector $inflector,
+        private readonly ItemsStorageInterface $itemsStorage,
+        private readonly ManagerInterface $manager,
         private TranslatorInterface $translator,
         private ViewRenderer $viewRenderer
     )
@@ -129,20 +130,18 @@ class ItemController
 
         return $this
             ->viewRenderer
-            ->render('itemForm', [
-                'formModel' => $formModel,
-                'ruleNames' => $ruleService->getRuleNames(),
-                'type' => $type
-            ])
+            ->render(
+                'itemForm',
+                [
+                    'formModel' => $formModel,
+                    'ruleNames' => $ruleService->getRuleNames(),
+                    'type' => $type
+                ]
+            )
         ;
     }
 
-    public function children(
-        CurrentRoute $currentRoute,
-        FormHydrator $formHydrator,
-        Redirect $redirect,
-        ServerRequestInterface $request
-    ): ResponseInterface
+    public function children(CurrentRoute $currentRoute): ResponseInterface
     {
         $name = $this
             ->inflector
@@ -184,12 +183,16 @@ class ItemController
 
         return $this
             ->viewRenderer
-            ->render('children', [
-                'children' => $children,
-                'descendants' => $descendants,
-                'items' => $items,
-                'parent' => $parent
-            ])
+            ->render(
+                'children',
+                [
+                    'children' => $children,
+                    'descendants' => $descendants,
+                    'items' => $items,
+                    'parent' => $parent,
+                    'type' => $type,
+                ]
+            )
         ;
     }
 
@@ -319,6 +322,7 @@ class ItemController
     }
 
     public function view(
+        AssignmentsStorageInterface $assignmentsStorage,
         CurrentRoute $currentRoute,
         NotFound $notFound,
         UserRepositoryInterface $userRepository
@@ -343,6 +347,8 @@ class ItemController
         ;
 
         if ($item?->getType() === Item::TYPE_ROLE) {
+            $assignments = $assignmentsStorage->getByItemNames([$name]);
+
             $permissions = $this
                 ->manager
                 ->getPermissionsByRoleName($name)
@@ -361,18 +367,41 @@ class ItemController
                 )
             ;
         } else {
-            $permissions = $roles = $users = [];
+            $assignedUsers = $assignments = $permissions = $roles = $userIds = [];
+
+            $ancestors = $this->itemsStorage->getParents($name);
+
+            foreach ($ancestors as $ancestor) {
+                if (
+                    $ancestor->getType() === Item::TYPE_ROLE
+                    && $this->manager->hasChild($ancestor->getName(), $name)
+                ) {
+                    $ids = $this
+                        ->manager
+                        ->getUserIdsByRoleName($ancestor->getName())
+                    ;
+                    array_push($userIds, ...$ids);
+                }
+            }
+
+            $users = $userRepository
+                ->findByIds(array_unique($userIds, SORT_NUMERIC))
+            ;
         }
 
         return $this
             ->viewRenderer
-            ->render('view', [
-                'item' => $item,
-                'itemStorage' => $this->itemsStorage,
-                'permissions' => $permissions,
-                'roles' => $roles,
-                'users' => $users
-            ])
+            ->render(
+                'view',
+                [
+                    'assignments' => $assignments,
+                    'item' => $item,
+                    'itemStorage' => $this->itemsStorage,
+                    'permissions' => $permissions,
+                    'roles' => $roles,
+                    'users' => $users,
+                ]
+            )
         ;
     }
 }

@@ -14,9 +14,10 @@ declare(strict_types=1);
  * @var Inflector $inflector
  * @var Item[] $items
  * @var Item $parent
+ * @var Permission[] $permissions
  * @var RbamParameters $rbamParameters
  * @var WebView $this
- * @var Translator $translator
+ * @var TranslatorInterface $translator
  * @var UrlGeneratorInterface $urlGenerator
  */
 
@@ -27,9 +28,10 @@ use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Input\Checkbox;
 use Yiisoft\Rbac\Item;
+use Yiisoft\Rbac\Permission;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Strings\Inflector;
-use Yiisoft\Translator\Translator;
+use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\CheckboxColumn;
@@ -41,7 +43,7 @@ $assetManager->register(RbamAsset::class);
 $this->addJsFiles($assetManager->getJsFiles());
 
 $this->setTitle(
-    $translator->translate('title.manage_child_roles', ['name' => $parent->getName()])
+    $translator->translate('label.manage_child_roles', ['name' => $parent->getName()])
 );
 
 $breadcrumbs = [
@@ -72,7 +74,8 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
 
 <?= GridView::widget()
     ->dataReader(new IterableDataReader($items))
-    ->tableAttributes(['class' => 'grid_view roles child_roles'])
+    ->containerAttributes(['class' => 'grid_view roles child_roles'])
+    ->tableAttributes(['class' => 'grid'])
     ->tbodyAttributes([
         'data-csrf' => $csrf,
         'data-action' => 'children',
@@ -147,89 +150,28 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
                 );
             }
         ),
-        new DataColumn(header: 'Description', content: static fn(Item $item) => $item->getDescription()),
         new DataColumn(
-            header: 'Created',
+            header: $translator->translate('label.' . $type),
+            content: static fn(Item $item) => $item->getName()
+        ),
+        new DataColumn(
+            header: $translator->translate('label.description'),
+            content: static fn(Item $item) => $item->getDescription()
+        ),
+        new DataColumn(
+            header: $translator->translate('label.created_at'),
             content: static fn(Item $item) => (new DateTime())
                 ->setTimestamp($item->getCreatedAt())
                 ->format($rbamParameters->getDatetimeFormat())
         ),
         new DataColumn(
-            header: 'Updated',
+            header: $translator->translate('label.updated_at'),
             content: static fn(Item $item) => (new DateTime())
                 ->setTimestamp($item->getUpdatedAt())
                 ->format($rbamParameters->getDatetimeFormat())
-        )
+        ),
+
     )
 ?>
 
-
-<?php /*
-array_walk($items, static function(&$item) use ($parent, $children, $descendants, $inflector) {
-    $checked = false;
-    $disabled = false;
-    $indeterminate = false;
-
-    if ($item === $parent) {
-        $disabled = $indeterminate = true;
-    } else {
-        foreach ($descendants as $descendant):
-            if ($item === $descendant):
-                $checked = true;
-
-                foreach ($children as $child):
-                    if ($child === $descendant):
-                        break;
-                    endif;
-                    $disabled = true;
-                endforeach;
-
-                break;
-            endif;
-        endforeach;
-    }
-
-    $content = Checkbox::tag()
-        ->checked($checked)
-        ->disabled($disabled)
-        ->attribute('indeterminate', $indeterminate)
-        ->name($inflector->toSnakeCase($item->getName()))
-    ;
-    $content .= Span::tag()
-        ->content($item->getName())
-        ->attributes(['class' => 'key'])
-    ;
-    $content .= Span::tag()
-        ->content($item->getDescription())
-        ->attributes(['class' => 'value'])
-    ;
-    $item = Li::tag()
-        ->content($content)
-        ->encode(false)
-    ;
-});
-
-/** @var Li[] $items *
-echo Ol::tag()
-       ->items(...$items)
-       ->attributes([
-           'data-csrf' => $csrf,
-           'data-action' => 'children',
-           'data-checked_url' => $urlGenerator->generate('rbam.addChild'),
-           'data-unchecked_url' => $urlGenerator->generate('rbam.removeChild'),
-           'data-item' => $parent->getName(),
-           'id' => 'items',
-       ])
-       ->render()
-;
-
-echo Button::tag()
-    ->attributes([
-        'class' => 'btn',
-        'data-url' => $urlGenerator->generate('rbam.removeAll'),
-        'id' => 'all_items',
-    ])
-    ->content($translator->translate('button.remove_all'))
-    ->render()
-;
-*/
+<?= $this->render('_permissions', ['permissions' => $permissions]) ?>

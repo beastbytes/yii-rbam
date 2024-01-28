@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @var Csrf $csrf
  * @var ItemForm $formModel
  * @var array $ruleNames
- * @var Translator $translator
+ * @var TranslatorInterface $translator
  * @var UrlGeneratorInterface $urlGenerator
  * @var WebView $this
  * @var string $type
@@ -21,17 +21,17 @@ use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Strings\Inflector;
-use Yiisoft\Translator\Translator;
+use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\View\Csrf;
 
 if ($formModel->getName() === ''):
     $this->setTitle(
-        $translator->translate("title.add_$type")
+        $translator->translate("label.add_$type")
     );
 else:
     $this->setTitle(
-        $translator->translate("title.update_$type")
+        $translator->translate("label.update_$type")
     );
 endif;
 

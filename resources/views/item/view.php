@@ -8,16 +8,17 @@ declare(strict_types=1);
 
 /**
  * @var AssetManager $assetManager
+ * @var Assignment[] $assignments
  * @var Inflector $inflector
  * @var Item $item
  * @var ItemsStorageInterface $itemStorage
- * @var array $permissions
+ * @var Permission[] $permissions
  * @var RbamParameters $rbamParameters
- * @var array $roles
+ * @var Role[] $roles
  * @var WebView $this
- * @var Translator $translator
+ * @var TranslatorInterface $translator
  * @var UrlGeneratorInterface $urlGenerator
- * @var array $users
+ * @var UserInterface[] $users
  */
 
 use BeastBytes\Mermaid\ClassDiagram\Attribute;
@@ -29,13 +30,18 @@ use BeastBytes\Mermaid\ClassDiagram\RelationshipType;
 use BeastBytes\Mermaid\InteractionType;
 use BeastBytes\Mermaid\Mermaid;
 use BeastBytes\Yii\Rbam\RbamParameters;
+use BeastBytes\Yii\Rbam\UserInterface;
+use BeastBytes\Yii\Rbam\UserRepositoryInterface;
 use Yiisoft\Assets\AssetManager;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Script;
+use Yiisoft\Rbac\Assignment;
 use Yiisoft\Rbac\Item;
 use Yiisoft\Rbac\ItemsStorageInterface;
+use Yiisoft\Rbac\Permission;
+use Yiisoft\Rbac\Role;
 use Yiisoft\Strings\Inflector;
-use Yiisoft\Translator\Translator;
+use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\DataView\DetailView;
@@ -89,24 +95,37 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
             ->valueTag('span'),
         DataField::create()
             ->label($translator->translate('label.type'))
-            ->value(fn($item) => ucfirst($item->getType()))
+            ->value(
+                static function($item) use ($translator)
+                {
+                    return $translator->translate('label.' . $item->getType());
+                }
+            )
             ->valueTag('span'),
         DataField::create()
             ->label($translator->translate('label.description'))
             ->value(fn($item) => $item->getDescription())
             ->valueTag('span'),
         DataField::create()
-            ->label($translator->translate('label.rule_name'))
+            ->label($translator->translate('label.rule'))
             ->value(fn($item) => $item->getRuleName() ?? $translator->translate('message.no_rule'))
             ->valueTag('span')
             ->valueAttributes(fn($item) => $item->getRuleName() === null ? ['class' => 'no_rule'] : []),
         DataField::create()
             ->label($translator->translate('label.created_at'))
-            ->value(fn($item) => (new DateTime())->setTimestamp($item->getCreatedAt())->format($rbamParameters->getDatetimeFormat()))
+            ->value(
+                fn($item) => (new DateTime())
+                    ->setTimestamp($item->getCreatedAt())
+                    ->format($rbamParameters->getDatetimeFormat())
+            )
             ->valueTag('span'),
         DataField::create()
             ->label($translator->translate('label.updated_at'))
-            ->value(fn($item) => (new DateTime())->setTimestamp($item->getUpdatedAt())->format($rbamParameters->getDatetimeFormat()))
+            ->value(
+                fn($item) => (new DateTime())
+                    ->setTimestamp($item->getUpdatedAt())
+                    ->format($rbamParameters->getDatetimeFormat())
+            )
             ->valueTag('span'),
     )
     ->header(
@@ -127,6 +146,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
 <?= $this->render(
     '_' . $item->getType(),
     [
+        'assignments' => $assignments,
         'item' => $item,
         'permissions' => $permissions,
         'roles' => $roles,

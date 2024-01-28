@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 /**
  * @var WebView $this
- * @var Translator $translator
+ * @var TranslatorInterface $translator
  * @var UrlGeneratorInterface $urlGenerator
  * @var UserInterface[] $users
  */
@@ -17,11 +17,11 @@ use BeastBytes\Yii\Rbam\UserInterface;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Html\Html;
 use Yiisoft\Router\UrlGeneratorInterface;
-use Yiisoft\Translator\Translator;
+use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\DataView\ListView;
 
-$this->setTitle($translator->translate('title.users'));
+$this->setTitle($translator->translate('label.users'));
 
 $breadcrumbs = [
     [

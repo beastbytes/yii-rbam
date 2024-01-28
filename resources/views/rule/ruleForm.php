@@ -9,7 +9,7 @@ declare(strict_types=1);
 /**
  * @var Csrf $csrf
  * @var ItemForm $formModel
- * @var Translator $translator
+ * @var TranslatorInterface $translator
  * @var UrlGeneratorInterface $urlGenerator
  * @var WebView $this
  */
@@ -18,17 +18,17 @@ use BeastBytes\Yii\Rbam\Form\ItemForm;
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Router\UrlGeneratorInterface;
-use Yiisoft\Translator\Translator;
+use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\View\Csrf;
 
 if ($formModel->getName() === ''):
     $this->setTitle(
-        $translator->translate("title.add_rule")
+        $translator->translate("label.add_rule")
     );
 else:
     $this->setTitle(
-        $translator->translate("title.update_rule")
+        $translator->translate("label.update_rule")
     );
 endif;
 

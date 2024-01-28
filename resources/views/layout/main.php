@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-use Yiisoft\Html\Html;
-use Yiisoft\Session\Flash\Flash;
-use Yiisoft\Translator\Translator;
-use Yiisoft\View\WebView;
-use Yiisoft\Yii\Widgets\Breadcrumbs;
-
 /**
  * @var Flash $flash
  * @var string $content
  * @var WebView $this
- * @var Translator $translator;
+ * @var TranslatorInterface $translator;
  */
+
+use Yiisoft\Html\Html;
+use Yiisoft\Session\Flash\Flash;
+use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\View\WebView;
+use Yiisoft\Yii\Widgets\Breadcrumbs;
 
 $this->beginPage()
 ?><!DOCTYPE html>

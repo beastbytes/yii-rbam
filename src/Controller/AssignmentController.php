@@ -17,9 +17,9 @@ use Yiisoft\Strings\Inflector;
 final class AssignmentController
 {
     public function __construct(
-        private DataResponseFactoryInterface $responseFactory,
-        private Inflector $inflector,
-        private ManagerInterface $manager,
+        private readonly DataResponseFactoryInterface $responseFactory,
+        private readonly Inflector $inflector,
+        private readonly ManagerInterface $manager,
     )
     {}
 

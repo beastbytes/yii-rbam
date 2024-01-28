@@ -10,21 +10,21 @@ declare(strict_types=1);
  * @var Inflector $inflector
  * @var RuleInterface $rule
  * @var WebView $this
- * @var Translator $translator
+ * @var TranslatorInterface $translator
  * @var UrlGeneratorInterface $urlGenerator
  */
 
 use BeastBytes\Yii\Rbam\RuleInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\Strings\Inflector;
-use Yiisoft\Translator\Translator;
+use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\DataView\DetailView;
 use Yiisoft\Yii\DataView\Field\DataField;
 
 $this->setTitle(
-    $translator->translate('title.rule', ['name' => $rule->getName()])
+    $translator->translate('label.rule', ['name' => $rule->getName()])
 );
 
 $breadcrumbs = [

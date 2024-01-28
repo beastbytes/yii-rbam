@@ -8,26 +8,36 @@ declare(strict_types=1);
 
 /**
  * @var AssetManager $assetManager
+ * @var Assignment[] $assignments
  * @var Csrf $csrf
  * @var Inflector $inflector
  * @var Item $item
- * @var array $permissions
- * @var array $roles
- * @var Translator $translator
+ * @var Permission[] $permissions
+ * @var RbamParameters $rbamParameters
+ * @var Role[] $roles
+ * @var TranslatorInterface $translator
  * @var WebView $this
  * @var UrlGeneratorInterface $urlGenerator
- * @var array $users
+ * @var UserInterface[] $users
  */
 
 use BeastBytes\Yii\Rbam\Assets\RbamAsset;
+use BeastBytes\Yii\Rbam\RbamParameters;
+use BeastBytes\Yii\Rbam\UserInterface;
+use BeastBytes\Yii\Rbam\UserRepositoryInterface;
 use Yiisoft\Assets\AssetManager;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Html\Html;
+use Yiisoft\Rbac\Assignment;
 use Yiisoft\Rbac\Item;
+use Yiisoft\Rbac\Permission;
+use Yiisoft\Rbac\Role;
 use Yiisoft\Strings\Inflector;
-use Yiisoft\Translator\Translator;
+use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\View\WebView;
+use Yiisoft\Yii\DataView\Column\ActionButton;
+use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\ListView;
@@ -37,95 +47,87 @@ $assetManager->register(RbamAsset::class);
 $this->addJsFiles($assetManager->getJsFiles());
 
 echo GridView::widget()
-    ->dataReader(new IterableDataReader($roles))
-    ->tableAttributes(['class' => 'grid_view child_roles'])
-    ->layout("{header}\n{toolbar}\n{items}")
-    ->header($translator->translate('title.child_roles'))
-    ->toolbar(
-        Html::div(
-            content: Html::a(
-                content: $translator->translate('button.manage_child_roles'),
-                url: $urlGenerator->generate(
-                    'rbam.children',
-                    ['name' => $inflector->toSnakeCase($item->getName()), 'type' => Item::TYPE_ROLE]
-                ),
-                attributes: ['class' => ['button', 'add']]
-            ),
-            attributes: ['class' => 'toolbar']
-        )
-        ->render()
-    )
-    ->emptyText($translator->translate('message.no_child_roles'))
-    ->columns(
-        new DataColumn(
-            header: ucfirst(Item::TYPE_ROLE),
-            content: static function ($item) use ($inflector, $urlGenerator) {
-                return Html::a(
-                    content: $item->getName(),
-                    url: $urlGenerator->generate(
-                        'rbam.viewItem',
-                        ['name' => $inflector->toSnakeCase($item->getName()), 'type' => Item::TYPE_ROLE]
-                    )
-                )
-                ->render();
-            }
-        ),
-        new DataColumn(header: 'Description', content: static fn(Item $item) => $item->getDescription())
-    )
-;
-
-echo GridView::widget()
-    ->dataReader(new IterableDataReader($permissions))
-    ->tableAttributes(['class' => 'grid_view permissions_granted'])
-    ->layout("{header}\n{toolbar}\n{items}")
-    ->header($translator->translate('title.permissions_granted'))
-    ->toolbar(
-        Html::div(
-            content: Html::a(
-                content: $translator->translate('button.manage_permissions'),
-                url: $urlGenerator->generate(
-                    'rbam.children',
-                    ['name' => $inflector->toSnakeCase($item->getName()), 'type' => Item::TYPE_PERMISSION]
-                ),
-                attributes: ['class' => ['button', 'add']]
-            ),
-            attributes: ['class' => 'toolbar']
-        )
-        ->render()
-    )
-    ->emptyText($translator->translate('message.no_permissions_granted'))
-    ->columns(
-        new DataColumn(
-            header: ucfirst(Item::TYPE_PERMISSION),
-            content: static function ($item) use ($inflector, $urlGenerator) {
-                return Html::a(
-                    content: $item->getName(),
-                    url: $urlGenerator->generate(
-                        'rbam.viewItem',
-                        ['name' => $inflector->toSnakeCase($item->getName()), 'type' => Item::TYPE_PERMISSION]
-                    )
-                )
-                ->render();
-            }
-        ),
-        new DataColumn(header: 'Description', content: static fn(Item $item) => $item->getDescription())
-    )
-;
-
-echo ListView::widget()
     ->dataReader(new IterableDataReader($users))
-    ->webView($this)
-    ->containerAttributes(['class' => 'list_view assigned_users'])
-    ->header($translator->translate('title.assigned_users'))
-    ->emptyText($translator->translate('message.no_users_assigned'))
-    ->itemView(static function ($user) use ($urlGenerator) {
-        return Html::a(
-            content: $user->getName(),
-            url: $urlGenerator->generate(
-                'rbam.viewUser',
-                ['id' => $user->getId()]
-            )
+    ->containerAttributes(['class' => 'grid_view assignments'])
+    ->header($translator->translate('label.assignments'))
+    ->headerAttributes(['class' => 'header'])
+    ->tableAttributes(['class' => 'grid'])
+    ->layout("{header}\n{items}")
+    ->emptyText($translator->translate('message.no_assignments_found'))
+    ->columns(
+        new DataColumn(
+            header: $translator->translate('label.user'),
+            content: static fn (UserInterface $user) => $user->getName()
+        ),
+        new DataColumn(
+            header: $translator->translate('label.assigned'),
+            content: static function (UserInterface $user) use ($assignments, $rbamParameters) {
+                $userId = $user->getId();
+
+                foreach ($assignments as $assignment) {
+                    if ($userId === $assignment->getUserId()) {
+                        return (new DateTime())
+                            ->setTimestamp($assignment->getCreatedAt())
+                            ->format($rbamParameters->getDatetimeFormat())
+                        ;
+                    }
+                }
+
+                return '';
+            }
+        ),
+        new ActionColumn(
+            template: '{view}',
+            urlCreator: static function($action, $context) use ($inflector, $urlGenerator)
+            {
+                return $urlGenerator->generate('rbam.' . $action . 'User', [
+                    'id' => $context->data->getid()
+                ]);
+            },
+            buttons: [
+                'view' => new ActionButton(
+                    content: $translator->translate($rbamParameters->getActionButton('view')['content']),
+                    attributes: $rbamParameters->getActionButton('view')['attributes'],
+                ),
+            ]
         )
-        ->render();
-    })
+    )
 ;
+
+echo $this->render(
+    '_items',
+    [
+        'items' => $roles,
+        'layout' => "{header}\n{toolbar}\n{items}",
+        'toolbar' => Html::a(
+            content: $translator->translate('button.manage_child_roles'),
+            url: $urlGenerator->generate(
+                'rbam.children',
+                ['name' => $inflector->toSnakeCase($item->getName()), 'type' => Item::TYPE_ROLE]
+            ),
+            attributes: ['class' => ['button', 'manage']]
+        ),
+        'translator' => $translator,
+        'type' => Item::TYPE_ROLE,
+        'urlGenerator' => $urlGenerator,
+    ]
+);
+
+echo $this->render(
+    '_items',
+    [
+        'items' => $permissions,
+        'layout' => "{header}\n{toolbar}\n{items}",
+        'toolbar' => Html::a(
+            content: $translator->translate('button.manage_permissions'),
+            url: $urlGenerator->generate(
+                'rbam.children',
+                ['name' => $inflector->toSnakeCase($item->getName()), 'type' => Item::TYPE_PERMISSION]
+            ),
+            attributes: ['class' => ['button', 'manage']]
+        ),
+        'translator' => $translator,
+        'type' => Item::TYPE_PERMISSION,
+        'urlGenerator' => $urlGenerator,
+    ]
+);

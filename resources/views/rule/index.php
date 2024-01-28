@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @var array $rules
  * @var Inflector $inflector
  * @var RbamParameters $rbamParameters
- * @var Translator $translator
+ * @var TranslatorInterface $translator
  * @var UrlGeneratorInterface $urlGenerator
  * @var WebView $this
  */
@@ -20,7 +20,7 @@ use BeastBytes\Yii\Rbam\RuleInterface;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Html\Html;
 use Yiisoft\Strings\Inflector;
-use Yiisoft\Translator\Translator;
+use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\DataView\Column\ActionButton;
@@ -29,7 +29,7 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 
 $this->setTitle(
-    $translator->translate('title.rules')
+    $translator->translate('label.rules')
 );
 
 $breadcrumbs = [
@@ -46,7 +46,8 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
 
 <?= GridView::widget()
     ->dataReader(new IterableDataReader($rules))
-    ->tableAttributes(['class' => 'grid_view rules'])
+    ->containerAttributes(['class' => 'grid_view rules'])
+    ->tableAttributes(['class' => 'grid'])
     ->layout("{toolbar}\n{items}")
     ->toolbar(
         Html::div(

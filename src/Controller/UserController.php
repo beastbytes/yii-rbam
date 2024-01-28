@@ -10,6 +10,7 @@ namespace BeastBytes\Yii\Rbam\Controller;
 
 use BeastBytes\Yii\Rbam\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
+use Yiisoft\Rbac\AssignmentsStorageInterface;
 use Yiisoft\Rbac\ItemsStorageInterface;
 use Yiisoft\Rbac\ManagerInterface;
 use Yiisoft\Router\CurrentRoute;
@@ -22,9 +23,10 @@ class UserController
 {
     public function __construct(
         private FlashInterface $flash,
-        private ItemsStorageInterface $itemsStorage,
-        private ManagerInterface $manager,
-        private UserRepositoryInterface $userRepository,
+        private readonly AssignmentsStorageInterface $assignmentsStorage,
+        private readonly ItemsStorageInterface $itemsStorage,
+        private readonly ManagerInterface $manager,
+        private readonly UserRepositoryInterface $userRepository,
         private ViewRenderer $viewRenderer
     )
     {
@@ -47,31 +49,6 @@ class UserController
         ;
     }
 
-    public function assignments(
-        CurrentRoute $currentRoute,
-        UserRepositoryInterface $userRepository
-    ): ResponseInterface
-    {
-        $userId = $currentRoute
-            ->getArgument('id')
-        ;
-
-        $user = $userRepository->findById($userId);
-        $assignedRoles = $this
-            ->manager
-            ->getRolesByUserId($userId)
-        ;
-        $roles = $this
-            ->itemsStorage
-            ->getRoles()
-        ;
-
-        return $this
-            ->viewRenderer
-            ->render('assignments', ['assignedRoles' => $assignedRoles, 'roles' => $roles, 'user' => $user])
-        ;
-    }
-
     public function view(
         CurrentRoute $currentRoute,
         UserRepositoryInterface $userRepository
@@ -82,14 +59,32 @@ class UserController
         ;
 
         $user = $userRepository->findById($userId);
+        $assignments = $this->assignmentsStorage->getByUserId($userId);
         $assignedRoles = $this
             ->manager
             ->getRolesByUserId($userId)
         ;
+        $permissionsGranted = $this
+            ->manager
+            ->getPermissionsByUserId($userId)
+        ;
+        $roles = $this
+            ->itemsStorage
+            ->getRoles()
+        ;
 
         return $this
             ->viewRenderer
-            ->render('view', ['assignedRoles' => $assignedRoles, 'user' => $user])
+            ->render(
+                'view',
+                [
+                    'assignedRoles' => $assignedRoles,
+                    'assignments' => $assignments,
+                    'permissionsGranted' => $permissionsGranted,
+                    'roles' =>  $roles,
+                    'user' => $user
+                ]
+            )
         ;
     }
 }
