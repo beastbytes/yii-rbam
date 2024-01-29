@@ -176,16 +176,24 @@ class ItemController
             ;
         }
 
+        $ancestors = $this
+            ->itemsStorage
+            ->getParents($name)
+        ;
+
         $parent = $this
             ->itemsStorage
             ->getRole($name)
         ;
+
+        $ancestors[] = $parent;
 
         return $this
             ->viewRenderer
             ->render(
                 'children',
                 [
+                    'ancestors' => $ancestors,
                     'children' => $children,
                     'descendants' => $descendants,
                     'items' => $items,

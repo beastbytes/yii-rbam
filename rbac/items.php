@@ -18,8 +18,8 @@ return [
         'updated_at' => 1705268964,
         'created_at' => 1705268964,
         'children' => [
-            'DeletePost',
             'UpdatePost',
+            'DeletePost',
         ],
     ],
     [

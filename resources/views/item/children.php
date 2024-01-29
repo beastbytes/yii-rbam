@@ -7,6 +7,7 @@
 declare(strict_types=1);
 
 /**
+ * @var Item[] $ancestors
  * @var AssetManager $assetManager
  * @var Item[] $children
  * @var Item[] $descendants
@@ -14,9 +15,9 @@ declare(strict_types=1);
  * @var Inflector $inflector
  * @var Item[] $items
  * @var Item $parent
- * @var Permission[] $permissions
  * @var RbamParameters $rbamParameters
  * @var WebView $this
+ * @var string $type
  * @var TranslatorInterface $translator
  * @var UrlGeneratorInterface $urlGenerator
  */
@@ -28,11 +29,12 @@ use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Input\Checkbox;
 use Yiisoft\Rbac\Item;
-use Yiisoft\Rbac\Permission;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
+use Yiisoft\Yii\DataView\Column\ActionButton;
+use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\CheckboxColumn;
 use Yiisoft\Yii\DataView\Column\DataColumn;
@@ -43,7 +45,10 @@ $assetManager->register(RbamAsset::class);
 $this->addJsFiles($assetManager->getJsFiles());
 
 $this->setTitle(
-    $translator->translate('label.manage_child_roles', ['name' => $parent->getName()])
+    $translator->translate(
+            $type === Item::TYPE_PERMISSION ? 'label.manage_permissions' : 'label.manage_child_roles',
+        ['name' => $parent->getName()]
+    )
 );
 
 $breadcrumbs = [
@@ -56,7 +61,7 @@ $breadcrumbs = [
         'url' => $urlGenerator->generate('rbam.itemIndex', ['type' => $inflector->toPlural($parent->getType())]),
     ],
     [
-        'label' => $translator->translate('label.role', ['name' => $parent->getName()]),
+        'label' => $translator->translate('label.role_name', ['name' => $parent->getName()]),
         'url' => $urlGenerator->generate(
             'rbam.viewItem',
             [
@@ -106,29 +111,25 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
             content: static function (
                 Checkbox $input,
                 DataContext $context
-            ) use ($parent, $children, $descendants, $inflector) {
+            ) use ($ancestors, $children, $descendants, $inflector) {
                 $checked = false;
                 $disabled = false;
                 $indeterminate = false;
 
-                if ($context->data === $parent) {
-                    $disabled = $indeterminate = true;
-                } else {
+                if (in_array($context->data, $ancestors, true)):
+                    $disabled = true;
+                else:
                     foreach ($descendants as $descendant):
                         if ($context->data === $descendant):
                             $checked = true;
 
-                            foreach ($children as $child):
-                                if ($child === $descendant):
-                                    break;
-                                endif;
+                            if (!in_array($descendant, $children, true)) {
                                 $disabled = true;
-                            endforeach;
-
+                            }
                             break;
                         endif;
                     endforeach;
-                }
+                endif;
 
                 return $input
                     ->checked($checked)
@@ -136,18 +137,6 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
                     ->attribute('indeterminate', $indeterminate)
                     ->name($inflector->toSnakeCase($context->data->getName()))
                 ;
-            }
-        ),
-        new DataColumn(
-            header: ucfirst(Item::TYPE_ROLE),
-            content: static function (Item $item) use ($inflector, $urlGenerator) {
-                return Html::a(
-                    content: $item->getName(),
-                    url: $urlGenerator->generate(
-                        'rbam.viewItem',
-                        ['name' => $inflector->toSnakeCase($item->getName()), 'type' => $item->getType()]
-                    )
-                );
             }
         ),
         new DataColumn(
@@ -170,8 +159,21 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
                 ->setTimestamp($item->getUpdatedAt())
                 ->format($rbamParameters->getDatetimeFormat())
         ),
-
+        new ActionColumn(
+            template: '{view}',
+            urlCreator: static function($action, $context) use ($inflector, $urlGenerator)
+            {
+                return $urlGenerator->generate('rbam.' . $action . 'Item', [
+                    'name' => $inflector->toSnakeCase($context->key),
+                    'type' => $context->data->getType()
+                ]);
+            },
+            buttons: [
+                'view' => new ActionButton(
+                    content: $translator->translate($rbamParameters->getActionButton('view')['content']),
+                    attributes: $rbamParameters->getActionButton('view')['attributes'],
+                ),
+            ]
+        )
     )
 ?>
-
-<?= $this->render('_permissions', ['permissions' => $permissions]) ?>
