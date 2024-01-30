@@ -24,7 +24,6 @@ declare(strict_types=1);
 use BeastBytes\Yii\Rbam\Assets\RbamAsset;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use BeastBytes\Yii\Rbam\UserInterface;
-use BeastBytes\Yii\Rbam\UserRepositoryInterface;
 use Yiisoft\Assets\AssetManager;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Html\Html;
@@ -40,7 +39,6 @@ use Yiisoft\Yii\DataView\Column\ActionButton;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\DataView\ListView;
 use Yiisoft\Yii\View\Csrf;
 
 $assetManager->register(RbamAsset::class);

@@ -7,8 +7,10 @@
 declare(strict_types=1);
 
 /**
+ * @var Role[] $ancestors
  * @var AssetManager $assetManager
  * @var Assignment[] $assignments
+ * @var AssignmentsStorageInterface $assignmentsStorage
  * @var Inflector $inflector
  * @var Item $item
  * @var ItemsStorageInterface $itemStorage
@@ -31,11 +33,11 @@ use BeastBytes\Mermaid\InteractionType;
 use BeastBytes\Mermaid\Mermaid;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use BeastBytes\Yii\Rbam\UserInterface;
-use BeastBytes\Yii\Rbam\UserRepositoryInterface;
 use Yiisoft\Assets\AssetManager;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Script;
 use Yiisoft\Rbac\Assignment;
+use Yiisoft\Rbac\AssignmentsStorageInterface;
 use Yiisoft\Rbac\Item;
 use Yiisoft\Rbac\ItemsStorageInterface;
 use Yiisoft\Rbac\Permission;
@@ -146,9 +148,12 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
 <?= $this->render(
     '_' . $item->getType(),
     [
+        'ancestors' => $ancestors,
         'assignments' => $assignments,
+        'assignmentsStorage' => $assignmentsStorage,
         'item' => $item,
         'permissions' => $permissions,
+        'rbamParameters' => $rbamParameters,
         'roles' => $roles,
         'users' => $users,
     ]
@@ -166,7 +171,7 @@ $currentItem = (new Classs($item->getName(), ucfirst($item->getType())))
 $classes[] = $item->getRuleName() ? $currentItem->addMember(new Method($item->getRuleName())) : $currentItem;
 
 $child = $currentItem;
-foreach ($itemStorage->getParents($item->getName()) as $ancestor):
+foreach ($ancestors as $ancestor):
     $parent = (new Classs($ancestor->getName(), ucfirst($ancestor->getType())))
         ->withMember(new Attribute($ancestor->getDescription()))
         ->withStyleClass('ancestor_' . $ancestor->getType())

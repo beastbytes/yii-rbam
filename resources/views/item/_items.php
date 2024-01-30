@@ -33,7 +33,7 @@ use Yiisoft\Yii\DataView\GridView;
 
 echo GridView::widget()
     ->dataReader(new IterableDataReader($items))
-    ->containerAttributes(['class' => 'grid_view items ' . $type . 's'])
+    ->containerAttributes(['class' => 'grid_view ' . $type . 's'])
     ->header($translator->translate('label.' . $type . 's'))
     ->headerAttributes(['class' => 'header'])
     ->tableAttributes(['class' => 'grid'])
@@ -81,4 +81,3 @@ echo GridView::widget()
         )
     )
 ;
-

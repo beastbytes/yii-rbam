@@ -375,7 +375,7 @@ class ItemController
                 )
             ;
         } else {
-            $assignedUsers = $assignments = $permissions = $roles = $userIds = [];
+            $assignments = $permissions = $roles = $userIds = [];
 
             $ancestors = $this->itemsStorage->getParents($name);
 
@@ -397,12 +397,19 @@ class ItemController
             ;
         }
 
+        $ancestors = $this
+            ->itemsStorage
+            ->getParents($name)
+        ;
+
         return $this
             ->viewRenderer
             ->render(
                 'view',
                 [
+                    'ancestors' => $ancestors,
                     'assignments' => $assignments,
+                    'assignmentsStorage' => $assignmentsStorage,
                     'item' => $item,
                     'itemStorage' => $this->itemsStorage,
                     'permissions' => $permissions,
