@@ -74,8 +74,8 @@ echo GridView::widget()
             },
             buttons: [
                'view' => new ActionButton(
-                   content: $translator->translate($rbamParameters->getActionButton('view')['content']),
-                   attributes: $rbamParameters->getActionButton('view')['attributes'],
+                   content: $translator->translate($rbamParameters->getButtons('view')['content']),
+                   attributes: $rbamParameters->getButtons('view')['attributes'],
                ),
             ]
         )

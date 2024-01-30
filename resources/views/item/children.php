@@ -93,12 +93,14 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
     ->toolbar(
         Html::div(
             content: Html::button(
-                 content: $translator->translate('button.remove_all'),
-                 attributes: [
-                     'class' => 'btn',
-                     'data-url' => $urlGenerator->generate('rbam.removeAll'),
-                     'id' => 'all_items',
-                ]
+                 content: $translator->translate($rbamParameters->getButtons('removeAll')['content']),
+                 attributes: array_merge(
+                     $rbamParameters->getButtons('removeAll')['attributes'],
+                     [
+                         'data-url' => $urlGenerator->generate('rbam.removeAll'),
+                         'id' => 'all_items',
+                     ]
+                 )
             ),
             attributes: ['class' => 'toolbar']
         )
@@ -170,8 +172,8 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
             },
             buttons: [
                 'view' => new ActionButton(
-                    content: $translator->translate($rbamParameters->getActionButton('view')['content']),
-                    attributes: $rbamParameters->getActionButton('view')['attributes'],
+                    content: $translator->translate($rbamParameters->getButtons('view')['content']),
+                    attributes: $rbamParameters->getButtons('view')['attributes'],
                 ),
             ]
         )

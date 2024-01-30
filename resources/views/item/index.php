@@ -51,9 +51,9 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
         'items' => $items,
         'layout' => "{toolbar}\n{items}",
         'toolbar' => Html::a(
-            content: $translator->translate($rbamParameters->getActionButton('add' . ucfirst($type))['content']),
+            content: $translator->translate($rbamParameters->getButtons('add' . ucfirst($type))['content']),
             url: $urlGenerator->generate('rbam.addItem', ['type' => $type]),
-            attributes: $rbamParameters->getActionButton('addRole')['attributes'],
+            attributes: $rbamParameters->getButtons('addRole')['attributes'],
         ),
         'translator' => $translator,
         'type' => $type,

@@ -83,12 +83,14 @@ $assignmentNames = array_keys($assignments);
     ->toolbar(
         Html::div(
             content: Html::button(
-                content: $translator->translate('button.revoke_all'),
-                attributes: [
-                    'class' => 'btn',
-                    'id' => 'all_items',
-                    'data-url' => $urlGenerator->generate('rbam.revokeAll'),
-                ]
+                content: $translator->translate($rbamParameters->getButtons('revokeAll')['content']),
+                attributes: array_merge(
+                    $rbamParameters->getButtons('revokeAll')['attributes'],
+                    [
+                        'id' => 'all_items',
+                        'data-url' => $urlGenerator->generate('rbam.revokeAll'),
+                    ]
+                )
             ),
             attributes: ['class' => 'toolbar']
         )

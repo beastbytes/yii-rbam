@@ -9,12 +9,14 @@ declare(strict_types=1);
 /**
  * @var Csrf $csrf
  * @var ItemForm $formModel
+ * @var RbamParameters $rbamParameters
  * @var TranslatorInterface $translator
  * @var UrlGeneratorInterface $urlGenerator
  * @var WebView $this
  */
 
 use BeastBytes\Yii\Rbam\Form\ItemForm;
+use BeastBytes\Yii\Rbam\RbamParameters;
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Router\UrlGeneratorInterface;
@@ -68,10 +70,10 @@ $tabIndex = 1;
 ?>
 <?= Field::submitButton()
      ->containerClass('d-grid gap-2 form-floating')
-     ->buttonClass('btn btn-primary btn-lg mt-3')
+     ->buttonClass($rbamParameters->getButtons('submit')['attributes']['class'])
      ->buttonId('submit-button')
      ->tabindex($tabIndex)
-     ->content($translator->translate('label.submit'))
+     ->content($translator->translate($rbamParameters->getButtons('submit')['content']))
 ?>
 <?= Html::form()
     ->close()

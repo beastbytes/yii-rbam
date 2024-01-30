@@ -54,7 +54,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
             content: Html::a(
                 content: $translator->translate('button.add_rule'),
                 url: $urlGenerator->generate('rbam.addRule'),
-                attributes: $rbamParameters->getActionButton('addRole')['attributes'],
+                attributes: $rbamParameters->getButtons('addRole')['attributes'],
             ),
             attributes: ['class' => 'toolbar']
         )
@@ -86,12 +86,12 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
             },
             buttons: [
                 'update' => new ActionButton(
-                    content: $translator->translate($rbamParameters->getActionButton('update')['content']),
-                    attributes: $rbamParameters->getActionButton('update')['attributes'],
+                    content: $translator->translate($rbamParameters->getButtons('update')['content']),
+                    attributes: $rbamParameters->getButtons('update')['attributes'],
                 ),
                 'view' => new ActionButton(
-                    content: $translator->translate($rbamParameters->getActionButton('view')['content']),
-                    attributes: $rbamParameters->getActionButton('view')['attributes'],
+                    content: $translator->translate($rbamParameters->getButtons('view')['content']),
+                    attributes: $rbamParameters->getButtons('view')['attributes'],
                 ),
             ]
         )

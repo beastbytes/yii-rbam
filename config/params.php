@@ -6,9 +6,23 @@
 
 declare(strict_types=1);
 
+use BeastBytes\Yii\Rbam\RulesMiddleware;
+
+$rules = [];
+$ruleFiles = array_slice(
+    scandir(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'rbac' . DIRECTORY_SEPARATOR . 'rules'),
+    2
+);
+
+foreach ($ruleFiles as $ruleFile) {
+    $rules[lcfirst(substr($ruleFile, 0, -8))]
+        = 'BeastBytes\\Yii\\Rbam\\Rule\\' . substr($ruleFile, 0, -4)
+    ;
+}
+
 return [
     'beastbytes/yii-rbam' => [
-        'actionButtons' => [ // 'add' is Html::a(), others are ActionButton
+        'buttons' => [ // allows use of icon fonts and/or css frameworks to style buttons
             'addPermission' => [
                 'content' => 'button.add_permission',
                 'attributes' => ['class' => 'btn btn_add btn_add_permission'],
@@ -21,9 +35,29 @@ return [
                 'content' => 'button.add_rule',
                 'attributes' => ['class' => 'btn btn_add btn_add_rule'],
             ],
+            'manageChildRoles' => [
+                'content' => 'button.manage_child_roles',
+                'attributes' => ['class' => 'btn btn_manage_child_roles'],
+            ],
+            'managePermissions' => [
+                'content' => 'button.manage_permissions',
+                'attributes' => ['class' => 'btn btn_manage_permissions'],
+            ],
             'manageRoleAssignments' => [
                 'content' => 'button.manage_role_assignments',
                 'attributes' => ['class' => 'btn btn_manage_role_assignments'],
+            ],
+            'removeAll' => [
+                'content' => 'button.remove_all',
+                'attributes' => ['class' => 'btn btn_remove_all'],
+            ],
+            'revokeAll' => [
+                'content' => 'button.revoke_all',
+                'attributes' => ['class' => 'btn btn_revoke_all'],
+            ],
+            'submit' => [
+                'content' => 'button.submit',
+                'attributes' => ['class' => 'btn btn_submit'],
             ],
             'update' => [
                 'content' => 'button.update',
@@ -98,5 +132,12 @@ return [
                 ],
             ],
         ]
-    ]
+    ],
+    'middlewares' => [
+        RulesMiddleware::class
+    ],
+    'yiisoft/rbac-rules-container' => [
+        'rules' => $rules,
+        'validate' => false,
+    ],
 ];

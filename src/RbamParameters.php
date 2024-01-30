@@ -17,9 +17,9 @@ final class RbamParameters
     {
     }
 
-    public function getActionButton(string $name): array
+    public function getButtons(string $name): array
     {
-        return $this->parameters['actionButtons'][$name];
+        return $this->parameters['buttons'][$name];
     }
 
     public function getDatetimeFormat(): string

@@ -78,7 +78,7 @@ echo GridView::widget()
         ),
         new ActionColumn(
             template: '{view}',
-            urlCreator: static function($action, $context) use ($inflector, $urlGenerator)
+            urlCreator: static function($action, $context) use ($urlGenerator)
             {
                 return $urlGenerator->generate('rbam.' . $action . 'User', [
                     'id' => $context->data->getid()
@@ -86,8 +86,8 @@ echo GridView::widget()
             },
             buttons: [
                 'view' => new ActionButton(
-                    content: $translator->translate($rbamParameters->getActionButton('view')['content']),
-                    attributes: $rbamParameters->getActionButton('view')['attributes'],
+                    content: $translator->translate($rbamParameters->getButtons('view')['content']),
+                    attributes: $rbamParameters->getButtons('view')['attributes'],
                 ),
             ]
         )
@@ -100,12 +100,12 @@ echo $this->render(
         'items' => $roles,
         'layout' => "{header}\n{toolbar}\n{items}",
         'toolbar' => Html::a(
-            content: $translator->translate('button.manage_child_roles'),
+            content: $translator->translate($rbamParameters->getButtons('manageChildRoles')['content']),
             url: $urlGenerator->generate(
                 'rbam.children',
                 ['name' => $inflector->toSnakeCase($item->getName()), 'type' => Item::TYPE_ROLE]
             ),
-            attributes: ['class' => ['button', 'manage']]
+            attributes: $rbamParameters->getButtons('manageChildRoles')['attributes']
         ),
         'translator' => $translator,
         'type' => Item::TYPE_ROLE,
@@ -119,12 +119,12 @@ echo $this->render(
         'items' => $permissions,
         'layout' => "{header}\n{toolbar}\n{items}",
         'toolbar' => Html::a(
-            content: $translator->translate('button.manage_permissions'),
+            content: $translator->translate($rbamParameters->getButtons('managePermissions')['content']),
             url: $urlGenerator->generate(
                 'rbam.children',
                 ['name' => $inflector->toSnakeCase($item->getName()), 'type' => Item::TYPE_PERMISSION]
             ),
-            attributes: ['class' => ['button', 'manage']]
+            attributes: $rbamParameters->getButtons('managePermissions')['attributes']
         ),
         'translator' => $translator,
         'type' => Item::TYPE_PERMISSION,
