@@ -48,6 +48,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
 <?= $this->render(
 '_items',
     [
+        'actionButtons' => ['view', 'remove'],
         'items' => $items,
         'layout' => "{toolbar}\n{items}",
         'toolbar' => Html::a(

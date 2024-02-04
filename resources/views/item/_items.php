@@ -7,6 +7,7 @@
 declare(strict_types=1);
 
 /**
+ * @var array $actionButtons
  * @var Inflector $inflector
  * @var Item[] $items
  * @var string $layout
@@ -64,7 +65,7 @@ echo GridView::widget()
                 ->format($rbamParameters->getDatetimeFormat())
         ),
         new ActionColumn(
-            template: '{view}',
+            template: '{' . implode('}{', $actionButtons) . '}',
             urlCreator: static function($action, $context) use ($inflector, $urlGenerator)
             {
                 return $urlGenerator->generate('rbam.' . $action . 'Item', [
@@ -73,10 +74,14 @@ echo GridView::widget()
                 ]);
             },
             buttons: [
-               'view' => new ActionButton(
-                   content: $translator->translate($rbamParameters->getButtons('view')['content']),
-                   attributes: $rbamParameters->getButtons('view')['attributes'],
-               ),
+                'remove' => new ActionButton(
+                    content: $translator->translate($rbamParameters->getButtons('remove')['content']),
+                    attributes: $rbamParameters->getButtons('remove')['attributes'],
+                ),
+                'view' => new ActionButton(
+                    content: $translator->translate($rbamParameters->getButtons('view')['content']),
+                    attributes: $rbamParameters->getButtons('view')['attributes'],
+                ),
             ]
         )
     )

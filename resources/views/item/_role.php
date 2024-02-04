@@ -95,6 +95,7 @@ echo GridView::widget()
 echo $this->render(
     '_items',
     [
+        'actionButtons' => ['view'],
         'items' => $roles,
         'layout' => "{header}\n{toolbar}\n{items}",
         'toolbar' => Html::a(
@@ -114,6 +115,7 @@ echo $this->render(
 echo $this->render(
     '_items',
     [
+        'actionButtons' => ['view'],
         'items' => $permissions,
         'layout' => "{header}\n{toolbar}\n{items}",
         'toolbar' => Html::a(

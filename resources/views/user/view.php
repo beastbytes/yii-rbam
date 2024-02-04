@@ -153,6 +153,7 @@ $assignmentNames = array_keys($assignments);
 <?= $this->render(
     '/item/_items',
     [
+        'actionButtons' => ['view', 'remove'],
         'items' => $permissionsGranted,
         'layout' => "{header}\n{items}",
         'toolbar' => '',
