@@ -14,6 +14,7 @@ return [
     'button.add_role' => 'Add Role',
     'button.add_rule' => 'Add Rule',
     'button.manage_role_assignments' => 'Manage Role Assignments',
+    'button.remove' => 'Remove',
     'button.remove_all' => 'Remove All',
     'button.revoke_all' => 'Revoke All',
     'button.submit' => 'Submit',
