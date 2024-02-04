@@ -47,6 +47,10 @@ return [
                 'content' => 'button.manage_role_assignments',
                 'attributes' => ['class' => 'btn btn_manage_role_assignments'],
             ],
+            'remove' => [
+                'content' => 'button.remove',
+                'attributes' => ['class' => 'btn btn_remove'],
+            ],
             'removeAll' => [
                 'content' => 'button.remove_all',
                 'attributes' => ['class' => 'btn btn_remove_all'],
