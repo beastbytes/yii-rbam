@@ -55,6 +55,7 @@ package-lock.json
 /dev
 /runtime
 /config/environments
+/public_html
 /rbac/*.php
 /rbac/rules/*.php
 .merge-plan.php
