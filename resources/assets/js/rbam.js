@@ -6,7 +6,7 @@
 const rbam = {
     items: null,
     init: function() {
-        const itemList = document.getElementById("items")
+        const itemList = document.getElementById("js-items")
         const config = {
             csrf: itemList.getAttribute("data-csrf"),
             item: itemList.getAttribute("data-item"),
@@ -40,7 +40,7 @@ const rbam = {
 
         fetch(request)
     },
-    all:  function(target, config) {
+    all: function(target, config) {
         const formData = new FormData()
 
         formData.set("_csrf", config.csrf)

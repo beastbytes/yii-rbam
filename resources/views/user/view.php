@@ -77,7 +77,7 @@ $assignmentNames = array_keys($assignments);
         'data-checked_url' => $urlGenerator->generate('rbam.assign'),
         'data-unchecked_url' => $urlGenerator->generate('rbam.revoke'),
         'data-item' => $user->getId(),
-        'id' => 'items',
+        'id' => 'js-items',
     ])
     ->layout("{header}\n{toolbar}\n{items}")
     ->toolbar(

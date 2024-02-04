@@ -87,7 +87,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
         'data-checked_url' => $urlGenerator->generate('rbam.addChild'),
         'data-unchecked_url' => $urlGenerator->generate('rbam.removeChild'),
         'data-item' => $parent->getName(),
-        'id' => 'items',
+        'id' => 'js-items',
     ])
     ->layout("{toolbar}\n{items}")
     ->toolbar(
