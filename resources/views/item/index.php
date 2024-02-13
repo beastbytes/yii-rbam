@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright © 2023 BeastBytes - All rights reserved
+ * @copyright Copyright © 2024 BeastBytes - All rights reserved
  * @license BSD 3-Clause
  */
 
@@ -54,7 +54,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
         'toolbar' => Html::a(
             content: $translator->translate($rbamParameters->getButtons('add' . ucfirst($type))['content']),
             url: $urlGenerator->generate('rbam.addItem', ['type' => $type]),
-            attributes: $rbamParameters->getButtons('addRole')['attributes'],
+            attributes: $rbamParameters->getButtons('add' . ucfirst($type))['attributes'],
         ),
         'translator' => $translator,
         'type' => $type,

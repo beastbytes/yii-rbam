@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright © 2023 BeastBytes - All rights reserved
+ * @copyright Copyright © 2024 BeastBytes - All rights reserved
  * @license BSD 3-Clause
  */
 
@@ -77,7 +77,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
         ),
         new DataColumn(header: 'Description', content: static fn(RuleInterface $rule) => $rule->getDescription()),
         new ActionColumn(
-            template: '{view} {update}',
+            template: '{view}{update}',
             urlCreator: static function($action, $context) use ($urlGenerator)
             {
                 return $urlGenerator->generate('rbam.' . $action . 'Rule', [

@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright © 2023 BeastBytes - All rights reserved
+ * @copyright Copyright © 2024 BeastBytes - All rights reserved
  * @license BSD 3-Clause
  */
 
@@ -13,6 +13,7 @@ use BeastBytes\Yii\Http\Response\Redirect;
 use BeastBytes\Yii\Rbam\Form\ItemForm;
 use BeastBytes\Yii\Rbam\RuleServiceInterface;
 use BeastBytes\Yii\Rbam\UserRepositoryInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\FormModel\FormHydrator;
@@ -207,8 +208,7 @@ class ItemController
     /** @psalm-suppress PossiblyNullArgument */
     public function remove(
         CurrentRoute $currentRoute,
-        NotFound $notFound,
-        Redirect $redirect
+        ResponseFactoryInterface $responseFactory
     ): ResponseInterface
     {
         $name = $this
@@ -220,7 +220,9 @@ class ItemController
             ->itemsStorage
             ->exists($name)
         ) {
-            return $notFound->create();
+            return $responseFactory
+                ->createResponse(Status::NOT_FOUND)
+            ;
         }
 
         $type = $this
@@ -235,10 +237,8 @@ class ItemController
             ->$method($name)
         ;
 
-        return $redirect
-            ->toRoute('rbam.items', ['type' => $type])
-            ->withStatusCode(Status::SEE_OTHER)
-            ->create()
+        return $responseFactory
+            ->createResponse(Status::OK)
         ;
     }
 

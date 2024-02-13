@@ -1,10 +1,12 @@
 <?php
 /**
- * @copyright Copyright © 2023 BeastBytes - All rights reserved
+ * @copyright Copyright © 2024 BeastBytes - All rights reserved
  * @license BSD 3-Clause
  */
 
 declare(strict_types=1);
+
+/** |xxx| placeholders are replaced in JavaScript */
 
 return [
     'button.add_assignment' => 'Add Assignment',
@@ -13,6 +15,9 @@ return [
     'button.manage_permissions' => 'Manage Permissions',
     'button.add_role' => 'Add Role',
     'button.add_rule' => 'Add Rule',
+    'button.continue' => 'Continue',
+    'button.cancel' => 'Cancel',
+    'button.done' => 'Done',
     'button.manage_role_assignments' => 'Manage Role Assignments',
     'button.remove' => 'Remove',
     'button.remove_all' => 'Remove All',
@@ -23,6 +28,8 @@ return [
     'button.update_role' => 'Update {name} Role',
     'button.update_rule' => 'Update {name} Rule',
     'button.view' => 'View',
+    'header.remove_permission' => 'Remove |name| Permission',
+    'header.remove_role' => 'Remove |name| Role',
     'label.add_permission' => 'Add Permission',
     'label.add_role' => 'Add Role',
     'label.add_rule' => 'Add Rule',
@@ -34,7 +41,11 @@ return [
     'label.created_at' => 'Created',
     'label.description' => 'Description',
     'label.manage_child_roles' => 'Manage Child Roles for {name} Role',
-    'label.manage_permissions' => 'Manage Permissions for {name} Role',
+    'label.manage_permissions' => 'Manage Permissions',
+    'label.manage_role_permissions' => 'Manage Permissions for {name} Role',
+    'label.manage_roles' => 'Manage Roles',
+    'label.manage_rules' => 'Manage Rules',
+    'label.manage_users' => 'Manage Users',
     'label.name' => 'Name',
     'label.permission' => 'Permission',
     'label.permissions' => 'Permissions',
@@ -63,6 +74,8 @@ return [
     'message.no_users_found' => 'No users found',
     'message.no_users_permitted' => 'No users permitted',
     'message.no_rule' => 'No rule',
+    'message.remove_permission' => '<p>Removing the |name| permission is permanent and can not be undone</p><p>Click Continue to remove the |name| permission, click Cancel to cancel the operation</p>',
+    'message.remove_role' => '<p>Removing the |name| role is permanent and can not be undone</p><p>Click Continue to remove the |name| role, click Cancel to cancel the operation</p>',
     'prompt.select_rule' => 'Select Rule',
     'title.rbam' => 'Role Based Access Manager',
 ];

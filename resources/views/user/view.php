@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright © 2023 BeastBytes - All rights reserved
+ * @copyright Copyright © 2024 BeastBytes - All rights reserved
  * @license BSD 3-Clause
  */
 
@@ -28,6 +28,9 @@ use BeastBytes\Yii\Rbam\UserInterface;
 use Yiisoft\Assets\AssetManager;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\A;
+use Yiisoft\Html\Tag\Button;
+use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Input\Checkbox;
 use Yiisoft\Rbac\Assignment;
 use Yiisoft\Rbac\Item;
@@ -37,8 +40,10 @@ use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
+use Yiisoft\Yii\DataView\Column\ActionButton;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\CheckboxColumn;
+use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\View\Csrf;
@@ -81,19 +86,27 @@ $assignmentNames = array_keys($assignments);
     ])
     ->layout("{header}\n{toolbar}\n{items}")
     ->toolbar(
-        Html::div(
-            content: Html::button(
-                content: $translator->translate($rbamParameters->getButtons('revokeAll')['content']),
-                attributes: array_merge(
-                    $rbamParameters->getButtons('revokeAll')['attributes'],
-                    [
-                        'id' => 'all_items',
-                        'data-url' => $urlGenerator->generate('rbam.revokeAll'),
-                    ]
-                )
-            ),
-            attributes: ['class' => 'toolbar']
-        )
+        Div::tag()
+            ->attributes(['class' => 'toolbar'])
+            ->content(
+                Button::tag()
+                    ->attributes(array_merge(
+                        $rbamParameters->getButtons('revokeAll')['attributes'],
+                        [
+                            'id' => 'all_items',
+                            'data-url' => $urlGenerator->generate('rbam.revokeAll'),
+                            'type' => 'button'
+                        ]
+                    ))
+                    ->content($translator->translate($rbamParameters->getButtons('revokeAll')['content']))
+                    ->render()
+                . A::tag()
+                   ->attributes($rbamParameters->getButtons('done')['attributes'])
+                   ->content($translator->translate($rbamParameters->getButtons('done')['content']))
+                   ->href($urlGenerator->generate('rbam.userIndex'))
+                   ->render()
+            )
+            ->encode(false)
             ->render()
     )
     ->emptyText($translator->translate('message.no_assignments_found'))
@@ -146,6 +159,22 @@ $assignmentNames = array_keys($assignments);
 
                 return '';
             }
+        ),
+        new ActionColumn(
+            template: '{view}',
+            urlCreator: static function($action, $context) use ($inflector, $urlGenerator)
+            {
+                return $urlGenerator->generate('rbam.' . $action . 'Item', [
+                    'name' => $inflector->toSnakeCase($context->key),
+                    'type' => $context->data->getType()
+                ]);
+            },
+            buttons: [
+                'view' => new ActionButton(
+                    content: $translator->translate($rbamParameters->getButtons('view')['content']),
+                    attributes: $rbamParameters->getButtons('view')['attributes'],
+                ),
+            ]
         ),
     )
 ?>

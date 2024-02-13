@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright © 2023 BeastBytes - All rights reserved
+ * @copyright Copyright © 2024 BeastBytes - All rights reserved
  * @license BSD 3-Clause
  */
 
@@ -24,52 +24,56 @@ return [
     'beastbytes/yii-rbam' => [
         'buttons' => [ // allows use of icon fonts and/or css frameworks to style buttons
             'addPermission' => [
-                'content' => 'button.add_permission',
                 'attributes' => ['class' => 'btn btn_add btn_add_permission'],
+                'content' => 'button.add_permission',
             ],
             'addRole' => [
-                'content' => 'button.add_role',
                 'attributes' => ['class' => 'btn btn_add btn_add_role'],
+                'content' => 'button.add_role',
             ],
             'addRule' => [
-                'content' => 'button.add_rule',
                 'attributes' => ['class' => 'btn btn_add btn_add_rule'],
+                'content' => 'button.add_rule',
+            ],
+            'done' => [
+                'attributes' => ['class' => 'btn btn_done'],
+                'content' => 'button.done',
             ],
             'manageChildRoles' => [
-                'content' => 'button.manage_child_roles',
                 'attributes' => ['class' => 'btn btn_manage_child_roles'],
+                'content' => 'button.manage_child_roles',
             ],
             'managePermissions' => [
-                'content' => 'button.manage_permissions',
                 'attributes' => ['class' => 'btn btn_manage_permissions'],
+                'content' => 'button.manage_permissions',
             ],
             'manageRoleAssignments' => [
-                'content' => 'button.manage_role_assignments',
                 'attributes' => ['class' => 'btn btn_manage_role_assignments'],
+                'content' => 'button.manage_role_assignments',
             ],
             'remove' => [
-                'content' => 'button.remove',
                 'attributes' => ['class' => 'btn btn_remove'],
+                'content' => 'button.remove',
             ],
             'removeAll' => [
-                'content' => 'button.remove_all',
                 'attributes' => ['class' => 'btn btn_remove_all'],
+                'content' => 'button.remove_all',
             ],
             'revokeAll' => [
-                'content' => 'button.revoke_all',
                 'attributes' => ['class' => 'btn btn_revoke_all'],
+                'content' => 'button.revoke_all',
             ],
             'submit' => [
-                'content' => 'button.submit',
                 'attributes' => ['class' => 'btn btn_submit'],
+                'content' => 'button.submit',
             ],
             'update' => [
-                'content' => 'button.update',
                 'attributes' => ['class' => 'btn btn_update'],
+                'content' => 'button.update',
             ],
             'view' => [
-                'content' => 'button.view',
                 'attributes' => ['class' => 'btn btn_view'],
+                'content' => 'button.view',
             ],
         ],
         'datetimeFormat' => 'Y-m-d H:i:s',

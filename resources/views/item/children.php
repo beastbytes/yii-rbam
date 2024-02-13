@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright © 2023 BeastBytes - All rights reserved
+ * @copyright Copyright © 2024 BeastBytes - All rights reserved
  * @license BSD 3-Clause
  */
 
@@ -27,6 +27,7 @@ use BeastBytes\Yii\Rbam\RbamParameters;
 use Yiisoft\Assets\AssetManager;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\A;use Yiisoft\Html\Tag\Button;use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Input\Checkbox;
 use Yiisoft\Rbac\Item;
 use Yiisoft\Router\UrlGeneratorInterface;
@@ -46,7 +47,7 @@ $this->addJsFiles($assetManager->getJsFiles());
 
 $this->setTitle(
     $translator->translate(
-            $type === Item::TYPE_PERMISSION ? 'label.manage_permissions' : 'label.manage_child_roles',
+            $type === Item::TYPE_PERMISSION ? 'label.manage_role_permissions' : 'label.manage_child_roles',
         ['name' => $parent->getName()]
     )
 );
@@ -91,20 +92,34 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
     ])
     ->layout("{toolbar}\n{items}")
     ->toolbar(
-        Html::div(
-            content: Html::button(
-                 content: $translator->translate($rbamParameters->getButtons('removeAll')['content']),
-                 attributes: array_merge(
-                     $rbamParameters->getButtons('removeAll')['attributes'],
-                     [
-                         'data-url' => $urlGenerator->generate('rbam.removeAll'),
-                         'id' => 'all_items',
-                     ]
-                 )
-            ),
-            attributes: ['class' => 'toolbar']
-        )
-        ->render()
+        Div::tag()
+            ->attributes(['class' => 'toolbar'])
+            ->content(
+                Button::tag()
+                    ->attributes(array_merge(
+                         $rbamParameters->getButtons('removeAll')['attributes'],
+                         [
+                             'data-url' => $urlGenerator->generate('rbam.removeAll'),
+                             'id' => 'all_items',
+                             'type' => 'button'
+                         ]
+                    ))
+                    ->content($translator->translate($rbamParameters->getButtons('removeAll')['content']))
+                    ->render()
+                    . A::tag()
+                        ->attributes($rbamParameters->getButtons('done')['attributes'])
+                        ->content($translator->translate($rbamParameters->getButtons('done')['content']))
+                        ->href($urlGenerator->generate(
+                            'rbam.viewItem',
+                            [
+                                'name' => $inflector->toSnakeCase($parent->getName()),
+                                'type' => $parent->getType()
+                            ]
+                        ))
+                        ->render()
+            )
+            ->encode(false)
+            ->render()
     )
     ->emptyText($translator->translate('message.no_child_roles'))
     ->columns(
@@ -176,6 +191,6 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
                     attributes: $rbamParameters->getButtons('view')['attributes'],
                 ),
             ]
-        )
+        ),
     )
 ?>

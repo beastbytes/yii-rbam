@@ -45,6 +45,12 @@ return [
             '@views' => '@resources/views',
         ],
     ],
+    'yiisoft/assets' => [
+        'assetPublisher' => [
+            'forceCopy' => true,
+            'linkAssets' => false,
+        ],
+    ],
     'yiisoft/rbac' => [
         'guestRole' => 'guest',
     ],

@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright © 2023 BeastBytes - All rights reserved
+ * @copyright Copyright © 2024 BeastBytes - All rights reserved
  * @license BSD 3-Clause
  */
 
@@ -8,14 +8,18 @@ declare(strict_types=1);
 
 namespace BeastBytes\Yii\Rbam\Assets;
 
+use BeastBytes\Yii\Rbam\Widget\Assets\DialogAsset;
 use Yiisoft\Assets\AssetBundle;
 
-class MermaidAsset extends AssetBundle
+class RemoveAsset extends AssetBundle
 {
     public ?string $basePath = '@assets';
     public ?string $baseUrl = '@assetsUrl';
     public array $js = [
-        'js/mermaid.js',
+        'js/remove.js',
     ];
     public ?string $sourcePath = '@assetsSource';
+    public array $depends = [
+        DialogAsset::class
+    ];
 }

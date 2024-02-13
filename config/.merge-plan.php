@@ -6,7 +6,7 @@ declare(strict_types=1);
 return [
     '/' => [
         'params' => [
-            'yiisoft/assets' => [
+            'yiisoft/rbac-rules-container' => [
                 'config/params.php',
             ],
             'yiisoft/auth' => [
@@ -21,10 +21,16 @@ return [
             'yiisoft/router-fastroute' => [
                 'config/params.php',
             ],
+            'yiisoft/assets' => [
+                'config/params.php',
+            ],
+            'yiisoft/widget' => [
+                'config/params.php',
+            ],
             'yiisoft/form' => [
                 'config/params.php',
             ],
-            'yiisoft/rbac-rules-container' => [
+            'yiisoft/view' => [
                 'config/params.php',
             ],
             'yiisoft/csrf' => [
@@ -39,16 +45,10 @@ return [
             'yiisoft/aliases' => [
                 'config/params.php',
             ],
-            'yiisoft/widget' => [
-                'config/params.php',
-            ],
             'yiisoft/validator' => [
                 'config/params.php',
             ],
             'yiisoft/session' => [
-                'config/params.php',
-            ],
-            'yiisoft/view' => [
                 'config/params.php',
             ],
             'yiisoft/translator' => [
@@ -56,38 +56,6 @@ return [
             ],
             '/' => [
                 'params.php',
-            ],
-        ],
-        'di-web' => [
-            'yiisoft/assets' => [
-                'config/di-web.php',
-            ],
-            'yiisoft/yii-view' => [
-                'config/di-web.php',
-            ],
-            'yiisoft/router-fastroute' => [
-                'config/di-web.php',
-            ],
-            'yiisoft/csrf' => [
-                'config/di-web.php',
-            ],
-            'yiisoft/data-response' => [
-                'config/di-web.php',
-            ],
-            'yiisoft/error-handler' => [
-                'config/di-web.php',
-            ],
-            'yiisoft/session' => [
-                'config/di-web.php',
-            ],
-            'yiisoft/view' => [
-                'config/di-web.php',
-            ],
-            'yiisoft/yii-event' => [
-                'config/di-web.php',
-            ],
-            '/' => [
-                '$di',
             ],
         ],
         'di' => [
@@ -106,6 +74,9 @@ return [
             'yiisoft/router' => [
                 'config/di.php',
             ],
+            'yiisoft/view' => [
+                'config/di.php',
+            ],
             'yiisoft/log-target-file' => [
                 'config/di.php',
             ],
@@ -116,9 +87,6 @@ return [
                 'config/di.php',
             ],
             'yiisoft/validator' => [
-                'config/di.php',
-            ],
-            'yiisoft/view' => [
                 'config/di.php',
             ],
             'yiisoft/cache' => [
@@ -140,11 +108,43 @@ return [
             ],
             '/' => [],
         ],
+        'di-web' => [
+            'yiisoft/yii-view' => [
+                'config/di-web.php',
+            ],
+            'yiisoft/router-fastroute' => [
+                'config/di-web.php',
+            ],
+            'yiisoft/assets' => [
+                'config/di-web.php',
+            ],
+            'yiisoft/view' => [
+                'config/di-web.php',
+            ],
+            'yiisoft/csrf' => [
+                'config/di-web.php',
+            ],
+            'yiisoft/data-response' => [
+                'config/di-web.php',
+            ],
+            'yiisoft/error-handler' => [
+                'config/di-web.php',
+            ],
+            'yiisoft/session' => [
+                'config/di-web.php',
+            ],
+            'yiisoft/yii-event' => [
+                'config/di-web.php',
+            ],
+            '/' => [
+                '$di',
+            ],
+        ],
         'bootstrap' => [
-            'yiisoft/form' => [
+            'yiisoft/widget' => [
                 'config/bootstrap.php',
             ],
-            'yiisoft/widget' => [
+            'yiisoft/form' => [
                 'config/bootstrap.php',
             ],
             '/' => [],

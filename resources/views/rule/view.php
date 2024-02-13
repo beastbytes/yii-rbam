@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright © 2023 BeastBytes - All rights reserved
+ * @copyright Copyright © 2024 BeastBytes - All rights reserved
  * @license BSD 3-Clause
  */
 
@@ -24,7 +24,7 @@ use Yiisoft\Yii\DataView\DetailView;
 use Yiisoft\Yii\DataView\Field\DataField;
 
 $this->setTitle(
-    $translator->translate('label.rule', ['name' => $rule->getName()])
+    $translator->translate('label.rule_name', ['name' => $rule->getName()])
 );
 
 $breadcrumbs = [

@@ -1,0 +1,58 @@
+.rbam {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+.rbam .card {
+    border: 1px solid black;
+    border-radius: 1rem;
+}
+.rbam .card-header {
+    display: flex;
+    font-size: 1.333rem;
+    font-weight: bold;
+    justify-content: space-around;
+    padding: 1.5rem 0.75rem;
+}
+.rbam .card-header .badge {
+    align-items: center;
+    background: midnightblue;
+    border-radius: 2rem;
+    color: aliceblue;
+    display: inline-flex;
+    font-size: 0.875rem;
+    height: 1.25rem;
+    justify-content: center;
+    line-height: 1.25rem;
+    margin-left: 1.25rem;
+    padding-left: 0.563rem;
+    padding-right: 0.563rem;
+    width: fit-content;
+}
+.rbam .card-body {
+    padding: 1.5rem 0.75rem;
+    text-align: center;
+}
+.rbam .btn {
+    align-items: center;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    display: inline-flex;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    font-size: 0.875rem;
+    font-weight: 600;
+    height: 3rem;
+    justify-content: center;
+    line-height: 1em;
+    min-height: 3rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    text-align: center;
+    text-decoration-line: none;
+    user-select: none;
+}
+.rbam .btn_manage {
+    background: rgb(116, 128, 255);
+    color: aliceblue;
+}

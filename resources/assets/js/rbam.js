@@ -1,10 +1,11 @@
 /**
- * @copyright Copyright © 2023 BeastBytes - All rights reserved
+ * @copyright Copyright © 2024 BeastBytes - All rights reserved
  * @license BSD 3-Clause
  */
 
 const rbam = {
     items: null,
+
     init: function() {
         const itemList = document.getElementById("js-items")
         const config = {
@@ -14,17 +15,23 @@ const rbam = {
             uncheckedUrl: itemList.getAttribute("data-unchecked_url")
         }
 
-        rbam.items = document.querySelectorAll("#items input")
+        rbam.items = document.querySelectorAll("#js-items input")
 
         for (const item of rbam.items) {
-            item.onclick = (e) => {
-                rbam.action(e.target, config)
-            }
+            item.addEventListener(
+                'click',
+                (e) => {
+                    rbam.action(e.target, config)
+                }
+            )
         }
 
-        document.getElementById("all_items").onclick = (e) => {
-            rbam.all(e.target, config)
-        }
+        document.getElementById("all_items").addEventListener(
+            'click',
+            (e) => {
+                rbam.all(e.target, config)
+            }
+        )
     },
     action: function(target, config) {
         const formData = new FormData()

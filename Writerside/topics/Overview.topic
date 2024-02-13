@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="Overview" id="Overview">
+
+    <p>
+        Role Based Access Manager (RBAM) is a UI for the Yii3 Role Based Access Control (RBAC) package.
+    </p>
+
+    <chapter title="Features" id="overview-features" >
+        <list>
+            <li>
+                Create, edit, &amp; delete Permissions
+            </li>
+            <li>
+                Create, edit, &amp; delete Roles
+            </li>
+            <li>
+                Create &amp; edit Role/Permission hierarchy
+            </li>
+            <li>
+                Role/Permission hierarchy visualisation
+            </li>
+            <li>
+                Assign users to &amp; de-assign users from Roles
+            </li>
+            <li>
+                Create, edit, &amp; delete Rules
+            </li>
+            <li>
+                Assign Rules to Permissions &amp; Roles
+            </li>
+        </list>
+    </chapter>
+
+    <chapter title="Definitions" id="overview-definitions" >
+        <deflist>
+            <def title="Permission">
+                <p>
+                    Permission to perform an action, e.g. create an invoice.
+                </p>
+                <p>
+                    Permissions often map directly to controller actions.
+                </p>
+                <note>
+                    RBAM does not allow Permissions to have child Permissions.
+                </note>
+            </def>
+            <def title="Role">
+                <p>
+                    A role within an application that has a one or more permissions; permissions may be granted directly
+                    or by a descendant Role. Roles are assigned to end-users to grant a user a specific set of
+                    Permissions.
+                </p>
+                <p>
+                    Roles can have child roles allowing a hierarchy of Roles and Permissions and granular
+                    granting of Permissions. e.g. the accounts clerk Role is granted the "create invoice" Permission,
+                    the
+                    accounts manager Role has the accounts clerk Role as a child and inherits its Permissions and
+                    additionally is granted the "edit invoice" Permission.
+                </p>
+            </def>
+            <def title="Role Based Access Control">
+                An access control method that assigns permissions to end-users based on their role within an application.
+            </def>
+            <def title="Rule">
+                <p>
+                    Additional conditions taken into consideration when RBAC decides if the end-user has permission to
+                    perform the requested action, e.g. if an invoice has been paid it can not be edited.
+                </p>
+                <note>
+                    Creation of Composite Rules is not currently supported
+                </note>
+            </def>
+        </deflist>
+    </chapter>
+    <seealso style="cards">
+        <category ref="external">
+            <a
+                href="https://github.com/yiisoft/docs/blob/master/guide/en/security/authorization.md#role-based-access-control-rbac-"
+            >
+                Yii3 RBAC documentation
+            </a>
+            <a href="https://github.com/yiisoft/rbac">
+                Yii3 RBAC package
+            </a>
+            <a href="https://en.wikipedia.org/wiki/Role-based_access_control">
+                Wikipedia RBAC page
+            </a>
+        </category>
+    </seealso>
+</topic>

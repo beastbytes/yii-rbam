@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright © 2023 BeastBytes - All rights reserved
+ * @copyright Copyright © 2024 BeastBytes - All rights reserved
  * @license BSD 3-Clause
  */
 
@@ -45,7 +45,7 @@ return [
     Route::methods([Method::GET, Method::POST], '/rbam/children/{type: permission|role}/{name: [a-z][\w]*}')
          ->action([ItemController::class, 'children'])
          ->name('rbam.children'),
-    Route::get('/rbam/remove/{name: [a-z][\w]*}')
+    Route::post('/rbam/remove/{type: permission|role}/{name: [a-z][\w]*}')
          ->action([ItemController::class, 'remove'])
          ->name('rbam.removeItem'),
     Route::methods([Method::GET, Method::POST], '/rbam/update/{type: permission|role}/{name: [a-z][\w]*}')

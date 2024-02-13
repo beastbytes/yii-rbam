@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright © 2023 BeastBytes - All rights reserved
+ * @copyright Copyright © 2024 BeastBytes - All rights reserved
  * @license BSD 3-Clause
  */
 
@@ -30,8 +30,8 @@ class RuleController
 {
     public function __construct(
         private FlashInterface $flash,
-        private Inflector $inflector,
-        private RuleServiceInterface $ruleService,
+        private readonly Inflector $inflector,
+        private readonly RuleServiceInterface $ruleService,
         private TranslatorInterface $translator,
         private ViewRenderer $viewRenderer
     )

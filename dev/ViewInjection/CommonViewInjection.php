@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright © 2023 BeastBytes - All rights reserved
+ * @copyright Copyright © 2024 BeastBytes - All rights reserved
  * @license BSD 3-Clause
  */
 
@@ -20,12 +20,12 @@ use Yiisoft\Yii\View\CommonParametersInjectionInterface;
 final class CommonViewInjection implements CommonParametersInjectionInterface
 {
     public function __construct(
-        private AssetManager $assetManager,
-        private Inflector $inflector,
-        private Locale $locale,
-        private RbamParameters $rbamParameters,
-        private TranslatorInterface $translator,
-        private UrlGeneratorInterface $urlGenerator
+        private readonly AssetManager $assetManager,
+        private readonly Inflector $inflector,
+        private readonly Locale $locale,
+        private readonly RbamParameters $rbamParameters,
+        private readonly TranslatorInterface $translator,
+        private readonly UrlGeneratorInterface $urlGenerator
     ) {
     }
 

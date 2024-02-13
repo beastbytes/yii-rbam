@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 /**
  * @var array $actionButtons
+ * @var AssetManager $assetManager
+ * @var Csrf $csrf
  * @var Inflector $inflector
  * @var Item[] $items
  * @var string $layout
@@ -19,7 +21,10 @@ declare(strict_types=1);
  * @var UrlGeneratorInterface $urlGenerator
  */
 
+use BeastBytes\Yii\Rbam\Assets\RemoveAsset;
 use BeastBytes\Yii\Rbam\RbamParameters;
+use BeastBytes\Yii\Widgets\Dialog;
+use Yiisoft\Assets\AssetManager;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Html\Html;
 use Yiisoft\Rbac\Item;
@@ -31,6 +36,33 @@ use Yiisoft\Yii\DataView\Column\ActionButton;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\View\Csrf;
+
+$dialog = Dialog::widget()
+    ->body($translator->translate('message.remove_' . $type))
+    ->footer(
+        Html::button(
+            $translator->translate('button.continue'),
+            [
+                'class' => 'remove-continue',
+                'id' => 'remove-continue',
+                'type' => 'submit',
+                Dialog::CLOSE_DIALOG_ATTRIBUTE => true,
+            ]
+        )
+            ->render()
+        . Html::button(
+            $translator->translate('button.cancel'),
+            [
+                'class' => 'remove-cancel',
+                'type' => 'reset',
+                Dialog::CLOSE_DIALOG_ATTRIBUTE => true,
+            ]
+        )
+            ->render()
+    )
+    ->header($translator->translate('header.remove_' . $type))
+;
 
 echo GridView::widget()
     ->dataReader(new IterableDataReader($items))
@@ -40,7 +72,8 @@ echo GridView::widget()
     ->tableAttributes(['class' => 'grid'])
     ->layout($layout)
     ->toolbar(
-        Html::div(content: $toolbar, attributes: ['class' => 'toolbar'])->render()
+        Html::div(content: $toolbar, attributes: ['class' => 'toolbar'])
+            ->render()
     )
     ->emptyText($translator->translate('message.no_' . $type . 's_found'))
     ->columns(
@@ -68,6 +101,7 @@ echo GridView::widget()
             template: '{' . implode('}{', $actionButtons) . '}',
             urlCreator: static function($action, $context) use ($inflector, $urlGenerator)
             {
+                if ($action === 'test') return '';
                 return $urlGenerator->generate('rbam.' . $action . 'Item', [
                     'name' => $inflector->toSnakeCase($context->key),
                     'type' => $context->data->getType()
@@ -76,13 +110,26 @@ echo GridView::widget()
             buttons: [
                 'remove' => new ActionButton(
                     content: $translator->translate($rbamParameters->getButtons('remove')['content']),
-                    attributes: $rbamParameters->getButtons('remove')['attributes'],
+                    attributes: static function() use ($csrf, $dialog, $rbamParameters)
+                    {
+                        $attributes = $rbamParameters->getButtons('remove')['attributes'];
+                        Html::addCssClass($attributes, 'remove');
+                        $attributes[Dialog::OPEN_DIALOG_ATTRIBUTE] = $dialog->getId();
+                        $attributes['data-csrf'] = $csrf;
+                        return $attributes;
+                    }
                 ),
                 'view' => new ActionButton(
                     content: $translator->translate($rbamParameters->getButtons('view')['content']),
                     attributes: $rbamParameters->getButtons('view')['attributes'],
                 ),
-            ]
+            ],
         )
     )
 ;
+
+echo $dialog->render();
+
+$assetManager->register(RemoveAsset::class);
+$this->addCssFiles($assetManager->getCssFiles());
+$this->addJsFiles($assetManager->getJsFiles());
