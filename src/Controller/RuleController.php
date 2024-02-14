@@ -12,8 +12,10 @@ use BeastBytes\Yii\Http\Response\NotFound;
 use BeastBytes\Yii\Http\Response\Redirect;
 use BeastBytes\Yii\Rbam\Form\RuleForm;
 use BeastBytes\Yii\Rbam\RuleServiceInterface;
+use HttpSoft\Message\ServerRequest;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Http\Status;
@@ -46,8 +48,11 @@ class RuleController
         ;
     }
 
-    public function index(): ResponseInterface
+    public function index(ServerRequest $request): ResponseInterface
     {
+        $queryParams = $request
+            ->getQueryParams()
+        ;
         $rules = $this
             ->ruleService
             ->getRules()
@@ -55,7 +60,14 @@ class RuleController
 
         return $this
             ->viewRenderer
-            ->render('index', ['rules' => $rules])
+            ->render(
+                'index',
+                [
+                    'currentPage' => (int) ArrayHelper::getValue($queryParams, 'page', 1),
+                    'pageSize' => (int) ArrayHelper::getValue($queryParams, 'pagesize', 20),
+                    'rules' => $rules
+                ]
+            )
         ;
     }
 

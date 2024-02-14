@@ -7,8 +7,10 @@
 declare(strict_types=1);
 
 /**
+ * @var int $currentPage
  * @var Inflector $inflector
  * @var array $items
+ * @var int $pageSize
  * @var RbamParameters $rbamParameters
  * @var WebView $this
  * @var TranslatorInterface $translator
@@ -17,6 +19,7 @@ declare(strict_types=1);
  */
 
 use BeastBytes\Yii\Rbam\RbamParameters;
+use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Html\Html;
 use Yiisoft\Rbac\Item;
@@ -49,7 +52,10 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
 '_items',
     [
         'actionButtons' => ['view', 'remove'],
-        'items' => $items,
+        'dataReader' => (new OffsetPaginator(new IterableDataReader($items)))
+            ->withCurrentPage($currentPage)
+            ->withPageSize($pageSize)
+        ,
         'layout' => "{toolbar}\n{items}",
         'toolbar' => Html::a(
             content: $translator->translate($rbamParameters->getButtons('add' . ucfirst($type))['content']),

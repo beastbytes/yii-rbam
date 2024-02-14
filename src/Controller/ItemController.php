@@ -13,9 +13,11 @@ use BeastBytes\Yii\Http\Response\Redirect;
 use BeastBytes\Yii\Rbam\Form\ItemForm;
 use BeastBytes\Yii\Rbam\RuleServiceInterface;
 use BeastBytes\Yii\Rbam\UserRepositoryInterface;
+use HttpSoft\Message\ServerRequest;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Http\Status;
@@ -54,8 +56,11 @@ class ItemController
         ;
     }
 
-    public function index(CurrentRoute $currentRoute): ResponseInterface
+    public function index(CurrentRoute $currentRoute, ServerRequest $request): ResponseInterface
     {
+        $queryParams = $request
+            ->getQueryParams()
+        ;
         /** @psalm-suppress PossiblyNullArgument */
         $type = $this
             ->inflector
@@ -75,7 +80,15 @@ class ItemController
 
         return $this
             ->viewRenderer
-            ->render('index', ['items' => $items, 'type' => $type])
+            ->render(
+                'index',
+                [
+                    'currentPage' => (int) ArrayHelper::getValue($queryParams, 'page', 1),
+                    'items' => $items,
+                    'pageSize' => (int) ArrayHelper::getValue($queryParams, 'pagesize', 20),
+                    'type' => $type
+                ]
+            )
         ;
     }
 
@@ -142,8 +155,11 @@ class ItemController
         ;
     }
 
-    public function children(CurrentRoute $currentRoute): ResponseInterface
+    public function children(CurrentRoute $currentRoute, ServerRequest $request): ResponseInterface
     {
+        $queryParams = $request
+            ->getQueryParams()
+        ;
         $name = $this
             ->inflector
             ->toPascalCase($currentRoute->getArgument('name'))
@@ -196,8 +212,10 @@ class ItemController
                 [
                     'ancestors' => $ancestors,
                     'children' => $children,
+                    'currentPage' => (int) ArrayHelper::getValue($queryParams, 'page', 1),
                     'descendants' => $descendants,
                     'items' => $items,
+                    'pageSize' => (int) ArrayHelper::getValue($queryParams, 'pagesize', 20),
                     'parent' => $parent,
                     'type' => $type,
                 ]

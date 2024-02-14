@@ -9,7 +9,10 @@ declare(strict_types=1);
 namespace BeastBytes\Yii\Rbam\Controller;
 
 use BeastBytes\Yii\Rbam\UserRepositoryInterface;
+use HttpSoft\Message\ServerRequest;
 use Psr\Http\Message\ResponseInterface;
+use Yiisoft\Arrays\ArrayHelper;
+use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Rbac\AssignmentsStorageInterface;
 use Yiisoft\Rbac\ItemsStorageInterface;
 use Yiisoft\Rbac\ManagerInterface;
@@ -36,8 +39,11 @@ class UserController
         ;
     }
 
-    public function index(): ResponseInterface
+    public function index(ServerRequest $request): ResponseInterface
     {
+        $queryParams = $request
+            ->getQueryParams()
+        ;
         $users = $this
             ->userRepository
             ->findAll()
@@ -45,7 +51,14 @@ class UserController
 
         return $this
             ->viewRenderer
-            ->render('index', ['users' => $users])
+            ->render(
+                'index',
+                [
+                    'currentPage' => (int) ArrayHelper::getValue($queryParams, 'page', 1),
+                    'pageSize' => (int) ArrayHelper::getValue($queryParams, 'pagesize', 20),
+                    'users' => $users
+                ]
+            )
         ;
     }
 

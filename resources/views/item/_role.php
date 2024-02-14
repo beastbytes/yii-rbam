@@ -96,7 +96,7 @@ echo $this->render(
     '_items',
     [
         'actionButtons' => ['view'],
-        'items' => $roles,
+        'dataReader' => new IterableDataReader($roles),
         'layout' => "{header}\n{toolbar}\n{items}",
         'toolbar' => Html::a(
             content: $translator->translate($rbamParameters->getButtons('manageChildRoles')['content']),
@@ -116,7 +116,7 @@ echo $this->render(
     '_items',
     [
         'actionButtons' => ['view'],
-        'items' => $permissions,
+        'dataReader' => new IterableDataReader($permissions),
         'layout' => "{header}\n{toolbar}\n{items}",
         'toolbar' => Html::a(
             content: $translator->translate($rbamParameters->getButtons('managePermissions')['content']),

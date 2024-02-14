@@ -7,17 +7,19 @@
 declare(strict_types=1);
 
 /**
- * @var array $rules
+ * @var int $currentPage
  * @var Inflector $inflector
+ * @var int $pageSize
  * @var RbamParameters $rbamParameters
+ * @var array $rules
+ * @var WebView $this
  * @var TranslatorInterface $translator
  * @var UrlGeneratorInterface $urlGenerator
- * @var WebView $this
  */
 
 use BeastBytes\Yii\Rbam\RbamParameters;
 use BeastBytes\Yii\Rbam\RuleInterface;
-use Yiisoft\Data\Reader\Iterable\IterableDataReader;
+use Yiisoft\Data\Paginator\OffsetPaginator;use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Html\Html;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Translator\TranslatorInterface;
@@ -45,7 +47,11 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
 <h1><?= Html::encode($this->getTitle()) ?></h1>
 
 <?= GridView::widget()
-    ->dataReader(new IterableDataReader($rules))
+    ->dataReader(
+        (new OffsetPaginator(new IterableDataReader($rules)))
+            ->withCurrentPage($currentPage)
+            ->withPageSize($pageSize)
+    )
     ->containerAttributes(['class' => 'grid_view rules'])
     ->tableAttributes(['class' => 'grid'])
     ->layout("{toolbar}\n{items}")

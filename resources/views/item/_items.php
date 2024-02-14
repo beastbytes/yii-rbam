@@ -10,8 +10,8 @@ declare(strict_types=1);
  * @var array $actionButtons
  * @var AssetManager $assetManager
  * @var Csrf $csrf
+ * @var DataReaderInterface $dataReader
  * @var Inflector $inflector
- * @var Item[] $items
  * @var string $layout
  * @var RbamParameters $rbamParameters
  * @var WebView $this
@@ -25,7 +25,7 @@ use BeastBytes\Yii\Rbam\Assets\RemoveAsset;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use BeastBytes\Yii\Widgets\Dialog;
 use Yiisoft\Assets\AssetManager;
-use Yiisoft\Data\Reader\Iterable\IterableDataReader;
+use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\Rbac\Item;
 use Yiisoft\Router\UrlGeneratorInterface;
@@ -65,7 +65,7 @@ $dialog = Dialog::widget()
 ;
 
 echo GridView::widget()
-    ->dataReader(new IterableDataReader($items))
+    ->dataReader($dataReader)
     ->containerAttributes(['class' => 'grid_view ' . $type . 's'])
     ->header($translator->translate('label.' . $type . 's'))
     ->headerAttributes(['class' => 'header'])
@@ -101,7 +101,6 @@ echo GridView::widget()
             template: '{' . implode('}{', $actionButtons) . '}',
             urlCreator: static function($action, $context) use ($inflector, $urlGenerator)
             {
-                if ($action === 'test') return '';
                 return $urlGenerator->generate('rbam.' . $action . 'Item', [
                     'name' => $inflector->toSnakeCase($context->key),
                     'type' => $context->data->getType()

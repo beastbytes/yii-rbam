@@ -10,10 +10,12 @@ declare(strict_types=1);
  * @var Item[] $ancestors
  * @var AssetManager $assetManager
  * @var Item[] $children
+ * @var int $currentPage
  * @var Item[] $descendants
  * @var Csrf $csrf
  * @var Inflector $inflector
  * @var Item[] $items
+ * @var int $pageSize
  * @var Item $parent
  * @var RbamParameters $rbamParameters
  * @var WebView $this
@@ -25,6 +27,7 @@ declare(strict_types=1);
 use BeastBytes\Yii\Rbam\Assets\RbamAsset;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use Yiisoft\Assets\AssetManager;
+use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;use Yiisoft\Html\Tag\Button;use Yiisoft\Html\Tag\Div;
@@ -79,7 +82,11 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
 <h1><?= Html::encode($this->getTitle()) ?></h1>
 
 <?= GridView::widget()
-    ->dataReader(new IterableDataReader($items))
+    ->dataReader(
+        (new OffsetPaginator(new IterableDataReader($items)))
+            ->withCurrentPage($currentPage)
+            ->withPageSize($pageSize)
+    )
     ->containerAttributes(['class' => 'grid_view roles child_roles'])
     ->tableAttributes(['class' => 'grid'])
     ->tbodyAttributes([
