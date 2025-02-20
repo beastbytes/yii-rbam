@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright © 2024 BeastBytes - All rights reserved
+ * @copyright Copyright © 2025 BeastBytes - All rights reserved
  * @license BSD 3-Clause
  */
 
@@ -46,7 +46,7 @@ use Yiisoft\Yii\DataView\Column\CheckboxColumn;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\View\Csrf;
+use Yiisoft\Yii\View\Renderer\Csrf;
 
 $assetManager->register(RbamAsset::class);
 $this->addJsFiles($assetManager->getJsFiles());
@@ -109,7 +109,7 @@ $assignmentNames = array_keys($assignments);
             ->encode(false)
             ->render()
     )
-    ->emptyText($translator->translate('message.no_assignments_found'))
+    ->emptyText($translator->translate('message.no-roles-assigned'))
     ->columns(
         new CheckboxColumn(
             header: $translator->translate('label.assigned'),
@@ -180,10 +180,11 @@ $assignmentNames = array_keys($assignments);
 ?>
 
 <?= $this->render(
-    '/item/_items',
+    '../item/_items',
     [
         'actionButtons' => ['view', 'remove'],
-        'items' => $permissionsGranted,
+        'dataReader' => new IterableDataReader($permissionsGranted),
+        'emptyText' => $translator->translate('message.no-permissions-granted'),
         'layout' => "{header}\n{items}",
         'toolbar' => '',
         'type' => Item::TYPE_PERMISSION

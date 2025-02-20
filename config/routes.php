@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright © 2024 BeastBytes - All rights reserved
+ * @copyright Copyright © 2025 BeastBytes - All rights reserved
  * @license BSD 3-Clause
  */
 
@@ -40,8 +40,8 @@ return [
          ->action([ItemController::class, 'index'])
          ->name('rbam.itemIndex'),
     Route::methods([Method::GET, Method::POST], '/rbam/create/{type: permission|role}')
-         ->action([ItemController::class, 'add'])
-         ->name('rbam.addItem'),
+         ->action([ItemController::class, 'create'])
+         ->name('rbam.createItem'),
     Route::methods([Method::GET, Method::POST], '/rbam/children/{type: permission|role}/{name: [a-z][\w]*}')
          ->action([ItemController::class, 'children'])
          ->name('rbam.children'),
@@ -59,8 +59,8 @@ return [
          ->action([RbamController::class, 'index'])
          ->name('rbam.rbam'),
     Route::methods([Method::GET, Method::POST], '/rbam/create/rule')
-         ->action([RuleController::class, 'add'])
-         ->name('rbam.addRule'),
+         ->action([RuleController::class, 'create'])
+         ->name('rbam.createRule'),
     Route::get('/rbam/rules')
          ->action([RuleController::class, 'index'])
          ->name('rbam.ruleIndex'),

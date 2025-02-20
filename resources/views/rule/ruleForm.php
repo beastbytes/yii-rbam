@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright © 2024 BeastBytes - All rights reserved
+ * @copyright Copyright © 2025 BeastBytes - All rights reserved
  * @license BSD 3-Clause
  */
 
@@ -22,15 +22,15 @@ use Yiisoft\Html\Html;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
-use Yiisoft\Yii\View\Csrf;
+use Yiisoft\Yii\View\Renderer\Csrf;
 
 if ($formModel->getName() === ''):
     $this->setTitle(
-        $translator->translate("label.add_rule")
+        $translator->translate("label.create-rule")
     );
 else:
     $this->setTitle(
-        $translator->translate("label.update_rule")
+        $translator->translate("label.update-rule")
     );
 endif;
 

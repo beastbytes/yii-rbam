@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 use Yiisoft\Yii\Runner\Http\HttpApplicationRunner;
 
+require_once dirname(__DIR__) . '/vendor/autoload.php';
+require_once dirname(__DIR__) . '/env.php';
+
 if (getenv('YII_ENV') === 'test') {
     $c3 = dirname(__DIR__) . '/c3.php';
     if (file_exists($c3)) {
@@ -26,8 +29,6 @@ if (PHP_SAPI === 'cli-server') {
     // Explicitly set for URLs with dot.
     $_SERVER['SCRIPT_NAME'] = '/index.php';
 }
-
-require_once dirname(__DIR__) . '/autoload.php';
 
 // Run HTTP application runner
 (new HttpApplicationRunner(

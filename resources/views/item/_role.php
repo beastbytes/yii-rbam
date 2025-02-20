@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright © 2024 BeastBytes - All rights reserved
+ * @copyright Copyright © 2025 BeastBytes - All rights reserved
  * @license BSD 3-Clause
  */
 
@@ -39,7 +39,7 @@ use Yiisoft\Yii\DataView\Column\ActionButton;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\View\Csrf;
+use Yiisoft\Yii\View\Renderer\Csrf;
 
 $assetManager->register(RbamAsset::class);
 $this->addJsFiles($assetManager->getJsFiles());
@@ -51,7 +51,7 @@ echo GridView::widget()
     ->headerAttributes(['class' => 'header'])
     ->tableAttributes(['class' => 'grid'])
     ->layout("{header}\n{items}")
-    ->emptyText($translator->translate('message.no_assignments_found'))
+    ->emptyText($translator->translate('message.no-assignments-found'))
     ->columns(
         new DataColumn(
             header: $translator->translate('label.user'),
@@ -97,6 +97,7 @@ echo $this->render(
     [
         'actionButtons' => ['view'],
         'dataReader' => new IterableDataReader($roles),
+        'emptyText' => $translator->translate('message.no-roles-found'),
         'layout' => "{header}\n{toolbar}\n{items}",
         'toolbar' => Html::a(
             content: $translator->translate($rbamParameters->getButtons('manageChildRoles')['content']),
@@ -117,6 +118,7 @@ echo $this->render(
     [
         'actionButtons' => ['view'],
         'dataReader' => new IterableDataReader($permissions),
+        'emptyText' => $translator->translate('message.no-permissions-found'),
         'layout' => "{header}\n{toolbar}\n{items}",
         'toolbar' => Html::a(
             content: $translator->translate($rbamParameters->getButtons('managePermissions')['content']),

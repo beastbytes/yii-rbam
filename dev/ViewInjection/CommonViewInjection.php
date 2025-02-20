@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright © 2024 BeastBytes - All rights reserved
+ * @copyright Copyright © 2025 BeastBytes - All rights reserved
  * @license BSD 3-Clause
  */
 
@@ -16,7 +16,7 @@ use Yiisoft\Rbac\ManagerInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\CommonParametersInjectionInterface;
+use Yiisoft\Yii\View\Renderer\CommonParametersInjectionInterface;
 
 final class CommonViewInjection implements CommonParametersInjectionInterface
 {

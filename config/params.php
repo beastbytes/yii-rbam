@@ -1,16 +1,16 @@
 <?php
 /**
- * @copyright Copyright © 2024 BeastBytes - All rights reserved
+ * @copyright Copyright © 2025 BeastBytes - All rights reserved
  * @license BSD 3-Clause
  */
 
 declare(strict_types=1);
 
-use BeastBytes\Yii\Rbam\RulesMiddleware;
-
+//use BeastBytes\Yii\Rbam\RulesMiddleware;
+//@todo think rules need handling differently
 $rules = [];
 $ruleFiles = array_slice(
-    scandir(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'rbac' . DIRECTORY_SEPARATOR . 'rules'),
+    scandir(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'rbac' . DIRECTORY_SEPARATOR . '_rules'),
     2
 );
 
@@ -23,17 +23,17 @@ foreach ($ruleFiles as $ruleFile) {
 return [
     'beastbytes/yii-rbam' => [
         'buttons' => [ // allows use of icon fonts and/or css frameworks to style buttons
-            'addPermission' => [
-                'attributes' => ['class' => 'btn btn_add btn_add_permission'],
-                'content' => 'button.add_permission',
+            'createPermission' => [
+                'attributes' => ['class' => 'btn btn_create btn_create_permission'],
+                'content' => 'button.create-permission',
             ],
-            'addRole' => [
-                'attributes' => ['class' => 'btn btn_add btn_add_role'],
-                'content' => 'button.add_role',
+            'createRole' => [
+                'attributes' => ['class' => 'btn btn_create btn_create_role'],
+                'content' => 'button.create-role',
             ],
-            'addRule' => [
-                'attributes' => ['class' => 'btn btn_add btn_add_rule'],
-                'content' => 'button.add_rule',
+            'createRule' => [
+                'attributes' => ['class' => 'btn btn_create btn_create_rule'],
+                'content' => 'button.create-rule',
             ],
             'done' => [
                 'attributes' => ['class' => 'btn btn_done'],
@@ -41,15 +41,15 @@ return [
             ],
             'manageChildRoles' => [
                 'attributes' => ['class' => 'btn btn_manage_child_roles'],
-                'content' => 'button.manage_child_roles',
+                'content' => 'button.manage-child-roles',
             ],
             'managePermissions' => [
                 'attributes' => ['class' => 'btn btn_manage_permissions'],
-                'content' => 'button.manage_permissions',
+                'content' => 'button.manage-permissions',
             ],
             'manageRoleAssignments' => [
                 'attributes' => ['class' => 'btn btn_manage_role_assignments'],
-                'content' => 'button.manage_role_assignments',
+                'content' => 'button.manage-role-assignments',
             ],
             'remove' => [
                 'attributes' => ['class' => 'btn btn_remove'],
@@ -57,11 +57,11 @@ return [
             ],
             'removeAll' => [
                 'attributes' => ['class' => 'btn btn_remove_all'],
-                'content' => 'button.remove_all',
+                'content' => 'button.remove-all',
             ],
             'revokeAll' => [
                 'attributes' => ['class' => 'btn btn_revoke_all'],
-                'content' => 'button.revoke_all',
+                'content' => 'button.revoke-all',
             ],
             'submit' => [
                 'attributes' => ['class' => 'btn btn_submit'],
@@ -141,9 +141,11 @@ return [
             ],
         ]
     ],
+    /*
     'middlewares' => [
         RulesMiddleware::class
     ],
+    */
     'yiisoft/rbac-rules-container' => [
         'rules' => $rules,
         'validate' => false,

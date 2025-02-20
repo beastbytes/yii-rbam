@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright © 2024 BeastBytes - All rights reserved
+ * @copyright Copyright © 2025 BeastBytes - All rights reserved
  * @license BSD 3-Clause
  */
 
@@ -20,7 +20,6 @@ declare(strict_types=1);
 use BeastBytes\Yii\Rbam\RbamParameters;
 use BeastBytes\Yii\Rbam\UserInterface;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
-use Yiisoft\Html\Html;
 use Yiisoft\Rbac\AssignmentsStorageInterface;
 use Yiisoft\Rbac\Permission;
 use Yiisoft\Rbac\Role;
@@ -31,16 +30,15 @@ use Yiisoft\Yii\DataView\Column\ActionButton;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\DataView\ListView;
 
 echo GridView::widget()
     ->dataReader(new IterableDataReader($users))
     ->containerAttributes(['class' => 'grid_view permitted_users'])
-    ->header($translator->translate('label.permitted_users'))
+    ->header($translator->translate('label.permitted-users'))
     ->headerAttributes(['class' => 'header'])
     ->tableAttributes(['class' => 'grid'])
     ->layout("{header}\n{items}")
-    ->emptyText($translator->translate('message.no_users_found'))
+    ->emptyText($translator->translate('message.no-users-found'))
     ->columns(
         new DataColumn(
             header: $translator->translate('label.user'),

@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright © 2024 BeastBytes - All rights reserved
+ * @copyright Copyright © 2025 BeastBytes - All rights reserved
  * @license BSD 3-Clause
  */
 
@@ -11,14 +11,14 @@ namespace BeastBytes\Yii\Rbam\Form;
 use JetBrains\PhpStorm\ArrayShape;
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Validator\AttributeTranslator\TranslatorAttributeTranslator;
-use Yiisoft\Validator\AttributeTranslatorInterface;
-use Yiisoft\Validator\AttributeTranslatorProviderInterface;
+use Yiisoft\Validator\PropertyTranslator\ArrayPropertyTranslator;
+use Yiisoft\Validator\PropertyTranslatorInterface;
+use Yiisoft\Validator\PropertyTranslatorProviderInterface;
 use Yiisoft\Validator\Rule\Regex;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\Rule\StringValue;
 
-final class ItemForm extends FormModel implements AttributeTranslatorProviderInterface
+final class ItemForm extends FormModel implements PropertyTranslatorProviderInterface
 {
     #[Required]
     #[StringValue]
@@ -36,33 +36,6 @@ final class ItemForm extends FormModel implements AttributeTranslatorProviderInt
     {
     }
 
-    public function getAttributeLabel(string $attribute): string
-    {
-        return $this
-            ->translator
-            ->translate(parent::getAttributeLabel($attribute))
-       ;
-    }
-
-    #[ArrayShape([
-        'description' => 'string',
-        'name' => 'string',
-        'ruleName' => 'string',
-    ])]
-    public function getAttributeLabels(): array
-    {
-        return [
-            'description' => 'label.description',
-            'name' => 'label.name',
-            'ruleName' => 'label.ruleName',
-        ];
-    }
-
-    public function getAttributeTranslator(): ?AttributeTranslatorInterface
-    {
-        return new TranslatorAttributeTranslator($this->translator);
-    }
-
     public function getDescription(): string
     {
         return $this->description;
@@ -76,5 +49,24 @@ final class ItemForm extends FormModel implements AttributeTranslatorProviderInt
     public function getRuleName(): string
     {
         return $this->ruleName;
+    }
+
+    #[ArrayShape([
+        'description' => 'string',
+        'name' => 'string',
+        'ruleName' => 'string',
+    ])]
+    public function getPropertyLabels(): array
+    {
+        return [
+            'description' => $this->translator->translate('label.description'),
+            'name' => $this->translator->translate('label.name'),
+            'ruleName' => $this->translator->translate('label.ruleName'),
+        ];
+    }
+
+    public function getPropertyTranslator(): ?PropertyTranslatorInterface
+    {
+        return new ArrayPropertyTranslator($this->getPropertyLabels());
     }
 }

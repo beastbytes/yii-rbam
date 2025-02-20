@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright © 2024 BeastBytes - All rights reserved
+ * @copyright Copyright © 2025 BeastBytes - All rights reserved
  * @license BSD 3-Clause
  */
 
@@ -44,7 +44,7 @@ class RuleService implements RuleServiceInterface
         foreach (array_slice(scandir($this->rulesDir), 2) as $ruleFile) {
             $ruleClass = self::RULE_NAMESPACE . '\\' . substr($ruleFile, 0, -4);
 
-            /** @var RuleInterface $rule */
+            /** @var RbamRuleInterface $rule */
             $rule = new $ruleClass();
             $this->rules[$rule->getName()] = $rule;
         }
@@ -56,7 +56,7 @@ class RuleService implements RuleServiceInterface
     }
 
     /** @psalm-suppress MoreSpecificReturnType */
-    public function getRule(string $name): ?RuleInterface
+    public function getRule(string $name): ?RbamRuleInterface
     {
         return $this->rules[$name] ?? null;
     }
@@ -72,49 +72,23 @@ declare(strict_types=1);
 
 namespace $namespace;
 
-use BeastBytes\Yii\Rbam\RuleInterface;
+use BeastBytes\Yii\Rbam\RbamRuleInterface;
+use BeastBytes\Yii\Rbam\RbamRuleTrait;
 use ReflectionClass;
 use Yiisoft\Rbac\Item;
 use Yiisoft\Rbac\RuleContext;
 
 use const DIRECTORY_SEPARATOR;
 
-final class {$model->getName()}Rule implements RuleInterface
+final class {$model->getName()}Rule implements RbamRuleInterface, RuleInterface
 {
-    private string \$description = '{$model->getDescription()}';
+    use RbamRuleTrait;
     
-    public function execute(?string \$userId, Item \$item, RuleContext \$ruleContext): bool
+    private const string DESCRIPTION = '{$model->getDescription()}';
+    
+    public function execute(?string \$userId, Item \$item, RuleContext \$context): bool
     {
         {$model->getCode()}
-    }
-    
-    public function getCode(): string
-    {
-        \$reflectionClass = new ReflectionClass(\$this);
-        \$executeMethod = \$reflectionClass->getMethod('execute');
-
-        \$offset = \$executeMethod->getStartLine() + 1;
-        \$length = \$executeMethod->getEndLine() - 1 - \$offset;
-
-        \$filename = __DIR__ . DIRECTORY_SEPARATOR . \$reflectionClass->getShortName() . '.php';
-        \$lines = array_slice(file(\$filename), \$offset, \$length);
-
-        foreach (\$lines as &\$line) {
-            \$line = trim(\$line);
-        }
-
-        return implode("\\n", \$lines);
-    }
-    
-    public function getDescription(): string
-    {
-        return \$this->description;
-    }
-    
-    public function getName(): string
-    {
-        \$reflectionClass = new ReflectionClass(\$this);
-        return substr(\$reflectionClass->getShortName(), 0, -4);
     }
 }
 RULE;

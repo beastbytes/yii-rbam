@@ -1,11 +1,13 @@
 {
     "name": "beastbytes/yii-rbam",
+    "type": "library",
     "description": "Role Based Access Manager for Yii3 ",
     "keywords": [
         "yii3",
         "extension",
         "rbam"
     ],
+    "license": "BSD-3-Clause",
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
@@ -15,20 +17,20 @@
         "beastbytes/yii-widgets": "dev-master",
         "httpsoft/http-message": "^1.0",
         "yiisoft/aliases": "^3.0",
-        "yiisoft/assets": "^4.0",
+        "yiisoft/assets": "^5.0",
         "yiisoft/auth": "^3.0",
         "yiisoft/data": "dev-master",
-        "yiisoft/form": "dev-master",
-        "yiisoft/form-model": "dev-master",
+        "yiisoft/form": "^1.0",
+        "yiisoft/form-model": "^1.0",
         "yiisoft/i18n": "^1.0",
-        "yiisoft/rbac": "dev-master",
+        "yiisoft/rbac": "^2.0",
+        "yiisoft/rbac-rules-container": "^2.0",
         "yiisoft/session": "^2.0",
         "yiisoft/strings": "^2.0",
         "yiisoft/translator": "^3.0",
         "yiisoft/translator-message-php": "^1.0",
         "yiisoft/yii-dataview": "dev-master",
-        "yiisoft/yii-view": "^6.0",
-        "yiisoft/yii-widgets": "^2.0"
+        "yiisoft/yii-view-renderer": "^7.0"
     },
     "require-dev": {
         "codeception/c3": "^2.6.0",
@@ -36,7 +38,7 @@
         "codeception/module-asserts": "^3.0",
         "codeception/module-cli": "^2.0",
         "codeception/module-db": "^3.0",
-        "codeception/module-phpbrowser": "^3.0",
+        "consolidation/robo": "^4.0",
         "dg/bypass-finals": "^v1.0",
         "roave/infection-static-analysis-plugin": "^1.7",
         "roave/security-advisories": "dev-latest",
@@ -44,10 +46,11 @@
         "vimeo/psalm": "^5.0",
         "vlucas/phpdotenv": "^5.0",
         "yiisoft/config": "^1.0",
+        "yiisoft/log-target-file": "dev-master",
         "yiisoft/rbac-php": "dev-master",
         "yiisoft/router": "^3.0",
         "yiisoft/router-fastroute": "^3.0",
-        "yiisoft/yii-runner-http": "^2.0"
+        "yiisoft/yii-runner-http": "^3.0"
     },
     "autoload": {
         "psr-4": {
@@ -64,6 +67,12 @@
     "extra": {
         "branch-alias": {
             "dev-master": "1.0.x-dev"
+        },
+        "config-plugin-options": {
+            "source-directory": "config"
+        },
+        "config-plugin": {
+            "di": "di.php"
         },
         "config-plugin-file": "config.php"
     },

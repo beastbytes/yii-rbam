@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright © 2024 BeastBytes - All rights reserved
+ * @copyright Copyright © 2025 BeastBytes - All rights reserved
  * @license BSD 3-Clause
  */
 
@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @var AssetManager $assetManager
  * @var Permission[] $permissions
  * @var Role[] $roles
- * @var RuleInterface[] $rules
+ * @var RbamRuleInterface[] $rules
  * @var WebView $this
  * @var TranslatorInterface $translator
  * @var UrlGeneratorInterface $urlGenerator
@@ -18,7 +18,7 @@ declare(strict_types=1);
  */
 
 use BeastBytes\Yii\Rbam\Assets\RbamAsset;
-use BeastBytes\Yii\Rbam\RuleInterface;
+use BeastBytes\Yii\Rbam\RbamRuleInterface;
 use BeastBytes\Yii\Rbam\UserInterface;
 use Yiisoft\Assets\AssetManager;
 use Yiisoft\Html\Html;
@@ -53,7 +53,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
                     'rbam.itemIndex',
                     ['type' => $type]
                 ) ?>">
-                    <?= $translator->translate('label.manage_' . $type) ?>
+                    <?= $translator->translate('label.manage-' . $type) ?>
                 </a>
             </div>
         </div>
@@ -64,7 +64,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
         </header>
         <div class="card-body">
             <a class="btn btn_manage" href="<?= $urlGenerator->generate('rbam.ruleIndex') ?>">
-                <?= $translator->translate('label.manage_rules')?>
+                <?= $translator->translate('label.manage-rules')?>
             </a>
         </div>
     </div>
@@ -74,7 +74,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
         </header>
         <div class="card-body">
             <a class="btn btn_manage" href="<?= $urlGenerator->generate('rbam.userIndex') ?>">
-                <?= $translator->translate('label.manage_users')?>
+                <?= $translator->translate('label.manage-users')?>
             </a>
         </div>
     </div>

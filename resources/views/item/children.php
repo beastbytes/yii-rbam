@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright © 2024 BeastBytes - All rights reserved
+ * @copyright Copyright © 2025 BeastBytes - All rights reserved
  * @license BSD 3-Clause
  */
 
@@ -43,14 +43,14 @@ use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\CheckboxColumn;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\View\Csrf;
+use Yiisoft\Yii\View\Renderer\Csrf;
 
 $assetManager->register(RbamAsset::class);
 $this->addJsFiles($assetManager->getJsFiles());
 
 $this->setTitle(
     $translator->translate(
-            $type === Item::TYPE_PERMISSION ? 'label.manage_role_permissions' : 'label.manage_child_roles',
+            $type === Item::TYPE_PERMISSION ? 'label.manage-role_permissions' : 'label.manage-child_roles',
         ['name' => $parent->getName()]
     )
 );
@@ -65,7 +65,7 @@ $breadcrumbs = [
         'url' => $urlGenerator->generate('rbam.itemIndex', ['type' => $inflector->toPlural($parent->getType())]),
     ],
     [
-        'label' => $translator->translate('label.role_name', ['name' => $parent->getName()]),
+        'label' => $translator->translate('label.role-name', ['name' => $parent->getName()]),
         'url' => $urlGenerator->generate(
             'rbam.viewItem',
             [
@@ -128,7 +128,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
             ->encode(false)
             ->render()
     )
-    ->emptyText($translator->translate('message.no_child_roles'))
+    ->emptyText($translator->translate('message.no-child_roles'))
     ->columns(
         new CheckboxColumn(
             header: 'Assigned',
@@ -172,13 +172,13 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
             content: static fn(Item $item) => $item->getDescription()
         ),
         new DataColumn(
-            header: $translator->translate('label.created_at'),
+            header: $translator->translate('label.created-at'),
             content: static fn(Item $item) => (new DateTime())
                 ->setTimestamp($item->getCreatedAt())
                 ->format($rbamParameters->getDatetimeFormat())
         ),
         new DataColumn(
-            header: $translator->translate('label.updated_at'),
+            header: $translator->translate('label.updated-at'),
             content: static fn(Item $item) => (new DateTime())
                 ->setTimestamp($item->getUpdatedAt())
                 ->format($rbamParameters->getDatetimeFormat())

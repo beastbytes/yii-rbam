@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright © 2024 BeastBytes - All rights reserved
+ * @copyright Copyright © 2025 BeastBytes - All rights reserved
  * @license BSD 3-Clause
  */
 
@@ -22,18 +22,17 @@ use BeastBytes\Yii\Rbam\RbamParameters;
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Router\UrlGeneratorInterface;
-use Yiisoft\Strings\Inflector;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
-use Yiisoft\Yii\View\Csrf;
+use Yiisoft\Yii\View\Renderer\Csrf;
 
 if ($formModel->getName() === ''):
     $this->setTitle(
-        $translator->translate("label.add_$type")
+        $translator->translate("label.create-$type")
     );
 else:
     $this->setTitle(
-        $translator->translate("label.update_$type")
+        $translator->translate("label.update-$type")
     );
 endif;
 
@@ -76,7 +75,7 @@ $tabIndex = 1;
             ->tabindex($tabIndex++)
         ?>
         <?= Field::select($formModel, 'ruleName', [
-            'prompt()' => [$translator->translate('prompt.select_rule')],
+            'prompt()' => [$translator->translate('prompt.select-rule')],
             'optionsData()' => [
                 array_combine($ruleNames, $ruleNames),
             ],

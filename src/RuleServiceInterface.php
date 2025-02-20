@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright © 2024 BeastBytes - All rights reserved
+ * @copyright Copyright © 2025 BeastBytes - All rights reserved
  * @license BSD 3-Clause
  */
 
@@ -15,7 +15,7 @@ Interface RuleServiceInterface
 {
     public function getRuleNames(): array;
 
-    public function getRule(string $name): ?RuleInterface;
+    public function getRule(string $name): ?RbamRuleInterface;
 
     public function save(RuleForm $model, ?string $previousName = null): bool;
 }

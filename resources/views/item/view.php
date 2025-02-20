@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright © 2024 BeastBytes - All rights reserved
+ * @copyright Copyright © 2025 BeastBytes - All rights reserved
  * @license BSD 3-Clause
  */
 
@@ -91,48 +91,50 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
     ->attributes(['class' => 'detail_view ' . $item->getType()])
     ->data($item)
     ->fields(
-        DataField::create()
-            ->label($translator->translate('label.name'))
-            ->value(fn($item) => $item->getName())
-            ->valueTag('span'),
-        DataField::create()
-            ->label($translator->translate('label.type'))
-            ->value(
-                static function($item) use ($translator)
-                {
-                    return $translator->translate('label.' . $item->getType());
-                }
-            )
-            ->valueTag('span'),
-        DataField::create()
-            ->label($translator->translate('label.description'))
-            ->value(fn($item) => $item->getDescription())
-            ->valueTag('span'),
-        DataField::create()
-            ->label($translator->translate('label.rule'))
-            ->value(fn($item) => $item->getRuleName() ?? $translator->translate('message.no_rule'))
-            ->valueTag('span')
-            ->valueAttributes(fn($item) => $item->getRuleName() === null ? ['class' => 'no_rule'] : []),
-        DataField::create()
-            ->label($translator->translate('label.created_at'))
-            ->value(
-                fn($item) => (new DateTime())
-                    ->setTimestamp($item->getCreatedAt())
-                    ->format($rbamParameters->getDatetimeFormat())
-            )
-            ->valueTag('span'),
-        DataField::create()
-            ->label($translator->translate('label.updated_at'))
-            ->value(
-                fn($item) => (new DateTime())
-                    ->setTimestamp($item->getUpdatedAt())
-                    ->format($rbamParameters->getDatetimeFormat())
-            )
-            ->valueTag('span'),
+        new DataField(
+            label: $translator->translate('label.name'),
+            value: fn($item) => $item->getName(),
+            valueTag: 'span',
+        ),
+        new DataField(
+            label: $translator->translate('label.type'),
+            value: static function($item) use ($translator)
+            {
+                return $translator->translate('label.' . $item->getType());
+            },
+            valueTag: 'span'
+        ),
+        new DataField(
+            label: $translator->translate('label.description'),
+            value: fn($item) => $item->getDescription(),
+            valueTag: 'span'
+        ),
+        new DataField(
+            label: $translator->translate('label.rule'),
+            value: fn($item) => $item->getRuleName() ?? $translator->translate('message.no-rule'),
+            valueTag: 'span',
+            valueAttributes: fn($item) => $item->getRuleName() === null ? ['class' => 'no_rule'] : []
+        ),
+        new DataField(
+            label: $translator->translate('label.created-at'),
+            value: fn($item) => (new DateTime())
+                ->setTimestamp($item->getCreatedAt())
+                ->format($rbamParameters->getDatetimeFormat())
+            ,
+            valueTag: 'span'
+        ),
+        new DataField(
+            label: $translator->translate('label.updated-at'),
+            value: fn($item) => (new DateTime())
+                ->setTimestamp($item->getUpdatedAt())
+                ->format($rbamParameters->getDatetimeFormat())
+            ,
+            valueTag: 'span'
+        ),
     )
     ->header(
         Html::a(
-            $translator->translate('button.update_' . $item->getType(), [
+            $translator->translate('button.update-' . $item->getType(), [
                 'name' => $item->getName(),
             ]),
             $urlGenerator->generate('rbam.updateItem', [

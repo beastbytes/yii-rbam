@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright © 2024 BeastBytes - All rights reserved
+ * @copyright Copyright © 2025 BeastBytes - All rights reserved
  * @license BSD 3-Clause
  */
 
@@ -63,7 +63,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
     ->headerAttributes(['class' => 'header'])
     ->tableAttributes(['class' => 'grid'])
     ->layout("{header}\n{summary}\n{items}\n{pager}")
-    ->emptyText($translator->translate('message.no_users_found'))
+    ->emptyText($translator->translate('message.no-users-found'))
     ->columns(
         new DataColumn(
             header: $translator->translate('label.name'),

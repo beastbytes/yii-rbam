@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright © 2024 BeastBytes - All rights reserved
+ * @copyright Copyright © 2025 BeastBytes - All rights reserved
  * @license BSD 3-Clause
  */
 
@@ -11,6 +11,7 @@ declare(strict_types=1);
  * @var AssetManager $assetManager
  * @var Csrf $csrf
  * @var DataReaderInterface $dataReader
+ * @var string $emptyText
  * @var Inflector $inflector
  * @var string $layout
  * @var RbamParameters $rbamParameters
@@ -36,10 +37,10 @@ use Yiisoft\Yii\DataView\Column\ActionButton;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\View\Csrf;
+use Yiisoft\Yii\View\Renderer\Csrf;
 
 $dialog = Dialog::widget()
-    ->body($translator->translate('message.remove_' . $type))
+    ->body($translator->translate('message.remove-' . $type))
     ->footer(
         Html::button(
             $translator->translate('button.continue'),
@@ -61,7 +62,7 @@ $dialog = Dialog::widget()
         )
             ->render()
     )
-    ->header($translator->translate('header.remove_' . $type))
+    ->header($translator->translate('header.remove-' . $type))
 ;
 
 echo GridView::widget()
@@ -75,7 +76,7 @@ echo GridView::widget()
         Html::div(content: $toolbar, attributes: ['class' => 'toolbar'])
             ->render()
     )
-    ->emptyText($translator->translate('message.no_' . $type . 's_found'))
+    ->emptyText($emptyText)
     ->columns(
         new DataColumn(
             header: $translator->translate('label.' . $type),
@@ -86,13 +87,13 @@ echo GridView::widget()
             content: static fn(Item $item) => $item->getDescription()
         ),
         new DataColumn(
-            header: $translator->translate('label.created_at'),
+            header: $translator->translate('label.created-at'),
             content: static fn(Item $item) => (new DateTime())
                 ->setTimestamp($item->getCreatedAt())
                 ->format($rbamParameters->getDatetimeFormat())
         ),
         new DataColumn(
-            header: $translator->translate('label.updated_at'),
+            header: $translator->translate('label.updated-at'),
             content: static fn(Item $item) => (new DateTime())
                 ->setTimestamp($item->getUpdatedAt())
                 ->format($rbamParameters->getDatetimeFormat())
@@ -127,8 +128,8 @@ echo GridView::widget()
     )
 ;
 
-echo $dialog->render();
+//echo $dialog->render();
 
-$assetManager->register(RemoveAsset::class);
+//$assetManager->register(RemoveAsset::class);
 $this->addCssFiles($assetManager->getCssFiles());
 $this->addJsFiles($assetManager->getJsFiles());

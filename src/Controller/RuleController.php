@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright © 2024 BeastBytes - All rights reserved
+ * @copyright Copyright © 2025 BeastBytes - All rights reserved
  * @license BSD 3-Clause
  */
 
@@ -24,7 +24,7 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\Flash\FlashInterface;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 use const DIRECTORY_SEPARATOR;
 
@@ -44,7 +44,7 @@ class RuleController
         ;
         $this->viewRenderer = $this
             ->viewRenderer
-            ->withViewPath('@views/rule')
+            ->withController($this)
         ;
     }
 

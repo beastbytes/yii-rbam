@@ -13,7 +13,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Session\Flash\Flash;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
-use Yiisoft\Yii\Widgets\Breadcrumbs;
+//use Yiisoft\Yii\Widgets\Breadcrumbs;
 
 $this->beginPage()
 ?><!DOCTYPE html>
@@ -35,9 +35,9 @@ $this->beginPage()
 <?php endforeach; ?>
 
 <?php if ($this->hasParameter('breadcrumbs')): ?>
-<?= Breadcrumbs::widget()
+<?php /* <?= Breadcrumbs::widget()
     ->items($this->getParameter('breadcrumbs'))
-    ->render()
+    ->render() */
 ?>
 <?php endif; ?>
 
@@ -49,5 +49,3 @@ $this->beginPage()
 </body>
 </html>
 <?php $this->endPage() ?>
-
-

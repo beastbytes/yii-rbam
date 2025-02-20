@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 use BeastBytes\Yii\Rbam\Dev\ViewInjection\CommonViewInjection;
 use BeastBytes\Yii\Rbam\Dev\ViewInjection\LayoutViewInjection;
-use Yiisoft\Csrf\CsrfMiddleware;
+use Yiisoft\Csrf\CsrfTokenMiddleware;
 use Yiisoft\Definitions\Reference;
 use Yiisoft\ErrorHandler\Middleware\ErrorCatcher;
 use Yiisoft\Router\Middleware\Router;
 use Yiisoft\Session\SessionMiddleware;
-use Yiisoft\Yii\View\CsrfViewInjection;
+use Yiisoft\Yii\View\Renderer\CsrfViewInjection;
 
 const LOCALE = 'en-gb';
 
@@ -22,7 +22,7 @@ return [
     'middlewares' => [
         ErrorCatcher::class,
         SessionMiddleware::class,
-        CsrfMiddleware::class,
+        CsrfTokenMiddleware::class,
         Router::class,
     ],
     'yiisoft/aliases' => [
@@ -62,7 +62,9 @@ return [
     'yiisoft/view' => [
         'basePath' => '@views'
     ],
-    'yiisoft/yii-view' => [
+    'yiisoft/yii-view-renderer' => [
+        'viewPath' => '@views',
+        'layout' => '@layout/main',
         'injections' => [
             Reference::to(CommonViewInjection::class),
             Reference::to(CsrfViewInjection::class),

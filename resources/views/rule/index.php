@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright © 2024 BeastBytes - All rights reserved
+ * @copyright Copyright © 2025 BeastBytes - All rights reserved
  * @license BSD 3-Clause
  */
 
@@ -18,7 +18,7 @@ declare(strict_types=1);
  */
 
 use BeastBytes\Yii\Rbam\RbamParameters;
-use BeastBytes\Yii\Rbam\RuleInterface;
+use BeastBytes\Yii\Rbam\RbamRuleInterface;
 use Yiisoft\Data\Paginator\OffsetPaginator;use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Html\Html;
 use Yiisoft\Strings\Inflector;
@@ -58,7 +58,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
     ->toolbar(
         Html::div(
             content: Html::a(
-                content: $translator->translate('button.add_rule'),
+                content: $translator->translate('button.create-rule'),
                 url: $urlGenerator->generate('rbam.addRule'),
                 attributes: $rbamParameters->getButtons('addRole')['attributes'],
             ),
@@ -66,11 +66,11 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
         )
         ->render()
     )
-    ->emptyText($translator->translate('message.no_rules_found'))
+    ->emptyText($translator->translate('message.no-rules-found'))
     ->columns(
         new DataColumn(
             header: $translator->translate('label.name'),
-            content: static function (RuleInterface $rule) use ($inflector, $urlGenerator) {
+            content: static function (RbamRuleInterface $rule) use ($inflector, $urlGenerator) {
                 return Html::a(
                     content: $rule->getName(),
                     url: $urlGenerator->generate(
@@ -81,7 +81,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
                 ->render();
             }
         ),
-        new DataColumn(header: 'Description', content: static fn(RuleInterface $rule) => $rule->getDescription()),
+        new DataColumn(header: 'Description', content: static fn(RbamRuleInterface $rule) => $rule->getDescription()),
         new ActionColumn(
             template: '{view}{update}',
             urlCreator: static function($action, $context) use ($urlGenerator)

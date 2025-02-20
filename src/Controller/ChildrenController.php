@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright Copyright © 2024 BeastBytes - All rights reserved
+ * @copyright Copyright © 2025 BeastBytes - All rights reserved
  * @license BSD 3-Clause
  */
 
@@ -17,9 +17,9 @@ use Yiisoft\Strings\Inflector;
 final class ChildrenController
 {
     public function __construct(
-        private DataResponseFactoryInterface $responseFactory,
-        private Inflector $inflector,
-        private ManagerInterface $manager,
+        private readonly DataResponseFactoryInterface $responseFactory,
+        private readonly Inflector $inflector,
+        private readonly ManagerInterface $manager,
     )
     {}
 

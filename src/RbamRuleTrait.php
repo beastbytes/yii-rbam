@@ -2,25 +2,14 @@
 
 declare(strict_types=1);
 
-namespace BeastBytes\Yii\Rbam\Rule;
+namespace BeastBytes\Yii\Rbam;
 
-use BeastBytes\Yii\Rbam\RuleInterface;
 use ReflectionClass;
-use Yiisoft\Rbac\Item;
-use Yiisoft\Rbac\RuleContext;
 
 use const DIRECTORY_SEPARATOR;
 
-final class FalseRule implements RuleInterface
-{
-    private string $description = 'Always returns FALSE';
-    
-    public function execute(?string $userId, Item $item, RuleContext $ruleContext): bool
-    {
-        return false;
-    }
-    
-    public function getCode(): string
+trait RbamRuleTrait
+{    public function getCode(): string
     {
         $reflectionClass = new ReflectionClass($this);
         $executeMethod = $reflectionClass->getMethod('execute');
@@ -40,7 +29,7 @@ final class FalseRule implements RuleInterface
     
     public function getDescription(): string
     {
-        return $this->description;
+        return self::DESCRIPTION;
     }
     
     public function getName(): string
