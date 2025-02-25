@@ -1,22 +1,32 @@
 .rbam {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
+    --yii-blue: hsl(195, 66%, 55%);
+    --yii-green: hsl(88, 60%, 49%);
+    --yii-orange: hsl(29, 88%, 55%);
+    --yii-red: hsl(9, 88%, 55%);
+
+    font-family: "trebuchet ms",verdana,arial,sans-serif;;
+}
+.rbam .cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 3.33em;
 }
 .rbam .card {
     border: 1px solid black;
     border-radius: 1rem;
 }
 .rbam .card-header {
-    display: flex;
     font-size: 1.333rem;
     font-weight: bold;
-    justify-content: space-around;
-    padding: 1.5rem 0.75rem;
+    margin: 1.5rem auto;
+    text-align: center;
+}
+.rbam .card-header > span {
+    position: relative;
 }
 .rbam .card-header .badge {
     align-items: center;
-    background: midnightblue;
+    background:var(--yii-orange);
     border-radius: 2rem;
     color: aliceblue;
     display: inline-flex;
@@ -27,6 +37,8 @@
     margin-left: 1.25rem;
     padding-left: 0.563rem;
     padding-right: 0.563rem;
+    position: absolute;
+    right: -3.33em;
     width: fit-content;
 }
 .rbam .card-body {
@@ -45,6 +57,7 @@
     height: 3rem;
     justify-content: center;
     line-height: 1em;
+    margin-right: 1.5em;
     min-height: 3rem;
     padding-left: 1rem;
     padding-right: 1rem;
@@ -52,7 +65,185 @@
     text-decoration-line: none;
     user-select: none;
 }
-.rbam .btn_manage {
-    background: rgb(116, 128, 255);
+.rbam .btn_cancel {
+    background: var(--yii-red);
     color: aliceblue;
+}
+.rbam .btn_manage,
+.rbam .btn_update,
+.rbam .btn_view {
+    background: var(--yii-blue);
+    color: aliceblue;
+}
+.rbam .btn_remove,
+.rbam .btn_remove-all,
+.rbam .btn_revoke,
+.rbam .btn_revoke-all {
+    background: var(--yii-orange);
+    color: aliceblue;
+}
+.rbam .btn_continue,
+.rbam .btn_create,
+.rbam .btn_done,
+.rbam .btn_submit {
+    background: var(--yii-green);
+    color: aliceblue;
+}
+.rbam .detail-view .header {
+    font-size: 1.666rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+}
+.rbam .detail-view dl {
+    border: 1px solid hsl(0, 0%, 80%);
+    column-gap: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+.rbam .detail-view dd,
+.rbam .detail-view dt {
+    margin: 0;
+    padding: 0.375rem 0.75rem;
+}
+.rbam .detail-view dt {
+    font-weight: 800;
+}
+.rbam .detail-view dd:nth-child(4n),
+.rbam .detail-view dt:nth-child(4n-1) {
+    background-color: hsl(0, 0%, 95%);
+}
+.rbam .diagram {
+    margin-top: 7.5em;
+}
+
+.rbam .flashes {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.rbam .flash {
+    animation: 1s ease 3s normal forwards 1 fadeout;
+    border-radius: 0.5rem;
+    opacity: 1;
+    margin: 1em 3em;
+    padding: 1.5rem 0.75rem;
+    text-align: center;
+}
+@keyframes fadeout{from{opacity: 1}
+    to{opacity: 0}
+}
+
+.rbam .flash.error {
+    background-color: var(--yii-red);
+    color: aliceblue;
+}
+.rbam .flash.info {
+    background-color: var(--yii-blue);
+    color: aliceblue;
+}
+.rbam .flash.success {
+    background-color: var(--yii-green);
+    color: aliceblue;
+}
+.rbam .flash.warning {
+    background-color: var(--yii-orange);
+    color: aliceblue;
+}
+
+
+
+
+
+
+
+
+
+
+.rbam .flex {
+    display: flex;
+}
+.rbam .form-buttons {
+    margin-top: 1.5em;
+}
+.rbam .form-control-container {
+    background-color: hsl(0, 0%, 97%);
+    border: 1px solid hsl(0, 0%, 90%);
+    border-radius: 0.375rem;
+    display: block;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    margin-bottom: 0.75em;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    padding-top: 0.375rem;
+    padding-bottom: 0.375rem;
+    width: 50%;
+}
+.rbam .form-label{
+    color: hsl(0, 0%, 0%);
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 800;
+    line-height: 1.5rem;
+    text-align: left;
+}
+.rbam .form-control-container.disabled .form-input,
+.rbam .form-control-container.disabled .form-label {
+    color: hsl(0, 0%, 60%);
+}
+.rbam .form-input{
+    background-color: hsl(0, 0%, 97%);
+    border: none;
+    color: hsl(0, 0%, 33%);
+    display:block;
+    outline: none;
+}
+.rbam .form-input:focus{
+    border-bottom: 1px solid var(--yii-blue);
+}
+.rbam .grid-view {
+    margin-bottom: 3em;
+}
+.rbam .grid-view .header {
+    font-size: 1.666rem;
+    font-weight: 600;
+    margin: 0.375rem 0;
+}
+.rbam .grid-view .toolbar {
+    margin: 0.375rem 0;
+}
+.rbam .grid .btn {
+    height: 1.75rem;
+    margin: 0 0.57em;
+    min-height: 1.75rem;
+    line-height: 0.75em;
+}
+.rbam .grid {
+    border: 1px solid hsl(0, 0%, 80%);
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+.grid .number {
+    text-align: right;
+}
+.rbam .grid td,
+.rbam .grid th {
+    padding: 0.375rem 0.75rem;
+}
+.rbam .grid thead {
+    background-color: hsl(0, 0%, 0%);
+    color: hsl(0, 0%, 100%);
+}
+.rbam .grid tbody tr:nth-child(even) {
+    background-color: hsl(0, 0%, 95%);
+}
+.rbam .justify-evenly {
+    justify-content: space-evenly;
+}
+.rbam .mermaid {
+    text-align: center;
+}
+.dialog-footer {
+    display: flex;
+    justify-content: space-between;
 }
