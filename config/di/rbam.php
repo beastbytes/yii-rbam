@@ -6,6 +6,8 @@
 
 declare(strict_types=1);
 
+use BeastBytes\Yii\Rbam\HierarchyDiagramInterface;
+use BeastBytes\Yii\Rbam\MermaidHierarchyDiagram;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use BeastBytes\Yii\Rbam\RuleService;
 use BeastBytes\Yii\Rbam\RuleServiceInterface;
@@ -14,6 +16,7 @@ use Yiisoft\Aliases\Aliases;
 /** @var array $params */
 
 return [
+    HierarchyDiagramInterface::class => MermaidHierarchyDiagram::class,
     RbamParameters::class => [
         'class' => RbamParameters::class,
         '__construct()' => [

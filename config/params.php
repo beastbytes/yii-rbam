@@ -24,15 +24,15 @@ return [
     'beastbytes/yii-rbam' => [
         'buttons' => [ // allows use of icon fonts and/or css frameworks to style buttons
             'createPermission' => [
-                'attributes' => ['class' => 'btn btn_create btn_create_permission'],
+                'attributes' => ['class' => 'btn btn_create'],
                 'content' => 'button.create-permission',
             ],
             'createRole' => [
-                'attributes' => ['class' => 'btn btn_create btn_create_role'],
+                'attributes' => ['class' => 'btn btn_create'],
                 'content' => 'button.create-role',
             ],
             'createRule' => [
-                'attributes' => ['class' => 'btn btn_create btn_create_rule'],
+                'attributes' => ['class' => 'btn btn_create'],
                 'content' => 'button.create-rule',
             ],
             'done' => [
@@ -40,15 +40,15 @@ return [
                 'content' => 'button.done',
             ],
             'manageChildRoles' => [
-                'attributes' => ['class' => 'btn btn_manage_child_roles'],
+                'attributes' => ['class' => 'btn btn_manage'],
                 'content' => 'button.manage-child-roles',
             ],
             'managePermissions' => [
-                'attributes' => ['class' => 'btn btn_manage_permissions'],
+                'attributes' => ['class' => 'btn btn_manage'],
                 'content' => 'button.manage-permissions',
             ],
             'manageRoleAssignments' => [
-                'attributes' => ['class' => 'btn btn_manage_role_assignments'],
+                'attributes' => ['class' => 'btn btn_manage'],
                 'content' => 'button.manage-role-assignments',
             ],
             'remove' => [
@@ -56,11 +56,11 @@ return [
                 'content' => 'button.remove',
             ],
             'removeAll' => [
-                'attributes' => ['class' => 'btn btn_remove_all'],
+                'attributes' => ['class' => 'btn btn_remove-all'],
                 'content' => 'button.remove-all',
             ],
             'revokeAll' => [
-                'attributes' => ['class' => 'btn btn_revoke_all'],
+                'attributes' => ['class' => 'btn btn_revoke-all'],
                 'content' => 'button.revoke-all',
             ],
             'submit' => [
@@ -81,62 +81,62 @@ return [
         'mermaidDiagramStyles' => [
             'ancestor_permission' => [
                 'line.divider' => [
-                    'stroke' => '#1A6256',
+                    'stroke' => 'hsl(195, 66%, 55%)',
                 ],
                 'rect' => [
-                    'fill' => '#C0DCD7',
-                    'stroke' => '#1A6256',
+                    'fill' => 'hsl(195, 66%, 90%)',
+                    'stroke' => 'hsl(195, 66%, 55%)',
                     'stroke-width' => '1',
                 ],
             ],
             'ancestor_role' => [
                 'line.divider' => [
-                    'stroke' => '#1A6256',
+                    'stroke' => 'hsl(195, 66%, 55%)',
                 ],
                 'rect' => [
-                    'fill' => '#C0DCD7',
-                    'stroke' => '#1A6256',
-                    'stroke-width' => '2',
+                    'fill' => 'hsl(195, 66%, 90%)',
+                    'stroke' => 'hsl(195, 66%, 55%)',
+                    'stroke-width' => '1',
                 ],
             ],
             'current_permission' => [
                 'line.divider' => [
-                    'stroke' => '#378223',
+                    'stroke' => 'hsl(88, 60%, 49%)',
                 ],
                 'rect' => [
-                    'fill' => '#D8F0D1',
-                    'stroke' => '#378223',
+                    'fill' => 'hsl(88, 60%, 90%)',
+                    'stroke' => 'hsl(88, 60%, 49%)',
                     'stroke-width' => '1',
                 ],
             ],
             'current_role' => [
                 'line.divider' => [
-                    'stroke' => '#378223',
+                    'stroke' => 'hsl(88, 60%, 49%)',
                 ],
                 'rect' => [
-                    'fill' => '#D8F0D1',
-                    'stroke' => '#378223',
+                    'fill' => 'hsl(88, 60%, 90%)',
+                    'stroke' => 'hsl(88, 60%, 49%)',
                     'stroke-width' => '2',
                 ],
             ],
             'descendant_permission' => [
                 'line.divider' => [
-                    'stroke' => '#761F5A',
+                    'stroke' => 'hsl(29, 88%, 55%)',
                 ],
                 'rect' => [
-                    'fill' => '#E8CBDF',
-                    'stroke' => '#761F5A',
+                    'fill' => 'hsl(29, 88%, 90%)',
+                    'stroke' => 'hsl(29, 88%, 55%)',
                     'stroke-width' => '1',
                 ],
             ],
             'descendant_role' => [
                 'line.divider' => [
-                    'stroke' => '#761F5A',
+                    'stroke' => 'hsl(29, 88%, 55%)',
                 ],
                 'rect' => [
-                    'fill' => '#E8CBDF',
-                    'stroke' => '#761F5A',
-                    'stroke-width' => '2',
+                    'fill' => 'hsl(29, 88%, 90%)',
+                    'stroke' => 'hsl(29, 88%, 55%)',
+                    'stroke-width' => '1',
                 ],
             ],
         ]
