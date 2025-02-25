@@ -17,12 +17,15 @@ trait RbamRuleTrait
         $offset = $executeMethod->getStartLine() + 1;
         $length = $executeMethod->getEndLine() - 1 - $offset;
 
-        $filename = __DIR__ . DIRECTORY_SEPARATOR . $reflectionClass->getShortName() . '.php';
-        $lines = array_slice(file($filename), $offset, $length);
+        $lines = array_slice(file($reflectionClass->getFileName()), $offset, $length);
+        
+        array_unshift(
+            $lines,
+            'public function execute(?string $userId, Item $item, RuleContext $context): bool',
+            '{'
+        );
 
-        foreach ($lines as &$line) {
-            $line = trim($line);
-        }
+        array_push($lines, '}');
 
         return implode("\n", $lines);
     }
