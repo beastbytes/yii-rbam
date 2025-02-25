@@ -125,6 +125,22 @@ class ItemController
                 )
             ;
 
+            $this
+                ->flash
+                ->add(
+                    'success',
+                    $this
+                        ->translator
+                        ->translate(
+                            'flash.item-created',
+                            [
+                                'name' => $formModel->getName(),
+                                'type' => ucfirst($type)
+                            ]
+                        )
+                )
+            ;
+
             return $redirect
                 ->toRoute(
                     'rbam.viewItem',
@@ -314,7 +330,7 @@ class ItemController
                                 'flash.item-updated',
                                 [
                                     'name' => $name,
-                                    'type' => $type
+                                    'type' => ucfirst($type)
                                 ]
                             )
                     )
