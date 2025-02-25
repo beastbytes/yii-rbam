@@ -71,7 +71,7 @@ class RuleController
         ;
     }
 
-    public function add(
+    public function create(
         FormHydrator $formHydrator,
         Redirect $redirect,
         ServerRequestInterface $request,
@@ -87,6 +87,21 @@ class RuleController
             $this
                 ->ruleService
                 ->save($formModel)
+            ;
+
+            $this
+                ->flash
+                ->add(
+                    'success',
+                    $this
+                        ->translator
+                        ->translate(
+                            'flash.rule-created',
+                            [
+                                'name' => $formModel->getName(),
+                            ]
+                        )
+                )
             ;
 
             return $redirect
@@ -187,14 +202,28 @@ class RuleController
 
         if (
             $request->getMethod() === Method::POST
-            && $formHydrator->populate($formModel, $request->getParsedBody())
-            && $formModel->isValid()
+            && $formHydrator->populateFromPostAndValidate($formModel, $request)
         ) {
             if (
                 $this
                     ->ruleService
                     ->save($formModel, $previousName)
             ) {
+                $this
+                    ->flash
+                    ->add(
+                        'success',
+                        $this
+                            ->translator
+                            ->translate(
+                                'flash.rule-updated',
+                                [
+                                    'name' => $formModel->getName(),
+                                ]
+                            )
+                    )
+                ;
+
                 return $redirect
                     ->toRoute('rbam.viewRule', ['name' => $formModel->getName()])
                     ->withStatusCode(Status::SEE_OTHER)
