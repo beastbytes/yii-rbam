@@ -7,6 +7,7 @@
 declare(strict_types=1);
 
 /**
+ * @var AssetManager $assetManager
  * @var int $currentPage
  * @var Inflector $inflector
  * @var array $items
@@ -19,34 +20,26 @@ declare(strict_types=1);
  */
 
 use BeastBytes\Yii\Rbam\RbamParameters;
+use Yiisoft\Assets\AssetManager;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Html\Html;
-use Yiisoft\Rbac\Item;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
-use Yiisoft\Yii\DataView\Column\ActionButton;
-use Yiisoft\Yii\DataView\Column\ActionColumn;
-use Yiisoft\Yii\DataView\Column\DataColumn;
-use Yiisoft\Yii\DataView\GridView;
 
-$this->setTitle(
-    $translator->translate('label.' . $type . 's')
-);
+$this->setTitle($translator->translate('label.' . $type . 's'));
 
 $breadcrumbs = [
     [
         'label' => $translator->translate('label.rbam'),
         'url' => $urlGenerator->generate('rbam.rbam')
     ],
-    Html::encode($this->getTitle())
+    $this->getTitle()
 ];
 $this->setParameter('breadcrumbs', $breadcrumbs);
 ?>
-
-<h1><?= Html::encode($this->getTitle()) ?></h1>
 
 <?= $this->render(
 '_items',
@@ -56,16 +49,26 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
             ->withCurrentPage($currentPage)
             ->withPageSize($pageSize)
         ,
+        'header' => $translator->translate($this->getTitle()),
         'emptyText' => $translator->translate('message.no-' . $type . 's-found'),
-        'layout' => "{toolbar}\n{items}",
         'toolbar' => Html::a(
             content: $translator->translate($rbamParameters->getButtons('create' . ucfirst($type))['content']),
             url: $urlGenerator->generate('rbam.createItem', ['type' => $type]),
             attributes: $rbamParameters->getButtons('create' . ucfirst($type))['attributes'],
-        ),
+        )
+            ->render()
+        ,
         'translator' => $translator,
         'type' => $type,
         'urlGenerator' => $urlGenerator,
     ]
 )
+?>
+
+<?= Html::a(
+    $translator->translate($rbamParameters->getButtons('done')['content']),
+    $urlGenerator->generate('rbam.rbam'),
+    $rbamParameters->getButtons('done')['attributes']
+)
+    ->render()
 ?>

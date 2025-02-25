@@ -23,9 +23,10 @@ use Yiisoft\View\WebView;
 use Yiisoft\Yii\DataView\DetailView;
 use Yiisoft\Yii\DataView\Field\DataField;
 
-$this->setTitle(
-    $translator->translate('label.rule-name', ['name' => $rule->getName()])
-);
+$this->setTitle($translator->translate(
+    'label.rule-name',
+    ['name' => $rule->getName()]
+));
 
 $breadcrumbs = [
     [
@@ -36,15 +37,13 @@ $breadcrumbs = [
         'label' => $translator->translate('label.rules'),
         'url' => $urlGenerator->generate('rbam.ruleIndex'),
     ],
-    Html::encode($this->getTitle())
+    $this->getTitle()
 ];
 $this->setParameter('breadcrumbs', $breadcrumbs);
 ?>
 
-<h1><?= Html::encode($this->getTitle()) ?></h1>
-
 <?= DetailView::widget()
-    ->attributes(['class' => 'detail_view rule'])
+    ->attributes(['class' => 'detail-view rule'])
     ->data($rule)
     ->fields(
         new DataField(

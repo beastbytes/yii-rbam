@@ -21,7 +21,6 @@ declare(strict_types=1);
 use BeastBytes\Yii\Rbam\RbamParameters;
 use BeastBytes\Yii\Rbam\UserInterface;
 use Yiisoft\Data\Paginator\OffsetPaginator;
-use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Html\Html;
 use Yiisoft\Rbac\ManagerInterface;
@@ -33,8 +32,6 @@ use Yiisoft\Yii\DataView\Column\ActionButton;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\DataView\OffsetPagination;
-use Yiisoft\Yii\DataView\UrlConfig;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
 $this->setTitle($translator->translate('label.users'));
@@ -44,12 +41,10 @@ $breadcrumbs = [
         'label' => $translator->translate('label.rbam'),
         'url' => $urlGenerator->generate('rbam.rbam'),
     ],
-    Html::encode($this->getTitle())
+    $this->getTitle()
 ];
 $this->setParameter('breadcrumbs', $breadcrumbs);
 ?>
-
-<h1><?= Html::encode($this->getTitle()) ?></h1>
 
 <?= GridView::widget()
     ->urlCreator(new UrlCreator($urlGenerator))
@@ -58,8 +53,8 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
             ->withCurrentPage($currentPage)
             ->withPageSize($pageSize)
     )
-    ->containerAttributes(['class' => 'grid_view users'])
-    ->header($translator->translate('label.users'))
+    ->containerAttributes(['class' => 'grid-view users'])
+    ->header($this->getTitle())
     ->headerAttributes(['class' => 'header'])
     ->tableAttributes(['class' => 'grid'])
     ->layout("{header}\n{summary}\n{items}\n{pager}")
@@ -71,17 +66,17 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
         ),
         new DataColumn(
             header: $translator->translate('label.roles'),
-            bodyAttributes: ['class' => 'number'],
             content: static function(UserInterface $user) use ($rbacManager) {
                 return count($rbacManager->getRolesByUserId($user->getId()));
             },
+            bodyClass: 'number',
         ),
         new DataColumn(
             header: $translator->translate('label.permissions'),
-            bodyAttributes: ['class' => 'number'],
             content: static function(UserInterface $user) use ($rbacManager) {
                 return count($rbacManager->getPermissionsByUserId($user->getId()));
-            }
+            },
+            bodyClass: 'number',
         ),
         new ActionColumn(
             template: '{view}',
@@ -97,6 +92,15 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
                     attributes: $rbamParameters->getButtons('view')['attributes'],
                 ),
             ],
+            bodyAttributes: ['class' => 'action'],
         )
     )
+?>
+
+<?= Html::a(
+    $translator->translate($rbamParameters->getButtons('done')['content']),
+    $urlGenerator->generate('rbam.rbam'),
+    $rbamParameters->getButtons('done')['attributes']
+)
+    ->render()
 ?>

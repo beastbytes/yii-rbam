@@ -73,7 +73,7 @@ $assignmentNames = array_keys($assignments);
 
 <?= GridView::widget()
     ->dataReader(new IterableDataReader($roles))
-    ->containerAttributes(['class' => 'grid_view assignments'])
+    ->containerAttributes(['class' => 'grid-view roles'])
     ->header($translator->translate('label.roles'))
     ->headerAttributes(['class' => 'header'])
     ->tableAttributes(['class' => 'grid'])
@@ -84,29 +84,19 @@ $assignmentNames = array_keys($assignments);
         'data-item' => $user->getId(),
         'id' => 'js-items',
     ])
-    ->layout("{header}\n{toolbar}\n{items}")
+    ->layout("{header}\n<div class=\"toolbar\">{toolbar}</div>\n{items}")
     ->toolbar(
-        Div::tag()
-            ->attributes(['class' => 'toolbar'])
-            ->content(
-                Button::tag()
-                    ->attributes(array_merge(
-                        $rbamParameters->getButtons('revokeAll')['attributes'],
-                        [
-                            'id' => 'all_items',
-                            'data-url' => $urlGenerator->generate('rbam.revokeAll'),
-                            'type' => 'button'
-                        ]
-                    ))
-                    ->content($translator->translate($rbamParameters->getButtons('revokeAll')['content']))
-                    ->render()
-                . A::tag()
-                   ->attributes($rbamParameters->getButtons('done')['attributes'])
-                   ->content($translator->translate($rbamParameters->getButtons('done')['content']))
-                   ->href($urlGenerator->generate('rbam.userIndex'))
-                   ->render()
+        Html::button(
+            $translator->translate($rbamParameters->getButtons('revokeAll')['content']),
+            array_merge(
+                $rbamParameters->getButtons('revokeAll')['attributes'],
+                [
+                    'id' => 'all_items',
+                    'data-url' => $urlGenerator->generate('rbam.revokeAll'),
+                    'type' => 'button'
+                ]
             )
-            ->encode(false)
+        )
             ->render()
     )
     ->emptyText($translator->translate('message.no-roles-assigned'))
@@ -174,7 +164,8 @@ $assignmentNames = array_keys($assignments);
                     content: $translator->translate($rbamParameters->getButtons('view')['content']),
                     attributes: $rbamParameters->getButtons('view')['attributes'],
                 ),
-            ]
+            ],
+            bodyAttributes: ['class' => 'action'],
         ),
     )
 ?>
@@ -182,11 +173,20 @@ $assignmentNames = array_keys($assignments);
 <?= $this->render(
     '../item/_items',
     [
-        'actionButtons' => ['view', 'remove'],
+        'actionButtons' => ['view'],
         'dataReader' => new IterableDataReader($permissionsGranted),
         'emptyText' => $translator->translate('message.no-permissions-granted'),
+        'header' => $translator->translate('label.permissions'),
         'layout' => "{header}\n{items}",
         'toolbar' => '',
         'type' => Item::TYPE_PERMISSION
     ]
 ) ?>
+
+<?= Html::a(
+    $translator->translate($rbamParameters->getButtons('done')['content']),
+    $urlGenerator->generate('rbam.userIndex'),
+    $rbamParameters->getButtons('done')['attributes']
+)
+    ->render()
+?>

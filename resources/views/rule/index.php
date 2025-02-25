@@ -30,21 +30,17 @@ use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 
-$this->setTitle(
-    $translator->translate('label.rules')
-);
+$this->setTitle($translator->translate('label.rules'));
 
 $breadcrumbs = [
     [
         'label' => $translator->translate('label.rbam'),
         'url' => $urlGenerator->generate('rbam.rbam')
     ],
-    Html::encode($this->getTitle())
+    $this->getTitle()
 ];
 $this->setParameter('breadcrumbs', $breadcrumbs);
 ?>
-
-<h1><?= Html::encode($this->getTitle()) ?></h1>
 
 <?= GridView::widget()
     ->dataReader(
@@ -52,17 +48,16 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
             ->withCurrentPage($currentPage)
             ->withPageSize($pageSize)
     )
-    ->containerAttributes(['class' => 'grid_view rules'])
+    ->containerAttributes(['class' => 'grid-view rules'])
+    ->header($translator->translate('label.rules'))
+    ->headerAttributes(['class' => 'header'])
     ->tableAttributes(['class' => 'grid'])
-    ->layout("{toolbar}\n{items}")
+    ->layout("{header}\n<div class=\"toolbar\">{toolbar}</div>\n{summary}\n{items}\n{pager}")
     ->toolbar(
-        Html::div(
-            content: Html::a(
-                content: $translator->translate('button.create-rule'),
-                url: $urlGenerator->generate('rbam.addRule'),
-                attributes: $rbamParameters->getButtons('addRole')['attributes'],
-            ),
-            attributes: ['class' => 'toolbar']
+        Html::a(
+            content: $translator->translate('button.create-rule'),
+            url: $urlGenerator->generate('rbam.createRule'),
+            attributes: $rbamParameters->getButtons('createRule')['attributes'],
         )
         ->render()
     )
@@ -78,7 +73,8 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
                         ['name' => $inflector->toSnakeCase($rule->getName())]
                     )
                 )
-                ->render();
+                    ->render()
+                ;
             }
         ),
         new DataColumn(header: 'Description', content: static fn(RbamRuleInterface $rule) => $rule->getDescription()),
@@ -99,7 +95,16 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
                     content: $translator->translate($rbamParameters->getButtons('view')['content']),
                     attributes: $rbamParameters->getButtons('view')['attributes'],
                 ),
-            ]
+            ],
+            bodyAttributes: ['class' => 'action'],
         )
     )
+?>
+
+<?= Html::a(
+    $translator->translate($rbamParameters->getButtons('done')['content']),
+    $urlGenerator->generate('rbam.rbam'),
+    $rbamParameters->getButtons('done')['attributes']
+)
+    ->render()
 ?>

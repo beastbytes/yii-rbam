@@ -7,8 +7,10 @@
 declare(strict_types=1);
 
 /**
+ * @var AssetManager $assetManager
  * @var Role[] $ancestors
  * @var AssignmentsStorageInterface $assignmentsStorage
+ * @var HierarchyDiagramInterface $diagram
  * @var Permission $item
  * @var RbamParameters $rbamParameters
  * @var WebView $this
@@ -17,80 +19,92 @@ declare(strict_types=1);
  * @var UserInterface[] $users
  */
 
+use BeastBytes\Yii\Rbam\HierarchyDiagramInterface;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use BeastBytes\Yii\Rbam\UserInterface;
+use BeastBytes\Yii\Widgets\Assets\TabsAsset;
+use BeastBytes\Yii\Widgets\Tabs;
+use Yiisoft\Assets\AssetManager;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Rbac\AssignmentsStorageInterface;
 use Yiisoft\Rbac\Permission;
 use Yiisoft\Rbac\Role;
-use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
+use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\DataView\Column\ActionButton;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 
-echo GridView::widget()
-    ->dataReader(new IterableDataReader($users))
-    ->containerAttributes(['class' => 'grid_view permitted_users'])
-    ->header($translator->translate('label.permitted-users'))
-    ->headerAttributes(['class' => 'header'])
-    ->tableAttributes(['class' => 'grid'])
-    ->layout("{header}\n{items}")
-    ->emptyText($translator->translate('message.no-users-found'))
-    ->columns(
-        new DataColumn(
-            header: $translator->translate('label.user'),
-            content: static fn (UserInterface $user) => $user->getName()
-        ),
-        new DataColumn(
-            header: $translator->translate('label.role'),
-            content: static function (UserInterface $user) use ($ancestors, $assignmentsStorage, $rbamParameters) {
-                $userId = $user->getId();
+$assetManager->register(TabsAsset::class);
+$this->addJsFiles($assetManager->getJsFiles());
 
-                foreach ($ancestors as $ancestor) {
-                    $assignment = $assignmentsStorage->get($ancestor->getName(), $userId);
-                    if ($assignment !== null) {
-                        return $ancestor->getName();
+echo Tabs::widget(['data' => [
+    $translator->translate('label.permitted-users') => GridView::widget()
+        ->dataReader(new IterableDataReader($users))
+        ->containerAttributes(['class' => 'grid-view permitted-users'])
+        ->header($translator->translate('label.permitted-users'))
+        ->headerAttributes(['class' => 'header'])
+        ->tableAttributes(['class' => 'grid'])
+        ->layout("{header}\n{items}")
+        ->emptyText($translator->translate('message.no-users-found'))
+        ->columns(
+            new DataColumn(
+                header: $translator->translate('label.user'),
+                content: static fn (UserInterface $user) => $user->getName()
+            ),
+            new DataColumn(
+                header: $translator->translate('label.role'),
+                content: static function (UserInterface $user) use ($ancestors, $assignmentsStorage, $rbamParameters) {
+                    $userId = $user->getId();
+
+                    foreach ($ancestors as $ancestor) {
+                        $assignment = $assignmentsStorage->get($ancestor->getName(), $userId);
+                        if ($assignment !== null) {
+                            return $ancestor->getName();
+                        }
                     }
+
+                    return '';
                 }
+            ),
+            new DataColumn(
+                header: $translator->translate('label.assigned'),
+                content: static function (UserInterface $user) use ($ancestors, $assignmentsStorage, $rbamParameters) {
+                    $userId = $user->getId();
 
-                return '';
-            }
-        ),
-        new DataColumn(
-            header: $translator->translate('label.assigned'),
-            content: static function (UserInterface $user) use ($ancestors, $assignmentsStorage, $rbamParameters) {
-                $userId = $user->getId();
-
-                foreach ($ancestors as $ancestor) {
-                    $assignment = $assignmentsStorage->get($ancestor->getName(), $userId);
-                    if ($assignment !== null) {
-                        return (new DateTime())
-                            ->setTimestamp($assignment->getCreatedAt())
-                            ->format($rbamParameters->getDatetimeFormat())
-                        ;
+                    foreach ($ancestors as $ancestor) {
+                        $assignment = $assignmentsStorage->get($ancestor->getName(), $userId);
+                        if ($assignment !== null) {
+                            return (new DateTime())
+                                ->setTimestamp($assignment->getCreatedAt())
+                                ->format($rbamParameters->getDatetimeFormat())
+                            ;
+                        }
                     }
-                }
 
-                return '';
-            }
-        ),
-        new ActionColumn(
-            template: '{view}',
-            urlCreator: static function($action, $context) use ($urlGenerator)
-            {
-                return $urlGenerator->generate('rbam.' . $action . 'User', [
-                    'id' => $context->data->getid()
-                ]);
-            },
-            buttons: [
-                'view' => new ActionButton(
-                    content: $translator->translate($rbamParameters->getButtons('view')['content']),
-                    attributes: $rbamParameters->getButtons('view')['attributes'],
-               ),
-            ]
+                    return '';
+                }
+            ),
+            new ActionColumn(
+                template: '{view}',
+                urlCreator: static function($action, $context) use ($urlGenerator)
+                {
+                    return $urlGenerator->generate('rbam.' . $action . 'User', [
+                        'id' => $context->data->getid()
+                    ]);
+                },
+                buttons: [
+                    'view' => new ActionButton(
+                        content: $translator->translate($rbamParameters->getButtons('view')['content']),
+                        attributes: $rbamParameters->getButtons('view')['attributes'],
+                    ),
+                ],
+                bodyAttributes: ['class' => 'action'],
+            )
         )
-    )
-;
+        ->render()
+    ,
+    $translator->translate('label.diagram') => $diagram->render(),
+]]);

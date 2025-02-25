@@ -3,9 +3,9 @@
 return [
     [
         'name' => 'Admin',
-        'description' => 'God mode',
+        'description' => 'Omnipotent',
         'type' => 'role',
-        'updated_at' => 1705268964,
+        'updated_at' => 1740494279,
         'created_at' => 1705268964,
         'children' => [
             'PostManager',
@@ -62,5 +62,12 @@ return [
         'type' => 'permission',
         'updated_at' => 1707673497,
         'created_at' => 1707673497,
+    ],
+    [
+        'name' => 'ItemManager',
+        'description' => 'Manages items',
+        'type' => 'role',
+        'updated_at' => 1740334057,
+        'created_at' => 1740334057,
     ],
 ];

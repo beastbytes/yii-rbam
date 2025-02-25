@@ -12,6 +12,7 @@ declare(strict_types=1);
  * @var Csrf $csrf
  * @var DataReaderInterface $dataReader
  * @var string $emptyText
+ * @var string $header
  * @var Inflector $inflector
  * @var string $layout
  * @var RbamParameters $rbamParameters
@@ -39,13 +40,16 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\View\Renderer\Csrf;
 
+$assetManager->register(RemoveAsset::class);
+$this->addJsFiles($assetManager->getJsFiles());
+
 $dialog = Dialog::widget()
     ->body($translator->translate('message.remove-' . $type))
     ->footer(
         Html::button(
             $translator->translate('button.continue'),
             [
-                'class' => 'remove-continue',
+                'class' => 'btn btn_continue',
                 'id' => 'remove-continue',
                 'type' => 'submit',
                 Dialog::CLOSE_DIALOG_ATTRIBUTE => true,
@@ -55,7 +59,7 @@ $dialog = Dialog::widget()
         . Html::button(
             $translator->translate('button.cancel'),
             [
-                'class' => 'remove-cancel',
+                'class' => 'btn btn_cancel',
                 'type' => 'reset',
                 Dialog::CLOSE_DIALOG_ATTRIBUTE => true,
             ]
@@ -64,18 +68,16 @@ $dialog = Dialog::widget()
     )
     ->header($translator->translate('header.remove-' . $type))
 ;
+echo $dialog->render();
 
 echo GridView::widget()
     ->dataReader($dataReader)
-    ->containerAttributes(['class' => 'grid_view ' . $type . 's'])
-    ->header($translator->translate('label.' . $type . 's'))
+    ->containerAttributes(['class' => 'grid-view ' . $type . 's'])
+    ->header($header)
     ->headerAttributes(['class' => 'header'])
     ->tableAttributes(['class' => 'grid'])
-    ->layout($layout)
-    ->toolbar(
-        Html::div(content: $toolbar, attributes: ['class' => 'toolbar'])
-            ->render()
-    )
+    ->layout("{header}\n<div class=\"toolbar\">{toolbar}</div>\n{summary}\n{items}\n{pager}")
+    ->toolbar($toolbar)
     ->emptyText($emptyText)
     ->columns(
         new DataColumn(
@@ -113,8 +115,8 @@ echo GridView::widget()
                     attributes: static function() use ($csrf, $dialog, $rbamParameters)
                     {
                         $attributes = $rbamParameters->getButtons('remove')['attributes'];
-                        Html::addCssClass($attributes, 'remove');
                         $attributes[Dialog::OPEN_DIALOG_ATTRIBUTE] = $dialog->getId();
+                        $attributes['class'] .= ' remove';
                         $attributes['data-csrf'] = $csrf;
                         return $attributes;
                     }
@@ -124,12 +126,7 @@ echo GridView::widget()
                     attributes: $rbamParameters->getButtons('view')['attributes'],
                 ),
             ],
+            bodyAttributes: ['class' => 'action'],
         )
     )
 ;
-
-//echo $dialog->render();
-
-//$assetManager->register(RemoveAsset::class);
-$this->addCssFiles($assetManager->getCssFiles());
-$this->addJsFiles($assetManager->getJsFiles());
