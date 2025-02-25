@@ -163,7 +163,10 @@
     display: flex;
 }
 .rbam .form-buttons {
-    margin-top: 1.5em;
+    display: flex;
+    justify-content: space-around;
+    padding: 1.5rem 3rem;
+    width: 50%;
 }
 .rbam .form-control-container {
     background-color: hsl(0, 0%, 97%);
