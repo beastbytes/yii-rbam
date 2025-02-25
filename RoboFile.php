@@ -1,40 +1,60 @@
 <?php
 
+declare(strict_types=1);
+
 use Robo\Symfony\ConsoleIO;
 use Robo\Tasks;
 
-/**
- * This is project's console commands configuration for Robo task runner.
- *
- * @see https://robo.li/
- */
 class RoboFile extends Tasks
 {
-    public function release($branch = 'master', $what = 'patch'): void
+    public function prerelease(ConsoleIO $io, string $tag = 'RC'): void
     {
-        $this->say($what);
+        $result = $this->taskSemVer()
+            ->prerelease($tag)
+            ->increment('minor')
+            ->metadata(date('Ymd\THisT'))
+            ->run()
+        ;
+
+        $io->say(sprintf(
+            'Updated version to %s',
+            $result->getMessage()
+        ));
+    }
+
+    public function release(ConsoleIO $io, string $what): void
+    {
         $result = $this->taskSemVer()
             ->increment($what)
-            ->run();
+            ->metadata(date('Ymd\THisT'))
+            ->run()
+        ;
 
-        $tag = $result->getMessage();
-
-        $this->say("Releasing $tag");
-        $this->createTag($branch, $tag);
+        $io->say(sprintf(
+            'Updated version to %s',
+            $result->getMessage()
+        ));
     }
 
     /**
      * @desc creates a new version tag and pushes to GitHub
+     * @param ConsoleIO $io
      * @param string $branch
-     * @param string $tag
      */
-    public function createTag(string $branch = '', string $tag = ''): void
+    public function createTag(ConsoleIO $io, string $branch = 'master'): void
     {
-        $this->say("Creating tag $tag on origin::$branch");
+        $tag = (string) $this
+            ->taskSemVer()
+            ->setFormat('%M.%m.%p')
+        ;
+        $io->say(sprintf(
+            'Creating tag %s on origin::%s',
+            $tag,
+            $branch
+        ));
 
         $this->taskGitStack()
             ->stopOnFail()
-            ->add('.semver')
             ->commit('Update version')
             ->push('origin', $branch)
             ->tag($tag)
