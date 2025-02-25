@@ -6,23 +6,13 @@
 
 declare(strict_types=1);
 
-//use BeastBytes\Yii\Rbam\RulesMiddleware;
-//@todo think rules need handling differently
-$rules = [];
-$ruleFiles = array_slice(
-    scandir(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'rbac' . DIRECTORY_SEPARATOR . '_rules'),
-    2
-);
-
-foreach ($ruleFiles as $ruleFile) {
-    $rules[lcfirst(substr($ruleFile, 0, -8))]
-        = 'BeastBytes\\Yii\\Rbam\\Rule\\' . substr($ruleFile, 0, -4)
-    ;
-}
-
 return [
     'beastbytes/yii-rbam' => [
         'buttons' => [ // allows use of icon fonts and/or css frameworks to style buttons
+            'cancel' => [
+                'attributes' => ['class' => 'btn btn_cancel'],
+                'content' => 'button.cancel',
+            ],
             'createPermission' => [
                 'attributes' => ['class' => 'btn btn_create'],
                 'content' => 'button.create-permission',
@@ -140,14 +130,5 @@ return [
                 ],
             ],
         ]
-    ],
-    /*
-    'middlewares' => [
-        RulesMiddleware::class
-    ],
-    */
-    'yiisoft/rbac-rules-container' => [
-        'rules' => $rules,
-        'validate' => false,
     ],
 ];
