@@ -90,13 +90,22 @@ $tabIndex = 1;
     ->validClass('valid')
     ->tabindex($tabIndex++)
 ?>
-<?= Field::submitButton()
-     ->containerClass('form-buttons')
-     ->buttonClass($rbamParameters->getButtons('submit')['attributes']['class'])
-     ->buttonId('submit-button')
-     ->tabindex($tabIndex)
-     ->content($translator->translate($rbamParameters->getButtons('submit')['content']))
-?>
+<div class="form-buttons">
+    <?= Field::submitButton()
+         ->containerClass('form-button')
+         ->buttonClass($rbamParameters->getButtons('submit')['attributes']['class'])
+         ->buttonId('submit-button')
+         ->tabindex($tabIndex++)
+         ->content($translator->translate($rbamParameters->getButtons('submit')['content']))
+    ?>
+    <?= Field::button()
+        ->containerClass('form-button')
+        ->buttonAttributes(['onClick' => 'history.back()'])
+        ->buttonClass($rbamParameters->getButtons('cancel')['attributes']['class'])
+        ->tabindex($tabIndex)
+        ->content($translator->translate($rbamParameters->getButtons('cancel')['content']))
+    ?>
+</div>
 <?= Html::form()
     ->close()
 ?>

@@ -24,28 +24,26 @@ use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\View\Renderer\Csrf;
 
-if ($formModel->getName() === ''):
-    $this->setTitle(
-        $translator->translate("label.create-rule")
-    );
-else:
-    $this->setTitle(
-        $translator->translate("label.update-rule")
-    );
-endif;
+$this->setTitle(
+    ($formModel->getName() === ''
+        ? $translator->translate('label.create-rule')
+        : $translator->translate('label.update-rule')
+    )
+);
 
 $breadcrumbs = [
     [
         'label' => $translator->translate('label.rules'),
         'url' => $urlGenerator->generate('rbam.ruleIndex')
     ],
-    Html::encode($this->getTitle())
+    $this->getTitle()
 ];
 $this->setParameter('breadcrumbs', $breadcrumbs);
 $tabIndex = 1;
 ?>
 
-<h1><?= Html::encode($this->getTitle()) ?></h1>
+<h2 class='header'><?= $this->getTitle() ?></h2>
+
 <?= Html::form()
     ->post($urlGenerator->generateFromCurrent([]))
     ->csrf($csrf)
@@ -54,27 +52,45 @@ $tabIndex = 1;
 ?>
 <?= Field::text($formModel, 'name')
     ->autofocus()
+    ->containerClass('form-control-container')
+    ->addInputClass('form-input')
+    ->addLabelClass('form-label')
     ->invalidClass('invalid')
     ->validClass('valid')
     ->tabindex($tabIndex++)
 ?>
 <?= Field::text($formModel, 'description')
+    ->containerClass('form-control-container')
+    ->addInputClass('form-input')
+    ->addLabelClass('form-label')
     ->invalidClass('invalid')
     ->validClass('valid')
     ->tabindex($tabIndex++)
 ?>
 <?= Field::textarea($formModel, 'code')
+    ->containerClass('form-control-container')
+    ->addInputClass('form-input')
+    ->addLabelClass('form-label')
     ->invalidClass('invalid')
     ->validClass('valid')
     ->tabindex($tabIndex++)
 ?>
-<?= Field::submitButton()
-     ->containerClass('d-grid gap-2 form-floating')
-     ->buttonClass($rbamParameters->getButtons('submit')['attributes']['class'])
-     ->buttonId('submit-button')
-     ->tabindex($tabIndex)
-     ->content($translator->translate($rbamParameters->getButtons('submit')['content']))
-?>
+    <div class='form-buttons'>
+        <?= Field::submitButton()
+            ->containerClass('form-button')
+            ->buttonClass($rbamParameters->getButtons('submit')['attributes']['class'])
+            ->buttonId('submit-button')
+            ->tabindex($tabIndex++)
+            ->content($translator->translate($rbamParameters->getButtons('submit')['content']))
+        ?>
+        <?= Field::button()
+            ->containerClass('form-button')
+            ->buttonAttributes(['onClick' => 'history.back()'])
+            ->buttonClass($rbamParameters->getButtons('cancel')['attributes']['class'])
+            ->tabindex($tabIndex)
+            ->content($translator->translate($rbamParameters->getButtons('cancel')['content']))
+        ?>
+    </div>
 <?= Html::form()
     ->close()
 ?>
