@@ -10,6 +10,7 @@ namespace BeastBytes\Yii\Rbam;
 
 use BeastBytes\Yii\Rbam\Form\RuleForm;
 
+use Yiisoft\Files\FileHelper;
 use const DIRECTORY_SEPARATOR;
 
 class RuleService implements RuleServiceInterface
@@ -20,14 +21,7 @@ class RuleService implements RuleServiceInterface
 
     public function __construct(private readonly string $rulesDir)
     {
-        if (
-            !file_exists($this->rulesDir)
-            && !mkdir($this->rulesDir, 0744, true)
-            && !is_dir($this->rulesDir)
-        ) {
-            throw new \RuntimeException(sprintf('Directory "%s" was not created', $this->rulesDir));
-        }
-
+        FileHelper::ensureDirectory($this->rulesDir);
         $this->load();
     }
 
