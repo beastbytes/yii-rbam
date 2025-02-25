@@ -92,7 +92,7 @@ class ItemController
         ;
     }
 
-    public function add(
+    public function create(
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
         Redirect $redirect,
@@ -106,11 +106,7 @@ class ItemController
 
         $formModel = new ItemForm($this->translator);
 
-        if (
-            $request->getMethod() === Method::POST
-            && $formHydrator->populate($formModel, $request->getParsedBody())
-            && $formModel->isValid()
-        ) {
+        if ($formHydrator->populateFromPostAndValidate($formModel, $request)) {
             if ($type === Item::TYPE_PERMISSION) {
                 $item = new Permission($formModel->getName());
             } else {
@@ -124,6 +120,8 @@ class ItemController
                 ->$method($item
                     ->withDescription($formModel->getDescription())
                     ->withRuleName($formModel->getRuleName())
+                    ->withCreatedAt(time())
+                    ->withUpdatedAt(time())
                 )
             ;
 
@@ -291,21 +289,35 @@ class ItemController
         $formModel = new ItemForm($this->translator);
 
         if ($request->getMethod() === Method::POST) {
-            if (
-                $formHydrator->populate($formModel, $request->getParsedBody())
-                && $formModel->isValid()
-            ) {
+            if ($formHydrator->populateFromPostAndValidate($formModel, $request)) {
                 /** @psalm-suppress PossiblyNullArgument */
                 $method = 'update' . ucfirst($type);
                 $item =  $item
                     ->withName($formModel->getName())
                     ->withDescription($formModel->getDescription())
                     ->withRuleName($formModel->getRuleName())
+                    ->withUpdatedAt(time())
                 ;
 
                 $this
                     ->manager
                     ->$method($name, $item)
+                ;
+
+                $this
+                    ->flash
+                    ->add(
+                        'success',
+                        $this
+                            ->translator
+                            ->translate(
+                                'flash.item-updated',
+                                [
+                                    'name' => $name,
+                                    'type' => $type
+                                ]
+                            )
+                    )
                 ;
 
                 return $redirect
@@ -429,7 +441,7 @@ class ItemController
                     'assignments' => $assignments,
                     'assignmentsStorage' => $assignmentsStorage,
                     'item' => $item,
-                    'itemStorage' => $this->itemsStorage,
+                    'itemsStorage' => $this->itemsStorage,
                     'permissions' => $permissions,
                     'roles' => $roles,
                     'users' => $users,
