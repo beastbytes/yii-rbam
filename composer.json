@@ -36,6 +36,7 @@
         "codeception/c3": "^2.6.0",
         "codeception/codeception": "^5.0",
         "codeception/module-asserts": "^3.0",
+        "codeception/module-phpbrowser": "^3.0",
         "codeception/module-cli": "^2.0",
         "codeception/module-db": "^3.0",
         "consolidation/robo": "^4.0",
