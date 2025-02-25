@@ -26,15 +26,12 @@ use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\View\Renderer\Csrf;
 
-if ($formModel->getName() === ''):
-    $this->setTitle(
-        $translator->translate("label.create-$type")
-    );
-else:
-    $this->setTitle(
-        $translator->translate("label.update-$type")
-    );
-endif;
+$this->setTitle(
+    ($formModel->getName() === ''
+        ? $translator->translate("label.create-$type")
+        : $translator->translate("label.update-$type")
+    )
+);
 
 $breadcrumbs = [
     [
@@ -45,54 +42,61 @@ $breadcrumbs = [
         'label' => $translator->translate('label.' . $type . 's'),
         'url' => $urlGenerator->generate('rbam.itemIndex', ['type' => $type . 's']),
     ],
-    Html::encode($this->getTitle())
+    $this->getTitle()
 ];
 $this->setParameter('breadcrumbs', $breadcrumbs);
 
 $tabIndex = 1;
 ?>
 
-<div class="card shadow mx-auto col-md-4">
-    <h1 class="card-header fw-normal h3 text-center">
-        <?= Html::encode($this->getTitle()) ?>
-    </h1>
-    <div class="card-body mt-2">
-        <?= Html::form()
-            ->post($urlGenerator->generateFromCurrent([]))
-            ->csrf($csrf)
-            ->id('form-item')
-            ->open()
-        ?>
-        <?= Field::text($formModel, 'name')
-            ->autofocus()
-            ->invalidClass('invalid')
-            ->validClass('valid')
-            ->tabindex($tabIndex++)
-        ?>
-        <?= Field::text($formModel, 'description')
-            ->invalidClass('invalid')
-            ->validClass('valid')
-            ->tabindex($tabIndex++)
-        ?>
-        <?= Field::select($formModel, 'ruleName', [
-            'prompt()' => [$translator->translate('prompt.select-rule')],
-            'optionsData()' => [
-                array_combine($ruleNames, $ruleNames),
-            ],
-        ])
-            ->invalidClass('invalid')
-            ->validClass('valid')
-            ->tabindex($tabIndex++)
-        ?>
-        <?= Field::submitButton()
-             ->containerClass('d-grid gap-2 form-floating')
-             ->buttonClass($rbamParameters->getButtons('submit')['attributes']['class'])
-             ->buttonId('submit-button')
-             ->tabindex($tabIndex)
-             ->content($translator->translate($rbamParameters->getButtons('submit')['content']))
-        ?>
-        <?= Html::form()
-            ->close()
-        ?>
-    </div>
-</div>
+<h2 class="header"><?= $this->getTitle() ?></h2>
+
+<?= Html::form()
+    ->post($urlGenerator->generateFromCurrent([]))
+    ->csrf($csrf)
+    ->id('form-item')
+    ->open()
+?>
+<?= Field::errorSummary($formModel) ?>
+<?= Field::text($formModel, 'name')
+    ->autofocus()
+    ->containerClass('form-control-container')
+    ->addInputClass('form-input')
+    ->addLabelClass('form-label')
+    ->invalidClass('invalid')
+    ->validClass('valid')
+    ->tabindex($tabIndex++)
+?>
+<?= Field::text($formModel, 'description')
+    ->containerClass('form-control-container')
+    ->addInputClass('form-input')
+    ->addLabelClass('form-label')
+    ->invalidClass('invalid')
+    ->validClass('valid')
+    ->tabindex($tabIndex++)
+?>
+<?= Field::select($formModel, 'ruleName', [
+    'prompt()' => [$translator->translate('prompt.select-rule')],
+    'optionsData()' => [
+        array_combine($ruleNames, $ruleNames),
+    ],
+])
+    ->containerClass('form-control-container')
+    ->addContainerClass(empty($ruleNames) ? 'disabled' : '')
+    ->addInputClass('form-input')
+    ->addLabelClass('form-label')
+    ->disabled(empty($ruleNames))
+    ->invalidClass('invalid')
+    ->validClass('valid')
+    ->tabindex($tabIndex++)
+?>
+<?= Field::submitButton()
+     ->containerClass('form-buttons')
+     ->buttonClass($rbamParameters->getButtons('submit')['attributes']['class'])
+     ->buttonId('submit-button')
+     ->tabindex($tabIndex)
+     ->content($translator->translate($rbamParameters->getButtons('submit')['content']))
+?>
+<?= Html::form()
+    ->close()
+?>

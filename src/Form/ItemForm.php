@@ -61,7 +61,7 @@ final class ItemForm extends FormModel implements PropertyTranslatorProviderInte
         return [
             'description' => $this->translator->translate('label.description'),
             'name' => $this->translator->translate('label.name'),
-            'ruleName' => $this->translator->translate('label.ruleName'),
+            'ruleName' => $this->translator->translate('label.rule'),
         ];
     }
 
