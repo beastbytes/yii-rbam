@@ -10,6 +10,7 @@ declare(strict_types=1);
  * @var Role[] $assignedRoles
  * @var Assignment[] $assignments
  * @var AssetManager $assetManager
+ * @var ItemsStorageInterface $itemsStorage
  * @var Permission[] $permissionsGranted
  * @var Csrf $csrf
  * @var Inflector $inflector
@@ -34,6 +35,7 @@ use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Input\Checkbox;
 use Yiisoft\Rbac\Assignment;
 use Yiisoft\Rbac\Item;
+use Yiisoft\Rbac\ItemsStorageInterface;
 use Yiisoft\Rbac\Permission;
 use Yiisoft\Rbac\Role;
 use Yiisoft\Router\UrlGeneratorInterface;
@@ -170,18 +172,55 @@ $assignmentNames = array_keys($assignments);
     )
 ?>
 
-<?= $this->render(
-    '../item/_items',
-    [
-        'actionButtons' => ['view'],
-        'dataReader' => new IterableDataReader($permissionsGranted),
-        'emptyText' => $translator->translate('message.no-permissions-granted'),
-        'header' => $translator->translate('label.permissions'),
-        'layout' => "{header}\n{items}",
-        'toolbar' => '',
-        'type' => Item::TYPE_PERMISSION
-    ]
-) ?>
+<?= GridView::widget()
+    ->dataReader(new IterableDataReader($permissionsGranted))
+    ->containerAttributes(['class' => 'grid-view permissions'])
+    ->header($translator->translate('label.permissions'))
+    ->headerAttributes(['class' => 'header'])
+    ->tableAttributes(['class' => 'grid'])
+    ->layout("{header}\n<div class=\"toolbar\">{toolbar}</div>\n{summary}\n{items}\n{pager}")
+    ->emptyText($translator->translate('message.no-permissions-granted'))
+    ->columns(
+        new DataColumn(
+            header: $translator->translate('label.permission'),
+            content: static fn(Item $item) => $item->getName()
+        ),
+        new DataColumn(
+            header: $translator->translate('label.description'),
+            content: static fn(Item $item) => $item->getDescription()
+        ),
+        new DataColumn(
+            header: $translator->translate('label.granted-by'),
+            content: static function(Item $item) use ($itemsStorage)
+            {
+                $ancestors = $itemsStorage
+                    ->getParents($item->getName())
+                ;
+
+                $parent = array_shift($ancestors);
+
+                return $parent->getName();
+            }
+        ),
+        new ActionColumn(
+            template: '{view}',
+            urlCreator: static function($action, $context) use ($inflector, $urlGenerator)
+            {
+                return $urlGenerator->generate('rbam.' . $action . 'Item', [
+                    'name' => $inflector->toSnakeCase($context->key),
+                    'type' => $context->data->getType()
+                ]);
+            },
+            buttons: [
+                'view' => new ActionButton(
+                    content: $translator->translate($rbamParameters->getButtons('view')['content']),
+                    attributes: $rbamParameters->getButtons('view')['attributes'],
+                ),
+            ],
+            bodyAttributes: ['class' => 'action'],
+        )
+    )
+?>
 
 <?= Html::a(
     $translator->translate($rbamParameters->getButtons('done')['content']),

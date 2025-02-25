@@ -93,6 +93,7 @@ class UserController
                 [
                     'assignedRoles' => $assignedRoles,
                     'assignments' => $assignments,
+                    'itemsStorage' => $this->itemsStorage,
                     'permissionsGranted' => $permissionsGranted,
                     'roles' =>  $roles,
                     'user' => $user
