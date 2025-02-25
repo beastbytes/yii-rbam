@@ -30,7 +30,6 @@ use Yiisoft\Assets\AssetManager;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\A;use Yiisoft\Html\Tag\Button;use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Input\Checkbox;
 use Yiisoft\Rbac\Item;
 use Yiisoft\Router\UrlGeneratorInterface;
@@ -48,12 +47,10 @@ use Yiisoft\Yii\View\Renderer\Csrf;
 $assetManager->register(RbamAsset::class);
 $this->addJsFiles($assetManager->getJsFiles());
 
-$this->setTitle(
-    $translator->translate(
-            $type === Item::TYPE_PERMISSION ? 'label.manage-role_permissions' : 'label.manage-child_roles',
-        ['name' => $parent->getName()]
-    )
-);
+$this->setTitle($translator->translate(
+    $type === Item::TYPE_PERMISSION ? 'label.manage-role-permissions' : 'label.manage-child-roles',
+    ['name' => $parent->getName()]
+));
 
 $breadcrumbs = [
     [
@@ -74,12 +71,10 @@ $breadcrumbs = [
             ]
         ),
     ],
-    Html::encode($this->getTitle())
+    $this->getTitle()
 ];
 $this->setParameter('breadcrumbs', $breadcrumbs);
 ?>
-
-<h1><?= Html::encode($this->getTitle()) ?></h1>
 
 <?= GridView::widget()
     ->dataReader(
@@ -87,7 +82,9 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
             ->withCurrentPage($currentPage)
             ->withPageSize($pageSize)
     )
-    ->containerAttributes(['class' => 'grid_view roles child_roles'])
+    ->containerAttributes(['class' => 'grid-view roles child-roles'])
+    ->header($this->getTitle())
+    ->headerAttributes(['class' => 'header'])
     ->tableAttributes(['class' => 'grid'])
     ->tbodyAttributes([
         'data-csrf' => $csrf,
@@ -97,35 +94,19 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
         'data-item' => $parent->getName(),
         'id' => 'js-items',
     ])
-    ->layout("{toolbar}\n{items}")
+    ->layout("{header}\n<div class=\"toolbar\">{toolbar}</div>\n{items}")
     ->toolbar(
-        Div::tag()
-            ->attributes(['class' => 'toolbar'])
-            ->content(
-                Button::tag()
-                    ->attributes(array_merge(
-                         $rbamParameters->getButtons('removeAll')['attributes'],
-                         [
-                             'data-url' => $urlGenerator->generate('rbam.removeAll'),
-                             'id' => 'all_items',
-                             'type' => 'button'
-                         ]
-                    ))
-                    ->content($translator->translate($rbamParameters->getButtons('removeAll')['content']))
-                    ->render()
-                    . A::tag()
-                        ->attributes($rbamParameters->getButtons('done')['attributes'])
-                        ->content($translator->translate($rbamParameters->getButtons('done')['content']))
-                        ->href($urlGenerator->generate(
-                            'rbam.viewItem',
-                            [
-                                'name' => $inflector->toSnakeCase($parent->getName()),
-                                'type' => $parent->getType()
-                            ]
-                        ))
-                        ->render()
+        Html::button(
+            $translator->translate($rbamParameters->getButtons('removeAll')['content']),
+            array_merge(
+                $rbamParameters->getButtons('removeAll')['attributes'],
+                [
+                    'data-url' => $urlGenerator->generate('rbam.removeAll'),
+                    'id' => 'all_items',
+                    'type' => 'button'
+                ]
             )
-            ->encode(false)
+        )
             ->render()
     )
     ->emptyText($translator->translate('message.no-child_roles'))
@@ -197,7 +178,22 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
                     content: $translator->translate($rbamParameters->getButtons('view')['content']),
                     attributes: $rbamParameters->getButtons('view')['attributes'],
                 ),
-            ]
+            ],
+            bodyAttributes: ['class' => 'action'],
         ),
     )
+?>
+
+<?= Html::a(
+    $translator->translate($rbamParameters->getButtons('done')['content']),
+    $urlGenerator->generate(
+        'rbam.viewItem',
+        [
+            'type' => $type,
+            'name' => $inflector->toSnakeCase($parent->getName())
+        ]
+    ),
+    $rbamParameters->getButtons('done')['attributes']
+)
+    ->render()
 ?>
