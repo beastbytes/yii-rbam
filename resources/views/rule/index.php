@@ -65,17 +65,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
     ->columns(
         new DataColumn(
             header: $translator->translate('label.name'),
-            content: static function (RbamRuleInterface $rule) use ($inflector, $urlGenerator) {
-                return Html::a(
-                    content: $rule->getName(),
-                    url: $urlGenerator->generate(
-                        'rbam.viewRule',
-                        ['name' => $inflector->toSnakeCase($rule->getName())]
-                    )
-                )
-                    ->render()
-                ;
-            }
+            content: fn (RbamRuleInterface $rule) => $rule->getName()
         ),
         new DataColumn(header: 'Description', content: static fn(RbamRuleInterface $rule) => $rule->getDescription()),
         new ActionColumn(
