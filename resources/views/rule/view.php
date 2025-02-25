@@ -8,12 +8,14 @@ declare(strict_types=1);
 
 /**
  * @var Inflector $inflector
+ * @var RbamParameters $rbamParameters
  * @var RbamRuleInterface $rule
  * @var WebView $this
  * @var TranslatorInterface $translator
  * @var UrlGeneratorInterface $urlGenerator
  */
 
+use BeastBytes\Yii\Rbam\RbamParameters;
 use BeastBytes\Yii\Rbam\RbamRuleInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\Strings\Inflector;
@@ -44,34 +46,45 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
 
 <?= DetailView::widget()
     ->attributes(['class' => 'detail-view rule'])
+    ->fieldTemplate('{label}{value}')
     ->data($rule)
     ->fields(
         new DataField(
             label: $translator->translate('label.name'),
             value: fn($rule) => $rule->getName(),
-            valueTag: 'span',
         ),
         new DataField(
             label: $translator->translate('label.description'),
             value: fn($rule) => $rule->getDescription(),
-            valueTag: 'span',
         ),
         new DataField(
             label: $translator->translate('label.code'),
-            value: fn($rule) => $rule->getCode(),
-            valueTag: 'pre',
+            value: static function($rule) {
+                return "<pre><code>" . $rule->getCode(). "</code></pre>";
+            },
+            encodeValue: false,
+
         ),
     )
     ->header(
         Html::a(
-            $translator->translate('button.update-rule', [
+            $translator->translate('button.update', [
                 'name' => $rule->getName(),
             ]),
             $urlGenerator->generate('rbam.updateRule', [
                 'name' => $inflector->toSnakeCase($rule->getName()),
-            ])
+            ]),
+            ['class' => 'btn btn_update']
         )
         ->render()
     )
+    ->render()
+?>
+
+<?= Html::a(
+    $translator->translate($rbamParameters->getButtons('done')['content']),
+    $urlGenerator->generate('rbam.ruleIndex'),
+    $rbamParameters->getButtons('done')['attributes']
+)
     ->render()
 ?>

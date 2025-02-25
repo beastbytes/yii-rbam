@@ -169,7 +169,6 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
         'rbam.itemIndex',
         [
             'type' => $item->getType() . 's',
-            'name' => $inflector->toSnakeCase($item->getName())
         ]
     ),
     $rbamParameters->getButtons('done')['attributes']
