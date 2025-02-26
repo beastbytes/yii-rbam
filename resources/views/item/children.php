@@ -25,6 +25,7 @@ declare(strict_types=1);
  */
 
 use BeastBytes\Yii\Rbam\Assets\RbamAsset;
+use BeastBytes\Yii\Rbam\ItemTypeService;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use Yiisoft\Assets\AssetManager;
 use Yiisoft\Data\Paginator\OffsetPaginator;
@@ -59,7 +60,12 @@ $breadcrumbs = [
     ],
     [
         'label' => $translator->translate('label.roles'),
-        'url' => $urlGenerator->generate('rbam.itemIndex', ['type' => $inflector->toPlural($parent->getType())]),
+        'url' => $urlGenerator->generate(
+            'rbam.itemIndex',
+            [
+                'type' => $inflector->toPlural(ItemTypeService::getItemType($parent))
+            ]
+        ),
     ],
     [
         'label' => $translator->translate('label.role-name', ['name' => $parent->getName()]),
@@ -67,7 +73,7 @@ $breadcrumbs = [
             'rbam.viewItem',
             [
                 'name' => $inflector->toSnakeCase($parent->getName()),
-                'type' => $parent->getType()
+                'type' => ItemTypeService::getItemType($parent)
             ]
         ),
     ],
@@ -170,7 +176,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
             {
                 return $urlGenerator->generate('rbam.' . $action . 'Item', [
                     'name' => $inflector->toSnakeCase($context->key),
-                    'type' => $context->data->getType()
+                    'type' => ItemTypeService::getItemType($context->data)
                 ]);
             },
             buttons: [

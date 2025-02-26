@@ -11,6 +11,7 @@ namespace BeastBytes\Yii\Rbam\Controller;
 use BeastBytes\Yii\Http\Response\NotFound;
 use BeastBytes\Yii\Http\Response\Redirect;
 use BeastBytes\Yii\Rbam\Form\ItemForm;
+use BeastBytes\Yii\Rbam\ItemTypeService;
 use BeastBytes\Yii\Rbam\RuleServiceInterface;
 use BeastBytes\Yii\Rbam\UserRepositoryInterface;
 use HttpSoft\Message\ServerRequest;
@@ -258,11 +259,10 @@ class ItemController
             ;
         }
 
-        $type = $this
+        $type = ItemTypeService::getItemType($this
             ->itemsStorage
             ->get($name)
-            ?->getType()
-        ;
+        );
 
         $method = 'remove' . ucfirst($type);
         $this
@@ -301,7 +301,7 @@ class ItemController
             ->get($name)
         ;
 
-        $type = $item->getType();
+        $type = ItemTypeService::getItemType($item);
 
         $formModel = new ItemForm($this->translator);
 

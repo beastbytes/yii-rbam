@@ -24,14 +24,12 @@ declare(strict_types=1);
  */
 
 use BeastBytes\Yii\Rbam\Assets\RbamAsset;
+use BeastBytes\Yii\Rbam\ItemTypeService;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use BeastBytes\Yii\Rbam\UserInterface;
 use Yiisoft\Assets\AssetManager;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\A;
-use Yiisoft\Html\Tag\Button;
-use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Input\Checkbox;
 use Yiisoft\Rbac\Assignment;
 use Yiisoft\Rbac\Item;
@@ -158,7 +156,7 @@ $assignmentNames = array_keys($assignments);
             {
                 return $urlGenerator->generate('rbam.' . $action . 'Item', [
                     'name' => $inflector->toSnakeCase($context->key),
-                    'type' => $context->data->getType()
+                    'type' => ItemTypeService::getItemType($context->data)
                 ]);
             },
             buttons: [
@@ -220,7 +218,7 @@ $assignmentNames = array_keys($assignments);
             {
                 return $urlGenerator->generate('rbam.' . $action . 'Item', [
                     'name' => $inflector->toSnakeCase($context->key),
-                    'type' => $context->data->getType()
+                    'type' => ItemTypeService::getItemType($context->data)
                 ]);
             },
             buttons: [

@@ -25,6 +25,7 @@ declare(strict_types=1);
  */
 
 use BeastBytes\Yii\Rbam\Assets\RemoveAsset;
+use BeastBytes\Yii\Rbam\ItemTypeService;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use BeastBytes\Yii\Widgets\Dialog;
 use Yiisoft\Assets\AssetManager;
@@ -122,7 +123,7 @@ echo GridView::widget()
             {
                 return $urlGenerator->generate('rbam.' . $action . 'Item', [
                     'name' => $inflector->toSnakeCase($context->key),
-                    'type' => $context->data->getType()
+                    'type' => ItemTypeService::getItemType($context->data)
                 ]);
             },
             buttons: [

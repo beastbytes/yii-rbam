@@ -39,7 +39,6 @@ const remove = {
         }
     },
     remove: function () {
-        console.log(remove)
         const request = new Request(remove.href, {
             method: "POST",
             headers: {

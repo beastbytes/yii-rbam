@@ -31,6 +31,7 @@ use BeastBytes\Mermaid\ClassDiagram\Relationship;
 use BeastBytes\Mermaid\ClassDiagram\RelationshipType;
 use BeastBytes\Mermaid\InteractionType;
 use BeastBytes\Mermaid\Mermaid;
+use BeastBytes\Yii\Rbam\ItemTypeService;
 use BeastBytes\Yii\Rbam\MermaidHierarchyDiagram;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use BeastBytes\Yii\Rbam\UserInterface;
@@ -69,7 +70,7 @@ endforeach;
 $this->registerCss($css);
 
 $this->setTitle($translator->translate(
-    'label.' . $item->getType() . '-name',
+    'label.' . ItemTypeService::getItemType($item) . '-name',
     ['name' => $item->getName()]
 ));
 
@@ -79,8 +80,13 @@ $breadcrumbs = [
         'url' => $urlGenerator->generate('rbam.rbam'),
     ],
     [
-        'label' => $translator->translate('label.' . $item->getType() . 's'),
-        'url' => $urlGenerator->generate('rbam.itemIndex', ['type' => $item->getType() . 's']),
+        'label' => $translator->translate('label.' . ItemTypeService::getItemType($item) . 's'),
+        'url' => $urlGenerator->generate(
+            'rbam.itemIndex',
+            [
+                'type' => ItemTypeService::getItemType($item) . 's'
+            ]
+        ),
     ],
     $this->getTitle()
 ];
@@ -88,7 +94,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
 ?>
 
 <?= DetailView::widget()
-    ->attributes(['class' => 'detail-view ' . $item->getType()])
+    ->attributes(['class' => 'detail-view ' . ItemTypeService::getItemType($item)])
     ->fieldTemplate('{label}{value}')
     ->data($item)
     ->fields(
@@ -100,7 +106,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
             label: $translator->translate('label.type'),
             value: static function($item) use ($translator)
             {
-                return $translator->translate('label.' . $item->getType());
+                return $translator->translate('label.' . ItemTypeService::getItemType($item));
             },
         ),
         new DataField(
@@ -130,7 +136,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
     ->header(
         Html::div(
             $translator->translate(
-                'label.' . $item->getType() . '-name',
+                'label.' . ItemTypeService::getItemType($item) . '-name',
                 ['name' => $item->getName()]
             ),
             ['class' => 'header']
@@ -139,7 +145,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
             $translator->translate('button.update'),
             $urlGenerator->generate('rbam.updateItem', [
                 'name' => $inflector->toSnakeCase($item->getName()),
-                'type' => $item->getType(),
+                'type' => ItemTypeService::getItemType($item),
             ]),
             ['class' => 'btn btn_update']
         )
@@ -149,7 +155,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
 ?>
 
 <?= $this->render(
-    '_' . $item->getType(),
+    '_' . ItemTypeService::getItemType($item),
     [
         'ancestors' => $ancestors,
         'assignments' => $assignments,
@@ -169,7 +175,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
     $urlGenerator->generate(
         'rbam.itemIndex',
         [
-            'type' => $item->getType() . 's',
+            'type' => ItemTypeService::getItemType($item) . 's',
         ]
     ),
     $rbamParameters->getButtons('done')['attributes']
