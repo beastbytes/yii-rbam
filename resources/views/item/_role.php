@@ -12,6 +12,7 @@ declare(strict_types=1);
  * @var HierarchyDiagramInterface $diagram
  * @var Inflector $inflector
  * @var Item $item
+ * @var ItemsStorageInterface $itemsStorage
  * @var Permission[] $permissions
  * @var RbamParameters $rbamParameters
  * @var Role[] $roles
@@ -31,6 +32,7 @@ use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Html\Html;
 use Yiisoft\Rbac\Assignment;
 use Yiisoft\Rbac\Item;
+use Yiisoft\Rbac\ItemsStorageInterface;
 use Yiisoft\Rbac\Permission;
 use Yiisoft\Rbac\Role;
 use Yiisoft\Strings\Inflector;
@@ -103,6 +105,7 @@ echo Tabs::widget(['data' => [
             'dataReader' => new IterableDataReader($roles),
             'emptyText' => $translator->translate('message.no-roles-found'),
             'header' => $translator->translate('label.child-roles'),
+            'itemsStorage' => $itemsStorage,
             'layout' => "{header}\n{toolbar}\n{items}",
             'toolbar' => Html::a(
                 content: $translator->translate($rbamParameters->getButtons('manageChildRoles')['content']),
@@ -126,6 +129,7 @@ echo Tabs::widget(['data' => [
             'dataReader' => new IterableDataReader($permissions),
             'emptyText' => $translator->translate('message.no-permissions-found'),
             'header' => $translator->translate('label.permissions'),
+            'itemsStorage' => $itemsStorage,
             'layout' => "{header}\n{toolbar}\n{items}",
             'toolbar' => Html::a(
                 content: $translator->translate($rbamParameters->getButtons('managePermissions')['content']),

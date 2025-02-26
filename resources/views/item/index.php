@@ -11,6 +11,7 @@ declare(strict_types=1);
  * @var int $currentPage
  * @var Inflector $inflector
  * @var array $items
+ * @var ItemsStorageInterface $itemsStorage
  * @var int $pageSize
  * @var RbamParameters $rbamParameters
  * @var WebView $this
@@ -24,6 +25,7 @@ use Yiisoft\Assets\AssetManager;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Html\Html;
+use Yiisoft\Rbac\ItemsStorageInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Translator\TranslatorInterface;
@@ -51,6 +53,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
         ,
         'header' => $translator->translate($this->getTitle()),
         'emptyText' => $translator->translate('message.no-' . $type . 's-found'),
+        'itemsStorage' => $itemsStorage,
         'toolbar' => Html::a(
             content: $translator->translate($rbamParameters->getButtons('create' . ucfirst($type))['content']),
             url: $urlGenerator->generate('rbam.createItem', ['type' => $type]),

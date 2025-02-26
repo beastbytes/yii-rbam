@@ -9,6 +9,7 @@ declare(strict_types=1);
 /**
  * @var array $actionButtons
  * @var AssetManager $assetManager
+ * @var ItemsStorageInterface $itemsStorage
  * @var Csrf $csrf
  * @var DataReaderInterface $dataReader
  * @var string $emptyText
@@ -30,6 +31,7 @@ use Yiisoft\Assets\AssetManager;
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\Rbac\Item;
+use Yiisoft\Rbac\ItemsStorageInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Translator\TranslatorInterface;
@@ -87,6 +89,20 @@ echo GridView::widget()
         new DataColumn(
             header: $translator->translate('label.description'),
             content: static fn(Item $item) => $item->getDescription()
+        ),
+        new DataColumn(
+            header: $translator->translate('label.granted-by'),
+            content: static function(Item $item) use ($itemsStorage)
+            {
+                $ancestors = $itemsStorage
+                    ->getParents($item->getName())
+                ;
+
+                $parent = array_shift($ancestors);
+
+                return $parent->getName();
+            },
+            visible: $type === Item::TYPE_PERMISSION
         ),
         new DataColumn(
             header: $translator->translate('label.created-at'),

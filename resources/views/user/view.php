@@ -202,6 +202,18 @@ $assignmentNames = array_keys($assignments);
                 return $parent->getName();
             }
         ),
+        new DataColumn(
+            header: $translator->translate('label.created-at'),
+            content: static fn(Item $item) => (new DateTime())
+                ->setTimestamp($item->getCreatedAt())
+                ->format($rbamParameters->getDatetimeFormat())
+        ),
+        new DataColumn(
+            header: $translator->translate('label.updated-at'),
+            content: static fn(Item $item) => (new DateTime())
+                ->setTimestamp($item->getUpdatedAt())
+                ->format($rbamParameters->getDatetimeFormat())
+        ),
         new ActionColumn(
             template: '{view}',
             urlCreator: static function($action, $context) use ($inflector, $urlGenerator)

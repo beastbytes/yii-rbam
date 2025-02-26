@@ -67,7 +67,7 @@ return [
         'name' => 'ItemManager',
         'description' => 'Manages items',
         'type' => 'role',
-        'updated_at' => 1740334057,
+        'updated_at' => 1740522731,
         'created_at' => 1740334057,
     ],
 ];

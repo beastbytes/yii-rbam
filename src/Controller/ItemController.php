@@ -85,6 +85,7 @@ class ItemController
                 [
                     'currentPage' => (int) ArrayHelper::getValue($queryParams, 'page', 1),
                     'items' => $items,
+                    'itemsStorage' => $this->itemsStorage,
                     'pageSize' => (int) ArrayHelper::getValue($queryParams, 'pagesize', 20),
                     'type' => $type
                 ]

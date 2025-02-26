@@ -156,6 +156,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
         'assignmentsStorage' => $assignmentsStorage,
         'diagram' => (new MermaidHierarchyDiagram($item, $itemsStorage, $inflector, $translator, $urlGenerator)),
         'item' => $item,
+        'itemsStorage' => $itemsStorage,
         'permissions' => $permissions,
         'rbamParameters' => $rbamParameters,
         'roles' => $roles,
