@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace BeastBytes\Yii\Rbam\Assets;
 
-use BeastBytes\Yii\Rbam\Widget\Assets\DialogAsset;
+use BeastBytes\Yii\Widgets\Assets\DialogAsset;
 use Yiisoft\Assets\AssetBundle;
 
 class RemoveAsset extends AssetBundle
