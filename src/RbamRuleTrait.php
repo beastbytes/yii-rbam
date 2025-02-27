@@ -18,14 +18,10 @@ trait RbamRuleTrait
         $length = $executeMethod->getEndLine() - 1 - $offset;
 
         $lines = array_slice(file($reflectionClass->getFileName()), $offset, $length);
-        
-        array_unshift(
-            $lines,
-            'public function execute(?string $userId, Item $item, RuleContext $context): bool',
-            '{'
-        );
 
-        array_push($lines, '}');
+        foreach ($lines as &$line) {
+            $line = str_repeat(' ', 4) . mb_trim($line);
+        }
 
         return implode("\n", $lines);
     }
