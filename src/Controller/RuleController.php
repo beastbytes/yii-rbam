@@ -11,6 +11,7 @@ namespace BeastBytes\Yii\Rbam\Controller;
 use BeastBytes\Yii\Http\Response\NotFound;
 use BeastBytes\Yii\Http\Response\Redirect;
 use BeastBytes\Yii\Rbam\Form\RuleForm;
+use BeastBytes\Yii\Rbam\RbamRuleInterface;
 use BeastBytes\Yii\Rbam\RuleServiceInterface;
 use HttpSoft\Message\ServerRequest;
 use Psr\Http\Message\ResponseInterface;
@@ -198,7 +199,15 @@ class RuleController
         }
 
         $formModel = new RuleForm($this->translator);
-        $formHydrator->populate(model: $formModel, data: $this->getFormData($rule), scope: '');
+        $formHydrator->populate(
+            model: $formModel,
+            data: [
+                'code' => $rule->getCode(),
+                'description' => $rule->getDescription(),
+                'name' => $rule->getName(),
+            ],
+            scope: ''
+        );
 
         if (
             $request->getMethod() === Method::POST
@@ -218,14 +227,14 @@ class RuleController
                             ->translate(
                                 'flash.rule-updated',
                                 [
-                                    'name' => $formModel->getName(),
+                                    'name' => $name,
                                 ]
                             )
                     )
                 ;
 
                 return $redirect
-                    ->toRoute('rbam.viewRule', ['name' => $formModel->getName()])
+                    ->toRoute('rbam.viewRule', ['name' => $this->inflector->toSnakeCase($name)])
                     ->withStatusCode(Status::SEE_OTHER)
                     ->create()
                 ;
@@ -269,37 +278,5 @@ class RuleController
             ->render('view', [
                 'rule' => $rule,
             ]);
-    }
-
-    private function getFormData(RuleInterface $rule): array
-    {
-        return [
-            'code' => 'return true;',
-            'description' => 'Always TRUE rule',
-            'name' => 'Demo'
-        ];
-
-        /*
-        $reflector = new ReflectionClass($rule);
-        $executeMethod = $reflector->getMethod('execute');
-
-        $start = $executeMethod->getStartLine() + 1;
-        $end = $executeMethod->getEndLine() - 1;
-
-        $rulesDir = str_replace('\\', '/', Yii::getAlias('@'.str_replace('\\', '/', $this->module->rulesNamespace)));
-
-        if (!is_dir($rulesDir)) {
-            throw new \Exception('Rules directory does not exist');
-        }
-
-        $filename = $rulesDir . '/' . $reflector->getShortName() . '.php';
-        $code = array_slice(file($filename), $start, $end - $start);
-
-        foreach ($code as &$line) {
-            $line = trim($line);
-        }
-
-        return implode("\n", $code);
-        */
     }
 }
