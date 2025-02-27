@@ -170,66 +170,20 @@ $assignmentNames = array_keys($assignments);
     )
 ?>
 
-<?= GridView::widget()
-    ->dataReader(new IterableDataReader($permissionsGranted))
-    ->containerAttributes(['class' => 'grid-view permissions'])
-    ->header($translator->translate('label.permissions'))
-    ->headerAttributes(['class' => 'header'])
-    ->tableAttributes(['class' => 'grid'])
-    ->layout("{header}\n<div class=\"toolbar\">{toolbar}</div>\n{summary}\n{items}\n{pager}")
-    ->emptyText($translator->translate('message.no-permissions-granted'))
-    ->columns(
-        new DataColumn(
-            header: $translator->translate('label.permission'),
-            content: static fn(Item $item) => $item->getName()
-        ),
-        new DataColumn(
-            header: $translator->translate('label.description'),
-            content: static fn(Item $item) => $item->getDescription()
-        ),
-        new DataColumn(
-            header: $translator->translate('label.granted-by'),
-            content: static function(Item $item) use ($itemsStorage)
-            {
-                $ancestors = $itemsStorage
-                    ->getParents($item->getName())
-                ;
-
-                $parent = array_shift($ancestors);
-
-                return $parent->getName();
-            }
-        ),
-        new DataColumn(
-            header: $translator->translate('label.created-at'),
-            content: static fn(Item $item) => (new DateTime())
-                ->setTimestamp($item->getCreatedAt())
-                ->format($rbamParameters->getDatetimeFormat())
-        ),
-        new DataColumn(
-            header: $translator->translate('label.updated-at'),
-            content: static fn(Item $item) => (new DateTime())
-                ->setTimestamp($item->getUpdatedAt())
-                ->format($rbamParameters->getDatetimeFormat())
-        ),
-        new ActionColumn(
-            template: '{view}',
-            urlCreator: static function($action, $context) use ($inflector, $urlGenerator)
-            {
-                return $urlGenerator->generate('rbam.' . $action . 'Item', [
-                    'name' => $inflector->toSnakeCase($context->key),
-                    'type' => ItemTypeService::getItemType($context->data)
-                ]);
-            },
-            buttons: [
-                'view' => new ActionButton(
-                    content: $translator->translate($rbamParameters->getButtons('view')['content']),
-                    attributes: $rbamParameters->getButtons('view')['attributes'],
-                ),
-            ],
-            bodyAttributes: ['class' => 'action'],
-        )
-    )
+<?= $this->render(
+    '../item/_items',
+    [
+        'actionButtons' => ['view'],
+        'dataReader' => new IterableDataReader($permissionsGranted),
+        'header' => $translator->translate('label.permissions'),
+        'emptyText' => $translator->translate('message.no-permissions-granted'),
+        'itemsStorage' => $itemsStorage,
+        'toolbar' => '',
+        'translator' => $translator,
+        'type' => 'permission',
+        'urlGenerator' => $urlGenerator,
+    ]
+)
 ?>
 
 <?= Html::a(

@@ -49,8 +49,7 @@ $assetManager->register(RbamAsset::class);
 $this->addJsFiles($assetManager->getJsFiles());
 
 $this->setTitle($translator->translate(
-    $type === Item::TYPE_PERMISSION ? 'label.manage-role-permissions' : 'label.manage-child-roles',
-    ['name' => $parent->getName()]
+    $type === Item::TYPE_PERMISSION ? 'label.manage-permissions' : 'label.manage-child-roles'
 ));
 
 $breadcrumbs = [
@@ -89,7 +88,10 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
             ->withPageSize($pageSize)
     )
     ->containerAttributes(['class' => 'grid-view roles child-roles'])
-    ->header($this->getTitle())
+    ->header($translator->translate(
+        $type === Item::TYPE_PERMISSION ? 'label.manage-permissions-for' : 'label.manage-child-roles-for',
+        ['name' => $parent->getName()]
+    ))
     ->headerAttributes(['class' => 'header'])
     ->tableAttributes(['class' => 'grid'])
     ->tbodyAttributes([

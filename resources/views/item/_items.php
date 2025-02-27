@@ -101,7 +101,7 @@ echo GridView::widget()
 
                 $parent = array_shift($ancestors);
 
-                return $parent->getName();
+                return $parent === null ? '' : $parent->getName();
             },
             visible: $type === Item::TYPE_PERMISSION
         ),
