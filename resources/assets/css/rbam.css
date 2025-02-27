@@ -4,46 +4,38 @@
     --yii-orange: hsl(29, 88%, 55%);
     --yii-red: hsl(9, 88%, 55%);
 
-    font-family: "trebuchet ms",verdana,arial,sans-serif;;
+    font-family: "trebuchet ms",verdana,arial,sans-serif;
 }
-.rbam .cards {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    column-gap: 3.33em;
+.rbam .breadcrumb {
+    display: flex;
+    font-size: 0.75rem;
+    justify-content: left;
+    line-height: 1.8;
+    list-style: none;
+    padding: 0;
 }
-.rbam .card {
-    border: 1px solid black;
-    border-radius: 1rem;
-}
-.rbam .card-header {
-    font-size: 1.333rem;
-    font-weight: bold;
-    margin: 1.5rem auto;
-    text-align: center;
-}
-.rbam .card-header > span {
+
+.rbam .breadcrumb li {
+    padding: 0.5em 1em;
     position: relative;
 }
-.rbam .card-header .badge {
-    align-items: center;
-    background:var(--yii-orange);
-    border-radius: 2rem;
-    color: aliceblue;
-    display: inline-flex;
-    font-size: 0.875rem;
-    height: 1.25rem;
-    justify-content: center;
-    line-height: 1.25rem;
-    margin-left: 1.25rem;
-    padding-left: 0.563rem;
-    padding-right: 0.563rem;
-    position: absolute;
-    right: -3.33em;
-    width: fit-content;
+.rbam .breadcrumb li:after {
+    content: '::';
+    left: 1em;
+    position: relative;
 }
-.rbam .card-body {
-    padding: 1.5rem 0.75rem;
-    text-align: center;
+.rbam .breadcrumb li:last-child:after {
+    content: '';
+}
+.rbam .breadcrumb li a {
+    color: black;
+    text-decoration: none;
+}
+.rbam .breadcrumb li a:hover {
+    color: var(--yii-blue);
+}
+.rbam .breadcrumb li:last-child a:hover {
+    color: black;
 }
 .rbam .btn {
     align-items: center;
@@ -88,6 +80,45 @@
 .rbam .btn_submit {
     background: var(--yii-green);
     color: aliceblue;
+}
+.rbam .cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 3.33em;
+}
+.rbam .card {
+    border: 1px solid black;
+    border-radius: 1rem;
+}
+.rbam .card-header {
+    font-size: 1.333rem;
+    font-weight: bold;
+    margin: 1.5rem auto;
+    text-align: center;
+}
+.rbam .card-header > span {
+    position: relative;
+}
+.rbam .card-header .badge {
+    align-items: center;
+    background:var(--yii-orange);
+    border-radius: 2rem;
+    color: aliceblue;
+    display: inline-flex;
+    font-size: 0.875rem;
+    height: 1.25rem;
+    justify-content: center;
+    line-height: 1.25rem;
+    margin-left: 1.25rem;
+    padding-left: 0.563rem;
+    padding-right: 0.563rem;
+    position: absolute;
+    right: -3.33em;
+    width: fit-content;
+}
+.rbam .card-body {
+    padding: 1.5rem 0.75rem;
+    text-align: center;
 }
 .rbam .detail-view .header {
     font-size: 1.666rem;
@@ -149,16 +180,6 @@
     background-color: var(--yii-orange);
     color: aliceblue;
 }
-
-
-
-
-
-
-
-
-
-
 .rbam .flex {
     display: flex;
 }

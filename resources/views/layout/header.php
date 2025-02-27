@@ -10,16 +10,16 @@ declare(strict_types=1);
 
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
-//use Yiisoft\Yii\Widgets\Breadcrumbs;
+use Yiisoft\Yii\Widgets\Breadcrumbs;
 
 ?>
 
 <header>
     <h1><?= $translator->translate('title.rbam') ?></h1>
     <?php if ($this->hasParameter('breadcrumbs')): ?>
-        <?php /* <?= Breadcrumbs::widget()
-    ->items($this->getParameter('breadcrumbs'))
-    ->render() */
+        <?= Breadcrumbs::widget()
+            ->items($this->getParameter('breadcrumbs'))
+            ->render()
         ?>
     <?php endif; ?>
 </header>
