@@ -64,7 +64,7 @@ return [
     Route::get('/rbam/rules')
          ->action([RuleController::class, 'index'])
          ->name('rbam.ruleIndex'),
-    Route::get('/rbam/update/rule/{name: [a-z][\w]*}')
+    Route::methods([Method::GET, Method::POST],'/rbam/update/rule/{name: [a-z][\w]*}')
          ->action([RuleController::class, 'update'])
          ->name('rbam.updateRule'),
     Route::get('/rbam/rule/{name: [a-z][\w]*}')
