@@ -68,6 +68,8 @@ $tabIndex = 1;
     ->tabindex($tabIndex++)
 ?>
 <?= Field::textarea($formModel, 'code')
+    ->beforeInput("public function execute(?string \$userId, Item \$item, RuleContext \$context): bool\n{")
+    ->afterInput('}')
     ->containerClass('form-control-container')
     ->addInputClass('form-input')
     ->addLabelClass('form-label')

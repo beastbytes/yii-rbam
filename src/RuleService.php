@@ -68,21 +68,19 @@ namespace $namespace;
 
 use BeastBytes\Yii\Rbam\RbamRuleInterface;
 use BeastBytes\Yii\Rbam\RbamRuleTrait;
-use ReflectionClass;
 use Yiisoft\Rbac\Item;
 use Yiisoft\Rbac\RuleContext;
-
-use const DIRECTORY_SEPARATOR;
+use Yiisoft\Rbac\RuleInterface;
 
 final class {$model->getName()}Rule implements RbamRuleInterface, RuleInterface
 {
     use RbamRuleTrait;
     
-    private const string DESCRIPTION = '{$model->getDescription()}';
+    private const DESCRIPTION = '{$model->getDescription()}';
     
     public function execute(?string \$userId, Item \$item, RuleContext \$context): bool
     {
-        {$model->getCode()}
+    {$model->getCode()}
     }
 }
 RULE;

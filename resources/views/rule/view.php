@@ -59,11 +59,13 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
         ),
         new DataField(
             label: $translator->translate('label.code'),
-            value: static function($rule) {
-                return "<pre><code>" . $rule->getCode(). "</code></pre>";
-            },
+            value: fn($rule) => '<pre><code>'
+                . 'public function execute(?string $userId, Item $item, RuleContext $context): bool'
+                . "\n{\n"
+                . $rule->getCode()
+                . "\n}</code></pre>"
+            ,
             encodeValue: false,
-
         ),
     )
     ->header(

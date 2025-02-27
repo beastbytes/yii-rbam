@@ -39,17 +39,17 @@ final class RuleForm extends FormModel implements PropertyTranslatorProviderInte
 
     public function getCode(): string
     {
-        return $this->code;
+        return mb_rtrim($this->code);
     }
 
     public function getDescription(): string
     {
-        return $this->description;
+        return mb_trim($this->description);
     }
 
     public function getName(): string
     {
-        return $this->name;
+        return mb_trim($this->name);
     }
 
     #[ArrayShape([
