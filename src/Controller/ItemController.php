@@ -79,6 +79,10 @@ class ItemController
                 ->getRoles()
         };
 
+        usort($items, function(Item $a, Item $b) {
+            return $a->getName() <=> $b->getName();
+        });
+
         return $this
             ->viewRenderer
             ->render(
