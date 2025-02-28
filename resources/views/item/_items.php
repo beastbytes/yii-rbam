@@ -84,7 +84,7 @@ echo GridView::widget()
     ->emptyText($emptyText)
     ->columns(
         new DataColumn(
-            header: $translator->translate('label.' . $type),
+            header: $translator->translate('label.name'),
             content: static fn(Item $item) => $item->getName()
         ),
         new DataColumn(
