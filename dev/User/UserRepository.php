@@ -13,7 +13,8 @@ use BeastBytes\Yii\Rbam\UserRepositoryInterface;
 
 class UserRepository implements UserRepositoryInterface
 {
-    private array $names = [
+    /** @var string[] $users */
+    private array $users = [
         'Robert Walpole',
         'Spencer Compton',
         'Henry Pelham',
@@ -65,54 +66,53 @@ class UserRepository implements UserRepositoryInterface
         'Margaret Thatcher',
         'John Major',
         'Tony Blair',
-        'Gordon Brown',
-        'David Cameron',
-        'Theresa May',
-        'Boris Johnson',
-        'Liz Truss',
-        'Rishi Sunak',
     ];
 
-
-    private array $users = [];
-
-    public function __construct()
-    {
-        foreach ($this->names as $id => $name) {
-            $id++;
-            $this->users[$id] = new User((string) ($id), $name);
-        }
-    }
-
+    /**
+     * @return UserInterface[]
+     */
     public function findAll(): array
-    {
-        return $this->users;
-    }
-
-    public function findAllIds(): array
-    {
-        $ids = [];
-
-        foreach ($this->users as $user) {
-            $ids[] = $user->getId();
-        }
-
-        return $ids;
-    }
-
-    public function findByIds(array $ids): array
     {
         $users = [];
 
-        foreach ($ids as $id) {
-            $users[] = $this->users[$id];
+        foreach ($this->users as $n => $name) {
+            $id = $n + 1;
+            $users[$n] = new User((string) $id, $name);
         }
 
         return $users;
     }
 
+    /** @return int[] */
+    public function findAllIds(): array
+    {
+        return range(1, count($this->users));
+    }
+
+
+    /**
+     * @param string[] $ids
+     * @psalm-param list<non-empty-string> $ids
+     * @return array<int, UserInterface>
+     */
+    public function findByIds(array $ids): array
+    {
+        $users = [];
+
+        foreach ($ids as $id) {
+            $users[] = new User($id, $this->users[(int) $id - 1]);
+        }
+
+        return $users;
+    }
+
+    /**
+     * @param string $id
+     * @psalm-param non-empty-string $id
+     * @return UserInterface
+     */
     public function findById(string $id): UserInterface
     {
-        return $this->users[$id];
+        return new User($id, $this->users[(int) $id - 1]);
     }
 }

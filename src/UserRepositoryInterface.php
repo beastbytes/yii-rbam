@@ -10,10 +10,11 @@ namespace BeastBytes\Yii\Rbam;
 
 interface UserRepositoryInterface
 {
-    /** @psalm-return UserInterface[] */
+    /** @return UserInterface[] */
     public function findAll(): array;
+    /** @return int[] */
     public function findAllIds(): array;
     public function findById(string $id): UserInterface;
-    /** @psalm-return UserInterface[] */
+    /** @return UserInterface[] */
     public function findByIds(array $ids): array;
 }
