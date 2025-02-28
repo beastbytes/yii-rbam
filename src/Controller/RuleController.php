@@ -59,6 +59,10 @@ class RuleController
             ->getRules()
         ;
 
+        usort($rules, function(RbamRuleInterface $a, RbamRuleInterface $b) {
+            return $a->getName() <=> $b->getName();
+        });
+
         return $this
             ->viewRenderer
             ->render(
