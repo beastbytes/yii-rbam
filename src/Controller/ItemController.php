@@ -79,8 +79,8 @@ class ItemController
                 ->getRoles()
         };
 
-        usort($items, function(Item $a, Item $b) {
-            return $a->getName() <=> $b->getName();
+        uksort($items, function(string $a, string $b) {
+            return $a <=> $b;
         });
 
         return $this
