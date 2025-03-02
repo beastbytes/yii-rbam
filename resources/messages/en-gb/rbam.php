@@ -25,12 +25,17 @@ return [
     'button.submit' => 'Submit',
     'button.update' => 'Update',
     'button.view' => 'View',
+    
     'flash.item-created' => '{name} {type} Created',
     'flash.item-updated' => '{name} {type} Updated',
+    'flash.rbam-already-initialised' => 'RBAM is already initialised',
+    'flash.rbam-initialised' => 'RBAM initialised',
     'flash.rule-created' => '{name} Rule Created',
     'flash.rule-updated' => '{name} Rule Updated',
+    
     'header.remove-permission' => 'Remove |name| Permission',
     'header.remove-role' => 'Remove |name| Role',
+    
     'label.create-permission' => 'Create Permission',
     'label.create-role' => 'Create Role',
     'label.create-rule' => 'Create Rule',
@@ -54,10 +59,12 @@ return [
     'label.permission' => 'Permission',
     'label.permission-name' => '{name} Permission',
     'label.permissions' => 'Permissions',
+    'label.permissions-granted' => 'Permissions Granted',
     'label.permitted-users' => 'Permitted Users',
     'label.rbam' => 'RBAM',
     'label.role' => 'Role',
     'label.roles' => 'Roles',
+    'label.roles-assigned' => 'Roles Assigned',
     'label.role-name' => '{name} Role',
     'label.rule' => 'Rule',
     'label.rules' => 'Rules',
@@ -70,6 +77,7 @@ return [
     'label.user' => 'User',
     'label.users' => 'Users',
     'label.via-ancestor-role' => 'Via Ancestor Role',
+    
     'message.no-child-roles' => 'No child roles',
     'message.no-assignments-found' => 'No assignments found',
     'message.no-permissions-found' => 'No permissions found',
@@ -82,6 +90,23 @@ return [
     'message.no-rule' => '---',
     'message.remove-permission' => '<p>Removing the |name| permission is permanent and can not be undone</p><p>Click Continue to remove the |name| permission or click Cancel to cancel the operation</p>',
     'message.remove-role' => '<p>Removing the |name| role is permanent and can not be undone</p><p>Click Continue to remove the |name| role or Cancel to cancel the operation</p>',
+
+    'permission.assignment-assign' => 'Assign Role',
+    'permission.assignment-revoke' => 'Revoke Role(s)',
+    'permission.child-add' => 'Add child item',
+    'permission.child-remove' => 'Remove child item(s)',
+    'permission.item-create' => 'Create Permissions and Roles',
+    'permission.item-remove' => 'Remove Permissions and Roles',
+    'permission.item-update' => 'Update Permissions and Roles',
+    'permission.item-view' => 'View Permissions and Roles',
+    'permission.rbam-index' => 'View RBAM',
+    'permission.rule-create' => 'Create Rules',
+    'permission.rule-delete' => 'Delete Rules',
+    'permission.rule-update' => 'Update Rules',
+    'permission.rule-view' => 'View Rules',
+    'permission.user-view' => 'View Users',
+    
     'prompt.select-rule' => 'Select Rule',
+    
     'title.rbam' => 'Role Based Access Manager',
 ];
