@@ -73,8 +73,8 @@ $assignmentNames = array_keys($assignments);
 
 <?= GridView::widget()
     ->dataReader(new IterableDataReader($roles))
-    ->containerAttributes(['class' => 'grid-view roles'])
-    ->header($translator->translate('label.roles'))
+    ->containerAttributes(['class' => 'grid-view roles', 'id' => 'roles'])
+    ->header($translator->translate('label.roles-assigned'))
     ->headerAttributes(['class' => 'header'])
     ->tableAttributes(['class' => 'grid'])
     ->tbodyAttributes([
@@ -86,7 +86,8 @@ $assignmentNames = array_keys($assignments);
     ])
     ->layout("{header}\n<div class=\"toolbar\">{toolbar}</div>\n{items}")
     ->toolbar(
-        Html::button(
+        !empty($roles)
+        ? Html::button(
             $translator->translate($rbamParameters->getButtons('revokeAll')['content']),
             array_merge(
                 $rbamParameters->getButtons('revokeAll')['attributes'],
@@ -98,6 +99,7 @@ $assignmentNames = array_keys($assignments);
             )
         )
             ->render()
+        : ''
     )
     ->emptyText($translator->translate('message.no-roles-assigned'))
     ->columns(
@@ -129,7 +131,7 @@ $assignmentNames = array_keys($assignments);
             }
         ),
         new DataColumn(
-            header: $translator->translate('label.role'),
+            header: $translator->translate('label.name'),
             content: static fn(Item $item) => $item->getName()
         ),
         new DataColumn(
@@ -175,7 +177,7 @@ $assignmentNames = array_keys($assignments);
     [
         'actionButtons' => ['view'],
         'dataReader' => new IterableDataReader($permissionsGranted),
-        'header' => $translator->translate('label.permissions'),
+        'header' => $translator->translate('label.permissions-granted'),
         'emptyText' => $translator->translate('message.no-permissions-granted'),
         'itemsStorage' => $itemsStorage,
         'toolbar' => '',

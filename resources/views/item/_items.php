@@ -75,7 +75,7 @@ echo $dialog->render();
 
 echo GridView::widget()
     ->dataReader($dataReader)
-    ->containerAttributes(['class' => 'grid-view ' . $type . 's'])
+    ->containerAttributes(['class' => 'grid-view ' . $type . 's', 'id' => $type . 's'])
     ->header($header)
     ->headerAttributes(['class' => 'header'])
     ->tableAttributes(['class' => 'grid'])

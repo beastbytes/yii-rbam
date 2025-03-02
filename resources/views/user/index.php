@@ -53,7 +53,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
             ->withCurrentPage($currentPage)
             ->withPageSize($pageSize)
     )
-    ->containerAttributes(['class' => 'grid-view users'])
+    ->containerAttributes(['class' => 'grid-view users', 'id' => 'users'])
     ->header($this->getTitle())
     ->headerAttributes(['class' => 'header'])
     ->tableAttributes(['class' => 'grid'])

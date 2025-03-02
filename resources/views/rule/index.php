@@ -48,7 +48,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
             ->withCurrentPage($currentPage)
             ->withPageSize($pageSize)
     )
-    ->containerAttributes(['class' => 'grid-view rules'])
+    ->containerAttributes(['class' => 'grid-view rules', 'id' => 'rules'])
     ->header($translator->translate('label.rules'))
     ->headerAttributes(['class' => 'header'])
     ->tableAttributes(['class' => 'grid'])
