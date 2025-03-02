@@ -34,15 +34,22 @@ return [
                 'environments/dev/params.php',
             ],
         ],
+        'test' => [
+            'di' => [],
+            'di-web' => [
+                '$di',
+                'environments/test/di/*.php',
+            ],
+            'params' => [],
+            'params-web' => [
+                '$params',
+                'environments/test/params.php',
+            ],
+        ],
         /*
         'prod' => [
             'params' => [
                 'environments/prod/params.php',
-            ],
-        ],
-        'test' => [
-            'params' => [
-                'environments/test/params.php',
             ],
         ],
         */
