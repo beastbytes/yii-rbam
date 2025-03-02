@@ -8,18 +8,36 @@ declare(strict_types=1);
 
 namespace BeastBytes\Yii\Rbam\Controller;
 
+use BeastBytes\Yii\Http\Response\Redirect;
+use BeastBytes\Yii\Rbam\Permission as RbamPermission;
 use BeastBytes\Yii\Rbam\RuleServiceInterface;
 use BeastBytes\Yii\Rbam\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
+use Yiisoft\Http\Status;
 use Yiisoft\Rbac\ItemsStorageInterface;
+use Yiisoft\Rbac\ManagerInterface;
+use Yiisoft\Rbac\Permission;
+use Yiisoft\Rbac\Role;
+use Yiisoft\Session\Flash\FlashInterface;
+use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\User\CurrentUser;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 class RbamController
 {
+    private const RBAM_ROLE = 'RBAM';
+
     public function __construct(
+        private readonly FlashInterface $flash,
+        private readonly ItemsStorageInterface $itemsStorage,
+        private TranslatorInterface $translator,
         private ViewRenderer $viewRenderer
     )
     {
+        $this->translator = $this
+            ->translator
+            ->withDefaultCategory('rbam')
+        ;
         $this->viewRenderer = $this
             ->viewRenderer
             ->withController($this)
@@ -27,9 +45,8 @@ class RbamController
     }
 
     public function index(
-        ItemsStorageInterface $itemsStorage,
         RuleServiceInterface $ruleService,
-        UserRepositoryInterface $userRepository
+        UserRepositoryInterface $userRepository,
     ): ResponseInterface
     {
         return $this
@@ -37,12 +54,75 @@ class RbamController
             ->render(
                 'index',
                 [
-                    'roles' => $itemsStorage->getRoles(),
-                    'permissions' => $itemsStorage->getPermissions(),
+                    'roles' => $this
+                        ->itemsStorage
+                        ->getRoles()
+                    ,
+                    'permissions' => $this
+                        ->itemsStorage
+                        ->getPermissions()
+                    ,
                     'rules' => $ruleService->getRules(),
                     'users' => $userRepository->findAll()
                 ]
             )
+        ;
+    }
+
+    public function init(
+        CurrentUser $currentUser,
+        ManagerInterface $manager,
+        Redirect $redirect,
+    ): ResponseInterface
+    {
+        if (count($this->itemsStorage->getRoles()) === 0) {
+            $now = time();
+            $manager
+                ->addRole((new Role(self::RBAM_ROLE))
+                    ->withDescription($this->translator->translate('title.rbam'))
+                    ->withCreatedAt($now)
+                    ->withUpdatedAt($now)
+                )
+            ;
+            $manager->assign(self::RBAM_ROLE, $currentUser->getId());
+
+            foreach (RbamPermission::cases() as $permission) {
+                $manager
+                    ->addPermission((new Permission($permission->name))
+                        ->withDescription($this->translator->translate('permission.' . $permission->value))
+                        ->withCreatedAt($now)
+                        ->withUpdatedAt($now)
+                    )
+                ;
+
+                $manager->addChild(self::RBAM_ROLE, $permission->name);
+            }
+
+            $this
+                ->flash
+                ->add(
+                    'success',
+                    $this
+                        ->translator
+                        ->translate('flash.rbam-initialised')
+                )
+            ;
+        } else {
+            $this
+                ->flash
+                ->add(
+                    'warning',
+                    $this
+                        ->translator
+                        ->translate('flash.rbam-already-initialised')
+                )
+            ;
+        }
+
+        return $redirect
+            ->toRoute('rbam.viewItem')
+            ->withStatusCode(Status::SEE_OTHER)
+            ->create()
         ;
     }
 }
