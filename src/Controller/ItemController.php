@@ -39,7 +39,7 @@ class ItemController
     public const TYPE = 'type';
 
     public function __construct(
-        private FlashInterface $flash,
+        private readonly FlashInterface $flash,
         private readonly Inflector $inflector,
         private readonly ItemsStorageInterface $itemsStorage,
         private readonly ManagerInterface $manager,
@@ -121,13 +121,14 @@ class ItemController
 
             /** @psalm-suppress PossiblyNullArgument */
             $method = 'add' . ucfirst($type);
+            $now = time();
             $this
                 ->manager
                 ->$method($item
                     ->withDescription($formModel->getDescription())
                     ->withRuleName($formModel->getRuleName())
-                    ->withCreatedAt(time())
-                    ->withUpdatedAt(time())
+                    ->withCreatedAt($now)
+                    ->withUpdatedAt($now)
                 )
             ;
 
