@@ -10,8 +10,10 @@ namespace BeastBytes\Yii\Rbam\Controller;
 
 use BeastBytes\Yii\Http\Response\NotFound;
 use BeastBytes\Yii\Http\Response\Redirect;
+use BeastBytes\Yii\Rbam\Command\Attribute\Permission as PermissionAttribute;
 use BeastBytes\Yii\Rbam\Form\ItemForm;
 use BeastBytes\Yii\Rbam\ItemTypeService;
+use BeastBytes\Yii\Rbam\Permission as RbamPermission;
 use BeastBytes\Yii\Rbam\RuleServiceInterface;
 use BeastBytes\Yii\Rbam\UserRepositoryInterface;
 use HttpSoft\Message\ServerRequest;
@@ -57,6 +59,7 @@ class ItemController
         ;
     }
 
+    #[PermissionAttribute(name: RbamPermission::ItemView, parent: RbamController::RBAM_ROLE)]
     public function index(CurrentRoute $currentRoute, ServerRequest $request): ResponseInterface
     {
         $queryParams = $request
@@ -98,6 +101,7 @@ class ItemController
         ;
     }
 
+    #[PermissionAttribute(name: RbamPermission::ItemCreate, parent: RbamController::RBAM_ROLE)]
     public function create(
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
@@ -176,6 +180,7 @@ class ItemController
         ;
     }
 
+    #[PermissionAttribute(name: RbamPermission::ItemView, parent: RbamController::RBAM_ROLE)]
     public function children(CurrentRoute $currentRoute, ServerRequest $request): ResponseInterface
     {
         $queryParams = $request
@@ -245,6 +250,7 @@ class ItemController
     }
 
     /** @psalm-suppress PossiblyNullArgument */
+    #[PermissionAttribute(name: RbamPermission::ItemRemove, parent: RbamController::RBAM_ROLE)]
     public function remove(
         CurrentRoute $currentRoute,
         ResponseFactoryInterface $responseFactory
@@ -280,6 +286,7 @@ class ItemController
         ;
     }
 
+    #[PermissionAttribute(name: RbamPermission::ItemUpdate, parent: RbamController::RBAM_ROLE)]
     public function update(
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
@@ -381,6 +388,7 @@ class ItemController
         ;
     }
 
+    #[PermissionAttribute(name: RbamPermission::ItemView, parent: RbamController::RBAM_ROLE)]
     public function view(
         AssignmentsStorageInterface $assignmentsStorage,
         CurrentRoute $currentRoute,

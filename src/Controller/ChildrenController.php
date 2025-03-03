@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace BeastBytes\Yii\Rbam\Controller;
 
+use BeastBytes\Yii\Rbam\Command\Attribute\Permission as PermissionAttribute;
+use BeastBytes\Yii\Rbam\Permission as RbamPermission;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\DataResponse\DataResponseFactoryInterface;
@@ -23,6 +25,7 @@ final class ChildrenController
     )
     {}
 
+    #[PermissionAttribute(name: RbamPermission::ItemUpdate, parent: RbamController::RBAM_ROLE)]
     public function add(ServerRequestInterface $request): ResponseInterface
     {
         $parsedBody = $request->getParsedBody();
@@ -43,6 +46,7 @@ final class ChildrenController
         ;
     }
 
+    #[PermissionAttribute(name: RbamPermission::ItemUpdate, parent: RbamController::RBAM_ROLE)]
     public function remove(ServerRequestInterface $request): ResponseInterface
     {
         $parsedBody = $request->getParsedBody();
@@ -63,6 +67,7 @@ final class ChildrenController
         ;
     }
 
+    #[PermissionAttribute(name: RbamPermission::ItemUpdate, parent: RbamController::RBAM_ROLE)]
     public function removeAll(ServerRequestInterface $request): ResponseInterface
     {
         $parsedBody = $request->getParsedBody();

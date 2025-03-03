@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace BeastBytes\Yii\Rbam\Controller;
 
+use BeastBytes\Yii\Rbam\Command\Attribute\Permission as PermissionAttribute;
+use BeastBytes\Yii\Rbam\Permission as RbamPermission;
 use BeastBytes\Yii\Rbam\UserRepositoryInterface;
 use HttpSoft\Message\ServerRequest;
 use Psr\Http\Message\ResponseInterface;
@@ -17,7 +19,6 @@ use Yiisoft\Rbac\AssignmentsStorageInterface;
 use Yiisoft\Rbac\ItemsStorageInterface;
 use Yiisoft\Rbac\ManagerInterface;
 use Yiisoft\Router\CurrentRoute;
-use Yiisoft\Session\Flash\FlashInterface;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 use const DIRECTORY_SEPARATOR;
@@ -25,7 +26,6 @@ use const DIRECTORY_SEPARATOR;
 class UserController
 {
     public function __construct(
-        private FlashInterface $flash,
         private readonly AssignmentsStorageInterface $assignmentsStorage,
         private readonly ItemsStorageInterface $itemsStorage,
         private readonly ManagerInterface $manager,
@@ -39,6 +39,7 @@ class UserController
         ;
     }
 
+    #[PermissionAttribute(name: RbamPermission::UserView, parent: RbamController::RBAM_ROLE)]
     public function index(ServerRequest $request): ResponseInterface
     {
         $queryParams = $request
@@ -62,6 +63,7 @@ class UserController
         ;
     }
 
+    #[PermissionAttribute(name: RbamPermission::UserView, parent: RbamController::RBAM_ROLE)]
     public function view(
         CurrentRoute $currentRoute,
         UserRepositoryInterface $userRepository

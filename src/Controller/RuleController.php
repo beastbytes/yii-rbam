@@ -10,7 +10,9 @@ namespace BeastBytes\Yii\Rbam\Controller;
 
 use BeastBytes\Yii\Http\Response\NotFound;
 use BeastBytes\Yii\Http\Response\Redirect;
+use BeastBytes\Yii\Rbam\Command\Attribute\Permission as PermissionAttribute;
 use BeastBytes\Yii\Rbam\Form\RuleForm;
+use BeastBytes\Yii\Rbam\Permission as RbamPermission;
 use BeastBytes\Yii\Rbam\RbamRuleInterface;
 use BeastBytes\Yii\Rbam\RuleServiceInterface;
 use HttpSoft\Message\ServerRequest;
@@ -32,7 +34,7 @@ use const DIRECTORY_SEPARATOR;
 class RuleController
 {
     public function __construct(
-        private FlashInterface $flash,
+        private readonly FlashInterface $flash,
         private readonly Inflector $inflector,
         private readonly RuleServiceInterface $ruleService,
         private TranslatorInterface $translator,
@@ -49,6 +51,7 @@ class RuleController
         ;
     }
 
+    #[PermissionAttribute(name: RbamPermission::RuleView, parent: RbamController::RBAM_ROLE)]
     public function index(ServerRequest $request): ResponseInterface
     {
         $queryParams = $request
@@ -76,6 +79,7 @@ class RuleController
         ;
     }
 
+    #[PermissionAttribute(name: RbamPermission::RuleCreate, parent: RbamController::RBAM_ROLE)]
     public function create(
         FormHydrator $formHydrator,
         Redirect $redirect,
@@ -174,11 +178,7 @@ class RuleController
     }
      */
 
-    /**
-     * Update a rule
-     *
-     * @return mixed The return value
-     */
+    #[PermissionAttribute(name: RbamPermission::RuleUpdate, parent: RbamController::RBAM_ROLE)]
     public function update(
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
@@ -254,16 +254,9 @@ class RuleController
         ;
     }
 
-    /**
-     * View an authorisation rule
-     *
-     * @param string $name Rule name
-     * @return mixed The return value
-     */
+    #[PermissionAttribute(name: RbamPermission::RuleView, parent: RbamController::RBAM_ROLE)]
     public function view(
-        CurrentRoute $currentRoute,
-        NotFound $notFound,
-        Redirect $redirect
+        CurrentRoute $currentRoute
     ): ResponseInterface
     {
         $name = $this

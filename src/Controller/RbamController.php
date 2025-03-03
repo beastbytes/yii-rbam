@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace BeastBytes\Yii\Rbam\Controller;
 
 use BeastBytes\Yii\Http\Response\Redirect;
+use BeastBytes\Yii\Rbam\Command\Attribute\Permission as PermissionAttribute;
 use BeastBytes\Yii\Rbam\Permission as RbamPermission;
 use BeastBytes\Yii\Rbam\RuleServiceInterface;
 use BeastBytes\Yii\Rbam\UserRepositoryInterface;
@@ -25,7 +26,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 class RbamController
 {
-    private const RBAM_ROLE = 'RBAM';
+    public const RBAM_ROLE = 'RBAM';
 
     public function __construct(
         private readonly FlashInterface $flash,
@@ -44,6 +45,7 @@ class RbamController
         ;
     }
 
+    #[PermissionAttribute(name: RbamPermission::RbamIndex, parent: self::RBAM_ROLE)]
     public function index(
         RuleServiceInterface $ruleService,
         UserRepositoryInterface $userRepository,
