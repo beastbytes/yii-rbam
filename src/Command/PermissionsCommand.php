@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace BeastBytes\Yii\Rbam\Command;
 
 use BeastBytes\Yii\Rbam\Command\Attribute\Permission as PermissionAttribute;
+use BeastBytes\Yii\Rbam\Permission as RbamPermission;
 use ReflectionClass;
-use StringBackedEnum;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -27,6 +27,7 @@ class PermissionsCommand extends Command
     private array $except = ['./config/**', './resources/**', './tests/**', './vendor/**'];
     /** @var list<string> */
     private array $only = ['**Controller.php'];
+    private SymfonyStyle $io;
 
     public function __construct(private readonly ManagerInterface $manager)
     {
@@ -61,7 +62,7 @@ class PermissionsCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $io = new SymfonyStyle($input, $output);
+        $this->io = new SymfonyStyle($input, $output);
 
         /** @var string $src */
         $src = $input->getArgument('src') ?? getcwd();
@@ -94,10 +95,10 @@ class PermissionsCommand extends Command
         }
 
         if ($this->errorMessage === null) {
-            $io->success('Permissions successfully created');
+            $this->io->success('Permissions successfully created');
             return Command::SUCCESS;
         } else {
-            $io->error($this->errorMessage);
+            $this->io->error($this->errorMessage);
             return Command::FAILURE;
         }
     }
@@ -119,7 +120,7 @@ class PermissionsCommand extends Command
                 $now = time();
                 $arguments = $attribute->getArguments();
                 $name = $arguments['name'];
-                if ($name instanceof StringBackedEnum) {
+                if ($name instanceof RbamPermission) {
                     $name = $name->value;
                 }
 
@@ -127,26 +128,27 @@ class PermissionsCommand extends Command
                     $this->manager->getRole($name) !== null
                     || $this->manager->getPermission($name) !== null
                 ) {
-                    $this->errorMessage = sprintf('RBAC Item with name "%s" exists', $name);
-                    break 2;
-                }
+                    $this->io->write(sprintf('RBAC Item with name "%s" exists', $name), true);
+                } else {
+                    $permission = (new Permission($name))
+                        ->withCreatedAt($now)
+                        ->withUpdatedAt($now)
+                    ;
 
-                $permission = (new Permission($name))
-                    ->withCreatedAt($now)
-                    ->withUpdatedAt($now)
-                ;
-
-                foreach (['description', 'ruleName'] as $argument) {
-                    if (is_string($arguments[$argument])) {
-                        $with = 'with' . ucfirst($argument);
-                        $permission = $permission->$with($arguments[$argument]);
+                    foreach (['description', 'ruleName'] as $argument) {
+                        if (key_exists($argument, $arguments)) {
+                            $with = 'with' . ucfirst($argument);
+                            $permission = $permission->$with($arguments[$argument]);
+                        }
                     }
-                }
 
-                $this
-                    ->manager
-                    ->addPermission($permission)
-                ;
+                    $this
+                        ->manager
+                        ->addPermission($permission)
+                    ;
+
+                    $this->io->write(sprintf('Added %s Permission', $name), true);
+                }
 
                 if (
                     is_string($arguments['parent'])
@@ -158,12 +160,17 @@ class PermissionsCommand extends Command
                         ->manager
                         ->addChild($arguments['parent'], $name)
                     ;
-                } else {
-                    $this->errorMessage = sprintf('Unable to add "%s" as child of "%s"',
+                    $this->io->write(sprintf(
+                        'Added "%s" as child of "%s"',
                         $name,
                         $arguments['parent']
-                    );
-                    break 2;
+                    ), true);
+                } else {
+                    $this->io->write(sprintf(
+                        'Unable to add "%s" as child of "%s"',
+                        $name,
+                        $arguments['parent']
+                    ), true);
                 }
             }
         }
