@@ -6,10 +6,6 @@ namespace BeastBytes\Yii\Rbam;
 
 enum Permission: string
 {
-    case AssignmentAssign = 'assignment-assign';
-    case AssignmentRevoke = 'assignment-revoke';
-    case ChildAdd = 'child-add';
-    case ChildRemove = 'child-remove';
     case ItemCreate = 'item-create';
     case ItemRemove = 'item-remove';
     case ItemUpdate = 'item-update';
