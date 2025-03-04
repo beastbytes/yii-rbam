@@ -130,10 +130,7 @@ class PermissionsCommand extends Command
                     return;
                 }
 
-                $name = $arguments['name'];
-                if ($name instanceof RbamPermission) {
-                    $name = $name->value;
-                }
+                $name = is_string($arguments['name']) ? $arguments['name'] : $arguments['name']->value;
 
                 if (
                     $this->manager->getRole($name) !== null
