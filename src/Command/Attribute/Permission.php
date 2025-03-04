@@ -14,7 +14,7 @@ final class Permission
         private StringBackedEnum|string $name,
         private string $description,
         private StringBackedEnum|string $parent,
-        private string $ruleName,
+        private StringBackedEnum|string $ruleName,
     )
     {
     }

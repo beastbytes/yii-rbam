@@ -146,7 +146,11 @@ class PermissionsCommand extends Command
                     foreach (['description', 'ruleName'] as $argument) {
                         if (key_exists($argument, $arguments)) {
                             $with = 'with' . ucfirst($argument);
-                            $permission = $permission->$with($arguments[$argument]);
+
+                            $permission = $permission->$with((is_string($arguments[$argument]))
+                                ? $arguments[$argument]
+                                : $arguments[$argument]->value
+                            );
                         }
                     }
 
