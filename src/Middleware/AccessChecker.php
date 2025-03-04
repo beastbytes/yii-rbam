@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace BeastBytes\Yii\Rbam\Middleware;
 
-use BackedEnum;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use StringBackedEnum;
 use Yiisoft\Http\Status;
 use Yiisoft\User\CurrentUser;
 
 final class AccessChecker implements MiddlewareInterface
 {
-    private BackedEnum|string|null $permission = null;
+    private ?string $permission = null;
 
     public function __construct(
         private readonly CurrentUser $currentUser,
@@ -41,11 +41,10 @@ final class AccessChecker implements MiddlewareInterface
         return $handler->handle($request);
     }
 
-    public function withPermission(BackedEnum|string $permission): self
+    public function withPermission(StringBackedEnum|string $permission): self
     {
         $new = clone $this;
-        $new->permission = $permission;
-
+        $new->permission = is_string($permission) ? $permission : $permission->value;
         return $new;
     }
 }
