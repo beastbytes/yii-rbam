@@ -119,6 +119,17 @@ class PermissionsCommand extends Command
             foreach ($attributes as $attribute) {
                 $now = time();
                 $arguments = $attribute->getArguments();
+
+                if (!key_exists('name', $arguments)) {
+                    $this->errorMessage = (sprintf(
+                        'Name not set for Permission attribute in %s::%s',
+                        $reflectionClass->getName(),
+                        $reflectionMethod->getName()
+                    ));
+
+                    return;
+                }
+
                 $name = $arguments['name'];
                 if ($name instanceof RbamPermission) {
                     $name = $name->value;
