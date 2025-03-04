@@ -12,9 +12,9 @@ final class Permission
 {
     public function __construct(
         private StringBackedEnum|string $name,
-        private string $description,
-        private StringBackedEnum|string $parent,
-        private StringBackedEnum|string $ruleName,
+        private ?string $description = null,
+        private StringBackedEnum|string|null $parent = null,
+        private StringBackedEnum|string|null $ruleName = null,
     )
     {
     }
