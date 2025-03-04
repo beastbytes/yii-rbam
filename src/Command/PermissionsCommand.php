@@ -150,27 +150,27 @@ class PermissionsCommand extends Command
                     $this->io->write(sprintf('Added %s Permission', $name), true);
                 }
 
-                if (
-                    is_string($arguments['parent'])
-                    && $this
-                        ->manager
-                        ->canAddChild($arguments['parent'], $name)
-                ) {
-                    $this
-                        ->manager
-                        ->addChild($arguments['parent'], $name)
-                    ;
-                    $this->io->write(sprintf(
-                        'Added "%s" as child of "%s"',
-                        $name,
-                        $arguments['parent']
-                    ), true);
-                } else {
-                    $this->io->write(sprintf(
-                        'Unable to add "%s" as child of "%s"',
-                        $name,
-                        $arguments['parent']
-                    ), true);
+                if (key_exists('parent', $arguments)) {
+                    $parent = is_string($arguments['parent']) ? $arguments['parent'] : $arguments['parent']->value;
+
+                    if ($this
+                            ->manager
+                            ->canAddChild($parent, $name)
+                    ) {
+                        $this
+                            ->manager
+                            ->addChild($parent, $name)
+                        ;
+                        $this->io->write(
+                            sprintf('Added "%s" as child of "%s"', $name, $parent),
+                            true
+                        );
+                    } else {
+                        $this->io->write(
+                            sprintf('Unable to add "%s" as child of "%s"', $name, $parent),
+                            true
+                        );
+                    }
                 }
             }
         }
