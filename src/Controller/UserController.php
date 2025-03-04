@@ -23,7 +23,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 use const DIRECTORY_SEPARATOR;
 
-class UserController
+final class UserController
 {
     public function __construct(
         private readonly AssignmentsStorageInterface $assignmentsStorage,

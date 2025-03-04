@@ -36,7 +36,7 @@ use Yiisoft\Strings\Inflector;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
-class ItemController
+final class ItemController
 {
     public const TYPE = 'type';
 

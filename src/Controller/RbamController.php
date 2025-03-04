@@ -24,7 +24,7 @@ use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\User\CurrentUser;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
-class RbamController
+final class RbamController
 {
     public const RBAM_ROLE = 'RBAM';
 

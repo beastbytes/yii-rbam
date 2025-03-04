@@ -31,7 +31,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 use const DIRECTORY_SEPARATOR;
 
-class RuleController
+final class RuleController
 {
     public function __construct(
         private readonly FlashInterface $flash,
