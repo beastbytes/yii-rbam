@@ -25,7 +25,11 @@ final class AssignmentController
     )
     {}
 
-    #[PermissionAttribute(name: RbamPermission::ItemUpdate, parent: RbamController::RBAM_ROLE)]
+    #[PermissionAttribute(
+        name: RbamPermission::ItemUpdate,
+        description: 'Update a RBAC Item',
+        parent: RbamController::RBAM_ROLE
+    )]
     public function assign(ServerRequestInterface $request): ResponseInterface
     {
         $parsedBody = $request->getParsedBody();
@@ -46,7 +50,11 @@ final class AssignmentController
         ;
     }
 
-    #[PermissionAttribute(name: RbamPermission::ItemUpdate, parent: RbamController::RBAM_ROLE)]
+    #[PermissionAttribute(
+        name: RbamPermission::ItemUpdate,
+        description: 'Update a RBAC Item',
+        parent: RbamController::RBAM_ROLE
+    )]
     public function revoke(ServerRequestInterface $request): ResponseInterface
     {
         $parsedBody = $request->getParsedBody();
@@ -67,7 +75,11 @@ final class AssignmentController
         ;
     }
 
-    #[PermissionAttribute(name: RbamPermission::ItemUpdate, parent: RbamController::RBAM_ROLE)]
+    #[PermissionAttribute(
+        name: RbamPermission::ItemUpdate,
+        description: 'Update a RBAC Item',
+        parent: RbamController::RBAM_ROLE
+    )]
     public function revokeAll(ServerRequestInterface $request): ResponseInterface
     {
         $parsedBody = $request->getParsedBody();

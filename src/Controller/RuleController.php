@@ -51,7 +51,11 @@ class RuleController
         ;
     }
 
-    #[PermissionAttribute(name: RbamPermission::RuleView, parent: RbamController::RBAM_ROLE)]
+    #[PermissionAttribute(
+        name: RbamPermission::RuleView,
+        description: 'View Rule(s)',
+        parent: RbamController::RBAM_ROLE
+    )]
     public function index(ServerRequest $request): ResponseInterface
     {
         $queryParams = $request
@@ -79,7 +83,11 @@ class RuleController
         ;
     }
 
-    #[PermissionAttribute(name: RbamPermission::RuleCreate, parent: RbamController::RBAM_ROLE)]
+    #[PermissionAttribute(
+        name: RbamPermission::RuleCreate,
+        description: 'Create a Rule',
+        parent: RbamController::RBAM_ROLE
+    )]
     public function create(
         FormHydrator $formHydrator,
         Redirect $redirect,
@@ -178,7 +186,11 @@ class RuleController
     }
      */
 
-    #[PermissionAttribute(name: RbamPermission::RuleUpdate, parent: RbamController::RBAM_ROLE)]
+    #[PermissionAttribute(
+        name: RbamPermission::RuleUpdate,
+        description: 'Update a Rule',
+        parent: RbamController::RBAM_ROLE
+    )]
     public function update(
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
@@ -254,7 +266,11 @@ class RuleController
         ;
     }
 
-    #[PermissionAttribute(name: RbamPermission::RuleView, parent: RbamController::RBAM_ROLE)]
+    #[PermissionAttribute(
+        name: RbamPermission::RuleView,
+        description: 'View Rule(s)',
+        parent: RbamController::RBAM_ROLE
+    )]
     public function view(
         CurrentRoute $currentRoute
     ): ResponseInterface

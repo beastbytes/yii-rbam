@@ -39,7 +39,11 @@ class UserController
         ;
     }
 
-    #[PermissionAttribute(name: RbamPermission::UserView, parent: RbamController::RBAM_ROLE)]
+    #[PermissionAttribute(
+        name: RbamPermission::UserView,
+        description: 'View user(s)',
+        parent: RbamController::RBAM_ROLE
+    )]
     public function index(ServerRequest $request): ResponseInterface
     {
         $queryParams = $request
@@ -63,7 +67,11 @@ class UserController
         ;
     }
 
-    #[PermissionAttribute(name: RbamPermission::UserView, parent: RbamController::RBAM_ROLE)]
+    #[PermissionAttribute(
+        name: RbamPermission::UserView,
+        description: 'View user(s)',
+        parent: RbamController::RBAM_ROLE
+    )]
     public function view(
         CurrentRoute $currentRoute,
         UserRepositoryInterface $userRepository

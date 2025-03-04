@@ -45,7 +45,11 @@ class RbamController
         ;
     }
 
-    #[PermissionAttribute(name: RbamPermission::RbamIndex, parent: self::RBAM_ROLE)]
+    #[PermissionAttribute(
+        name: RbamPermission::RbamIndex,
+        description: 'Allows access to the RBAM system',
+        parent: self::RBAM_ROLE
+    )]
     public function index(
         RuleServiceInterface $ruleService,
         UserRepositoryInterface $userRepository,
