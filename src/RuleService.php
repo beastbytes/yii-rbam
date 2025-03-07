@@ -10,6 +10,7 @@ namespace BeastBytes\Yii\Rbam;
 
 use BeastBytes\Yii\Rbam\Form\RuleForm;
 
+use Safe\Exceptions\FilesystemException;
 use Yiisoft\Files\FileHelper;
 use const DIRECTORY_SEPARATOR;
 
@@ -22,16 +23,6 @@ class RuleService implements RuleServiceInterface
     public function __construct(private readonly string $rulesDir)
     {
         FileHelper::ensureDirectory($this->rulesDir);
-        $this->load();
-    }
-
-    public function getRules(): array
-    {
-        return $this->rules;
-    }
-
-    private function load(): void
-    {
         $this->rules = [];
 
         /** @var string $ruleFile */
@@ -44,9 +35,12 @@ class RuleService implements RuleServiceInterface
         }
     }
 
-    public function getRuleNames(): array
+    /**
+     * @throws FilesystemException
+     */
+    public function delete(string $name): void
     {
-        return array_keys($this->rules);
+        \Safe\unlink($this->rulesDir . DIRECTORY_SEPARATOR . $name . 'Rule.php');
     }
 
     /** @psalm-suppress MoreSpecificReturnType */
@@ -55,7 +49,17 @@ class RuleService implements RuleServiceInterface
         return $this->rules[$name] ?? null;
     }
 
-    public function save(RuleForm $model, ?string $previousName = null): bool
+    public function getRules(): array
+    {
+        return $this->rules;
+    }
+
+    public function getRuleNames(): array
+    {
+        return array_keys($this->rules);
+    }
+
+    public function save(string $name, string $description, string $code): bool
     {
         $namespace = self::RULE_NAMESPACE;
         $rule =
@@ -72,24 +76,20 @@ use Yiisoft\Rbac\Item;
 use Yiisoft\Rbac\RuleContext;
 use Yiisoft\Rbac\RuleInterface;
 
-final class {$model->getName()}Rule implements RbamRuleInterface, RuleInterface
+final class {$name}Rule implements RbamRuleInterface, RuleInterface
 {
     use RbamRuleTrait;
     
-    private const DESCRIPTION = '{$model->getDescription()}';
+    private const DESCRIPTION = '$description';
     
     public function execute(?string \$userId, Item \$item, RuleContext \$context): bool
     {
-    {$model->getCode()}
+    $code
     }
 }
 RULE;
 
-        if (is_string($previousName) && $model->getName() !== $previousName) {
-            unlink($this->rulesDir . DIRECTORY_SEPARATOR . $previousName . 'Rule.php');
-        }
-
-        $fp = fopen($this->rulesDir . DIRECTORY_SEPARATOR . $model->getName() . 'Rule.php', 'wb');
+        $fp = fopen($this->rulesDir . DIRECTORY_SEPARATOR . $name . 'Rule.php', 'wb');
 
         if ($fp === false) {
             return false;
