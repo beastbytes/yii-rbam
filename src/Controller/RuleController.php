@@ -22,6 +22,7 @@ use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Http\Status;
+use Yiisoft\Rbac\ItemsStorageInterface;
 use Yiisoft\Rbac\RuleInterface;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\Flash\FlashInterface;
@@ -36,6 +37,8 @@ final class RuleController
     public function __construct(
         private readonly FlashInterface $flash,
         private readonly Inflector $inflector,
+        private readonly ItemsStorageInterface $itemsStorage,
+        private readonly Redirect $redirect,
         private readonly RuleServiceInterface $ruleService,
         private TranslatorInterface $translator,
         private ViewRenderer $viewRenderer
@@ -66,9 +69,7 @@ final class RuleController
             ->getRules()
         ;
 
-        usort($rules, function(RbamRuleInterface $a, RbamRuleInterface $b) {
-            return $a->getName() <=> $b->getName();
-        });
+        ksort($rules, SORT_STRING);
 
         return $this
             ->viewRenderer
@@ -141,50 +142,41 @@ final class RuleController
         ;
     }
 
-    /**
-     * Deletes authorisation rules
-     *
-     * The IDs of the rules to be deleted are contained in $_POST['ids']
-     *
-     * @return mixed The return value
-    public function delete(): ResponseInterface
+    #[PermissionAttribute(
+        name: RbamPermission::RuleDelete,
+        description: 'Delete a Rule',
+        parent: RbamController::RBAM_ROLE
+    )]
+    public function delete(ServerRequestInterface $request): ResponseInterface
     {
-        $am = Yii::$app->authManager;
-        $success = $notDeleted = $notRemoved = [];
+        $parsedBody = $request->getParsedBody();
 
-        foreach ($_POST['ids'] as $id) {
-            if (!$am->remove($am->getRule($id))) {
-                $notRemoved[] = $id;
-            } else {
-                if (unlink(str_replace('\\', '/', Yii::getAlias('@'.str_replace('\\', '/', $this->module->namespace))) . '/' . $id . '.php')) {
-                    $success[] = $id;
-                } else {
-                    $notDeleted[] = $id;
-                }
+        foreach ($this->itemsStorage->getPermissions() as $permission) {
+            if ($permission->getRuleName() === $parsedBody['name']) {
+                $this->itemsStorage->update(
+                    $permission->getName(),
+                    $permission->withRuleName(null)
+                );
             }
         }
 
-        if (!empty($success)) {
-            Yii::$app->session->setFlash('success', [Yii::t('rbam', 'The following authorisation rules have been removed and their class files deleted: {success}', [
-                'success' => Inflector::sentence($success, ' and ', ', and')
-            ])]);
+        foreach ($this->itemsStorage->getRoles() as $role) {
+            if ($role->getRuleName() === $parsedBody['name']) {
+                $this->itemsStorage->update(
+                    $role->getName(),
+                    $role->withRuleName(null)
+                );
+            }
         }
 
-        if (!empty($failure)) {
-            Yii::$app->session->setFlash('failure', [Yii::t('rbam', 'The following authorisation rules have not been removed: {failure}', [
-                'failure' => Inflector::sentence($notRemoved, ' and ', ', and')
-            ])]);
-        }
+        $this->ruleService->delete($parsedBody['name']);
 
-        if (!empty($failure)) {
-            Yii::$app->session->setFlash('failure', [Yii::t('rbam', 'The following authorisation rules have been removed but their class files have not been deleted: {failure}', [
-                'failure' => Inflector::sentence($notDeleted, ' and ', ', and')
-            ])]);
-        }
-
-        return $this->redirect(['index']);
+        return $this
+            ->redirect
+            ->toRoute('rbam.ruleIndex')
+            ->create()
+        ;
     }
-     */
 
     #[PermissionAttribute(
         name: RbamPermission::RuleUpdate,

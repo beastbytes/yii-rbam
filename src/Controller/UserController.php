@@ -13,15 +13,13 @@ use BeastBytes\Yii\Rbam\Permission as RbamPermission;
 use BeastBytes\Yii\Rbam\UserRepositoryInterface;
 use HttpSoft\Message\ServerRequest;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Rbac\AssignmentsStorageInterface;
 use Yiisoft\Rbac\ItemsStorageInterface;
 use Yiisoft\Rbac\ManagerInterface;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
-
-use const DIRECTORY_SEPARATOR;
 
 final class UserController
 {
@@ -72,17 +70,103 @@ final class UserController
         description: 'View user(s)',
         parent: RbamController::RBAM_ROLE
     )]
-    public function view(
-        CurrentRoute $currentRoute,
-        UserRepositoryInterface $userRepository
-    ): ResponseInterface
+    public function view(CurrentRoute $currentRoute): ResponseInterface
     {
         $userId = $currentRoute
             ->getArgument('id')
         ;
 
-        $user = $userRepository->findById($userId);
-        $assignments = $this->assignmentsStorage->getByUserId($userId);
+        return $this
+            ->viewRenderer
+            ->render(
+                'view',
+                $this->getViewParameters($userId)
+            )
+        ;
+    }
+
+    #[PermissionAttribute(
+        name: RbamPermission::ItemUpdate,
+        description: 'Update a RBAC Item',
+        parent: RbamController::RBAM_ROLE
+    )]
+    public function assignRole(ServerRequestInterface $request): ResponseInterface
+    {
+        /** @var array{name:string, item:string} $parsedBody */
+        $parsedBody = $request->getParsedBody();
+
+        $this
+            ->manager
+            ->assign($parsedBody['name'], $parsedBody['item'])
+        ;
+
+        return $this
+            ->viewRenderer
+            ->renderPartial(
+                '_assignments',
+                $this->getViewParameters($parsedBody['item'])
+            )
+        ;
+    }
+
+    #[PermissionAttribute(
+        name: RbamPermission::ItemUpdate,
+        description: 'Update a RBAC Item',
+        parent: RbamController::RBAM_ROLE
+    )]
+    public function revokeAssignment(ServerRequestInterface $request): ResponseInterface
+    {
+        /** @var array{name:string, item:string} $parsedBody */
+        $parsedBody = $request->getParsedBody();
+
+        $this
+            ->manager
+            ->revoke($parsedBody['name'], $parsedBody['item'])
+        ;
+
+        return $this
+            ->viewRenderer
+            ->renderPartial(
+                '_assignments',
+                $this->getViewParameters($parsedBody['item'])
+            )
+        ;
+    }
+
+    #[PermissionAttribute(
+        name: RbamPermission::ItemUpdate,
+        description: 'Update a RBAC Item',
+        parent: RbamController::RBAM_ROLE
+    )]
+    public function revokeAllAssignments(ServerRequestInterface $request): ResponseInterface
+    {
+        /** @var array{uid:string} $parsedBody */
+        $parsedBody = $request->getParsedBody();
+
+        $this
+            ->manager
+            ->revokeAll($parsedBody['uid'])
+        ;
+
+        return $this
+            ->viewRenderer
+            ->renderPartial(
+                '_assignments',
+                $this->getViewParameters($parsedBody['uid'])
+            )
+        ;
+    }
+
+    private function getViewParameters(string $userId): array
+    {
+        $user = $this
+            ->userRepository
+            ->findById($userId)
+        ;
+        $assignments = $this
+            ->assignmentsStorage
+            ->getByUserId($userId)
+        ;
         $assignedRoles = $this
             ->manager
             ->getRolesByUserId($userId)
@@ -96,19 +180,18 @@ final class UserController
             ->getRoles()
         ;
 
-        return $this
-            ->viewRenderer
-            ->render(
-                'view',
-                [
-                    'assignedRoles' => $assignedRoles,
-                    'assignments' => $assignments,
-                    'itemsStorage' => $this->itemsStorage,
-                    'permissionsGranted' => $permissionsGranted,
-                    'roles' =>  $roles,
-                    'user' => $user
-                ]
-            )
-        ;
+        $unassignedRoles = array_diff_key($roles, $assignedRoles);
+
+        ksort($assignedRoles, SORT_STRING);
+        ksort($unassignedRoles, SORT_STRING);
+
+        return [
+            'assignedRoles' => $assignedRoles,
+            'assignments' => $assignments,
+            'itemsStorage' => $this->itemsStorage,
+            'permissionsGranted' => $permissionsGranted,
+            'unassignedRoles' => $unassignedRoles,
+            'user' => $user,
+        ];
     }
 }

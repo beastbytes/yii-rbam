@@ -14,7 +14,6 @@ use BeastBytes\Yii\Rbam\Permission as RbamPermission;
 use BeastBytes\Yii\Rbam\RuleServiceInterface;
 use BeastBytes\Yii\Rbam\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
-use Yiisoft\Http\Status;
 use Yiisoft\Rbac\ItemsStorageInterface;
 use Yiisoft\Rbac\ManagerInterface;
 use Yiisoft\Rbac\Permission;
@@ -26,7 +25,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class RbamController
 {
-    public const RBAM_ROLE = 'RBAM';
+    public const RBAM_ROLE = 'Rbam';
 
     public function __construct(
         private readonly FlashInterface $flash,
@@ -47,7 +46,7 @@ final class RbamController
 
     #[PermissionAttribute(
         name: RbamPermission::RbamIndex,
-        description: 'Allows access to the RBAM system',
+        description: 'Allows access to RBAM',
         parent: self::RBAM_ROLE
     )]
     public function index(
@@ -117,7 +116,7 @@ final class RbamController
             $this
                 ->flash
                 ->add(
-                    'warning',
+                    'info',
                     $this
                         ->translator
                         ->translate('flash.rbam-already-initialised')
@@ -126,8 +125,7 @@ final class RbamController
         }
 
         return $redirect
-            ->toRoute('rbam.viewItem')
-            ->withStatusCode(Status::SEE_OTHER)
+            ->toRoute('rbam.index')
             ->create()
         ;
     }
