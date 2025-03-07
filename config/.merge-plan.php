@@ -5,59 +5,6 @@ declare(strict_types=1);
 // Do not edit. Content will be replaced.
 return [
     '/' => [
-        'params' => [
-            'yiisoft/auth' => [
-                'config/params.php',
-            ],
-            'yiisoft/rbac-rules-container' => [
-                'config/params.php',
-            ],
-            'yiisoft/yii-dataview' => [
-                'config/params.php',
-            ],
-            'yiisoft/yii-view-renderer' => [
-                'config/params.php',
-            ],
-            'yiisoft/log-target-file' => [
-                'config/params.php',
-            ],
-            'yiisoft/router-fastroute' => [
-                'config/params.php',
-            ],
-            'yiisoft/assets' => [
-                'config/params.php',
-            ],
-            'yiisoft/widget' => [
-                'config/params.php',
-            ],
-            'yiisoft/form' => [
-                'config/params.php',
-            ],
-            'yiisoft/validator' => [
-                'config/params.php',
-            ],
-            'yiisoft/view' => [
-                'config/params.php',
-            ],
-            'yiisoft/csrf' => [
-                'config/params.php',
-            ],
-            'yiisoft/data-response' => [
-                'config/params.php',
-            ],
-            'yiisoft/aliases' => [
-                'config/params.php',
-            ],
-            'yiisoft/translator' => [
-                'config/params.php',
-            ],
-            'yiisoft/session' => [
-                'config/params.php',
-            ],
-            '/' => [
-                'params.php',
-            ],
-        ],
         'di' => [
             'yiisoft/form-model' => [
                 'config/di.php',
@@ -108,13 +55,69 @@ return [
                 'di/*.php',
             ],
         ],
-        'widgets-themes' => [
-            'yiisoft/yii-dataview' => [
-                'config/widgets-themes.php',
+        'params' => [
+            'yiisoft/rbac-rules-container' => [
+                'config/params.php',
             ],
-            '/' => [],
+            'yiisoft/user' => [
+                'config/params.php',
+            ],
+            'yiisoft/yii-dataview' => [
+                'config/params.php',
+            ],
+            'yiisoft/yii-view-renderer' => [
+                'config/params.php',
+            ],
+            'yiisoft/log-target-file' => [
+                'config/params.php',
+            ],
+            'yiisoft/router-fastroute' => [
+                'config/params.php',
+            ],
+            'yiisoft/router' => [
+                'config/params.php',
+            ],
+            'yiisoft/assets' => [
+                'config/params.php',
+            ],
+            'yiisoft/widget' => [
+                'config/params.php',
+            ],
+            'yiisoft/auth' => [
+                'config/params.php',
+            ],
+            'yiisoft/form' => [
+                'config/params.php',
+            ],
+            'yiisoft/validator' => [
+                'config/params.php',
+            ],
+            'yiisoft/view' => [
+                'config/params.php',
+            ],
+            'yiisoft/csrf' => [
+                'config/params.php',
+            ],
+            'yiisoft/data-response' => [
+                'config/params.php',
+            ],
+            'yiisoft/aliases' => [
+                'config/params.php',
+            ],
+            'yiisoft/translator' => [
+                'config/params.php',
+            ],
+            'yiisoft/session' => [
+                'config/params.php',
+            ],
+            '/' => [
+                'params.php',
+            ],
         ],
         'di-web' => [
+            'yiisoft/user' => [
+                'config/di-web.php',
+            ],
             'yiisoft/yii-view-renderer' => [
                 'config/di-web.php',
             ],
@@ -143,6 +146,12 @@ return [
                 '$di',
             ],
         ],
+        'widgets-themes' => [
+            'yiisoft/yii-dataview' => [
+                'config/widgets-themes.php',
+            ],
+            '/' => [],
+        ],
         'events-web' => [
             'yiisoft/yii-view-renderer' => [
                 'config/events-web.php',
@@ -163,24 +172,41 @@ return [
             ],
             '/' => [],
         ],
+        'di-console' => [
+            'yiisoft/yii-console' => [
+                'config/di-console.php',
+            ],
+            'yiisoft/yii-event' => [
+                'config/di-console.php',
+            ],
+            '/' => [
+                '$di',
+                'console/di/*.php',
+            ],
+        ],
         'events-console' => [
+            'yiisoft/yii-console' => [
+                'config/events-console.php',
+            ],
             'yiisoft/log' => [
                 'config/events-console.php',
             ],
         ],
-        'di-console' => [
+        'params-console' => [
+            'yiisoft/yii-console' => [
+                'config/params-console.php',
+            ],
             'yiisoft/yii-event' => [
-                'config/di-console.php',
+                'config/params-console.php',
+            ],
+            '/' => [
+                '$params',
+                'console/params.php',
             ],
         ],
         'params-web' => [
             'yiisoft/yii-event' => [
                 'config/params-web.php',
-            ],
-        ],
-        'params-console' => [
-            'yiisoft/yii-event' => [
-                'config/params-console.php',
             ],
         ],
         'bootstrap-web' => [
@@ -204,6 +230,12 @@ return [
                 'environments/dev/di/*.php',
             ],
         ],
+        'di-console' => [
+            '/' => [
+                '$di',
+                'environments/dev/di/*.php',
+            ],
+        ],
         'params' => [
             '/' => [],
         ],
@@ -211,6 +243,44 @@ return [
             '/' => [
                 '$params',
                 'environments/dev/params.php',
+            ],
+        ],
+        'params-console' => [
+            '/' => [
+                '$params',
+                'environments/dev/params.php',
+            ],
+        ],
+    ],
+    'test' => [
+        'di' => [
+            '/' => [],
+        ],
+        'di-web' => [
+            '/' => [
+                '$di',
+                'environments/test/di/*.php',
+            ],
+        ],
+        'di-console' => [
+            '/' => [
+                '$di',
+                'environments/test/di/*.php',
+            ],
+        ],
+        'params' => [
+            '/' => [],
+        ],
+        'params-web' => [
+            '/' => [
+                '$params',
+                'environments/test/params.php',
+            ],
+        ],
+        'params-console' => [
+            '/' => [
+                '$params',
+                'environments/test/params.php',
             ],
         ],
     ],

@@ -13,10 +13,18 @@ return [
             '$bootstrap',
         ],
         'di' => 'di/*.php',
+        'di-console' => [
+            '$di',
+            'console/di/*.php',
+        ],
         'di-web' => [
             '$di',
         ],
         'params' => 'params.php',
+        'params-console' => [
+            '$params',
+            'console/params.php',
+        ],
         'routes' => 'routes.php',
         'widgets' => [],
         'widgets-themes' => [],
@@ -28,8 +36,16 @@ return [
                 '$di',
                 'environments/dev/di/*.php',
             ],
+            'di-console' => [
+                '$di',
+                'environments/dev/di/*.php',
+            ],
             'params' => [],
             'params-web' => [
+                '$params',
+                'environments/dev/params.php',
+            ],
+            'params-console' => [
                 '$params',
                 'environments/dev/params.php',
             ],
@@ -40,8 +56,16 @@ return [
                 '$di',
                 'environments/test/di/*.php',
             ],
+            'di-console' => [
+                '$di',
+                'environments/test/di/*.php',
+            ],
             'params' => [],
             'params-web' => [
+                '$params',
+                'environments/test/params.php',
+            ],
+            'params-console' => [
                 '$params',
                 'environments/test/params.php',
             ],

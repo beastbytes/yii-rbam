@@ -15,7 +15,7 @@ return [
     RouteCollectionInterface::class => static function (RouteCollectorInterface $collector) use ($config) {
         $collector
             ->middleware(FormatDataResponse::class)
-            ->addGroup(
+            ->addRoute(
                 Group::create(null)
                     ->routes(...$config->get('routes'))
             );
