@@ -59,7 +59,8 @@ $tabIndex = 1;
 ?>
 <?= Field::errorSummary($formModel) ?>
 <?= Field::text($formModel, 'name')
-    ->autofocus()
+    ->autofocus($formModel->getName() === '')
+    ->disabled($formModel->getName() !== '')
     ->containerClass('form-control-container')
     ->addInputClass('form-input')
     ->addLabelClass('form-label')
@@ -68,6 +69,7 @@ $tabIndex = 1;
     ->tabindex($tabIndex++)
 ?>
 <?= Field::text($formModel, 'description')
+    ->autofocus($formModel->getName() !== '')
     ->containerClass('form-control-container')
     ->addInputClass('form-input')
     ->addLabelClass('form-label')
