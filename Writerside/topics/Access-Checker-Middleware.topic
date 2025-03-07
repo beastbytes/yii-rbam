@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="Access Checker Middleware" id="Access-Checker-Middleware">
+
+    <p>The RBAM package contains Access Checker middleware that can be used in route definitions.</p>
+
+    <chapter title="Example Route Definition">
+        <code-block lang="php">
+            Route::methods([Method::GET, Method::POST], '{pattern}')
+                ->name('{name}')
+                ->middleware(fn(AccessChecker $checker) => $checker->withPermission({permission}))
+                ->action({action})
+            ,
+        </code-block>
+
+        <p>
+            <code>{permission}</code> is either a string giving the Permission name, or - better - a string backed enum
+            where the value is the Permission name.
+        </p>
+    </chapter>
+</topic>

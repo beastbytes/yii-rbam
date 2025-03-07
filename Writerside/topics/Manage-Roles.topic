@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="Manage Roles" id="Manage-Roles">
+
+    <chapter title="Overview" id="overview">
+        <p>
+            This section describes how manage Roles within RBAM.
+        </p>
+        <p>
+            Managing Roles consists of creating, updating, and deleting Roles, adding or removing child Roles,
+            granting and removing Permissions, and assigning Roles to and revoking them from users
+            (the users are defined elsewhere in the application).
+        </p>
+    </chapter>
+
+    <chapter title="Roles" id="roles">
+        <p>
+            On the RBAM home page, click the <emphasis>Manage Roles</emphasis> button.
+            A paged list of Roles is displayed. The following information is given for each Role:
+        </p>
+        <list>
+            <li>Name of the Role</li>
+            <li>Description of the Role</li>
+            <li>Date and time the Role was created</li>
+            <li>Date and time the Role was last updated</li>
+        </list>
+        <p>
+            To view the details for a Role, click the <emphasis>View</emphasis> button.
+        </p>
+        <p>
+            To remove a Role, click the <emphasis>Remove</emphasis> button.
+        </p>
+    </chapter>
+
+    <chapter title="Role" id="role">
+        <p>
+            The Role page shows details for the Role. To update the Role, click the <emphasis>Update</emphasis> button.
+        </p>
+        <p>
+            The tabs show:
+        </p>
+        <deflist>
+            <def title="Assignments">
+                <p>
+                    List of the users assigned the Role.
+                </p>
+                <p>
+                    If a user is directly assigned, the date and time the Role was assigned to the user is shown.
+                </p>
+                <p>
+                    If a user is indirectly assigned the Role,
+                    i.e. the Role is a descendant of a Role directly assigned to the user,
+                    the parent of the Role is displayed.
+                </p>
+            </def>
+            <def title="Child Roles">
+                <p>
+                    List of Child Roles.
+                </p>
+                <p>
+                    To manage Child Roles, click the <emphasis>Manage Child Roles</emphasis> button.
+                </p>
+            </def>
+            <def title="Permissions">
+                <p>
+                    List of Permissions granted by the Role.
+                </p>
+                <p>
+                    To manage Permissions granted by this Role,
+                    click the <emphasis>Manage Permissions</emphasis> button.
+                </p>
+            </def>
+            <def title="Diagram">
+                <p>
+                    Diagram showing the Role's place in the RBAC hierarchy.
+                </p>
+            </def>
+        </deflist>
+    </chapter>
+
+    <chapter title="Create a Role" id="create-a-role">
+        <p>
+            To create a Role, click the <emphasis>Create Role</emphasis> button on the Roles page then complete the
+            form. The form has the following fields:
+        </p>
+        <table>
+            <tr>
+                <td>Field</td>
+                <td>Required</td>
+                <td>Description</td>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td>Yes</td>
+                <td><p>Name of the Role in PascalCase</p></td>
+            </tr>
+            <tr>
+                <td>Description</td>
+                <td>No</td>
+                <td>Description of the Role</td>
+            </tr>
+            <tr>
+                <td>Rule</td>
+                <td>No</td>
+                <td>Select which Rule - if any - is to be executed when the Role is used to grant permission</td>
+            </tr>
+        </table>
+    </chapter>
+
+    <chapter title="Update a Role" id="update-a-role">
+        <p>
+            To update a Role, click the <emphasis>Update Role</emphasis> button on the Role's page then complete the
+            form. The form has the following fields:
+        </p>
+        <table>
+            <tr>
+                <td>Field</td>
+                <td>Required</td>
+                <td>Description</td>
+            </tr>
+            <tr>
+                <td>Description</td>
+                <td>No</td>
+                <td>Description of the Role</td>
+            </tr>
+            <tr>
+                <td>Rule</td>
+                <td>No</td>
+                <td>Select which Rule - if any - is to be executed when the Role is used to grant permission</td>
+            </tr>
+        </table>
+    </chapter>
+
+    <chapter title="Remove a Role" id="remove-a-role">
+        <p>
+            To remove a Role, click the Remove button for the Role and confirm the removal in the dialog.
+            The Role will be removed.
+        </p>
+        <p>
+            Child Roles and Permissions associated with the Role are not removed, but they may become orphaned.
+        </p>
+    </chapter>
+
+    <chapter title="Manage Child Roles" id="manage-child-roles">
+        <p>
+            To manage child roles for a Role, view the Role then click the <emphasis>Manage Child Roles</emphasis>
+            button on the Child Roles tab.
+        </p>
+        <p>
+            The Manage Child Roles page shows a list of descendant Roles and a list of Roles that are not descendants of
+            the Role being managed.
+        </p>
+
+        <chapter title="Add a Child Role" id="add-a-child-role">
+            <p>
+                To make a Role a child of the Role bing managed, click the <emphasis>Add</emphasis> button for the
+                required Role; the page updates to show the latest status. The <emphasis>Add</emphasis> button is
+                disabled for Roles that can not be a child Role.
+            </p>
+        </chapter>
+
+        <chapter title="Remove a Child Role" id="remove-a-child-role">
+            <p>
+                To remove a child Role, click the <emphasis>Remove</emphasis> button for the required Role; the page
+                updates to show the latest status. The <emphasis>Remove</emphasis> button is disabled for Roles that are
+                not children of the Role being managed.
+            </p>
+            <note>Removing a Child Role does not delete it.</note>
+        </chapter>
+
+        <chapter title="Remove all Descendant Roles" id="remove-all-descendant-roles">
+            <p>
+                All descendant Roles can be removed by clicking the <emphasis>Remove All</emphasis> button; the page
+                updates to show the latest status.
+            </p>
+            <note>Removing Child Roles does not delete them.</note>
+        </chapter>
+    </chapter>
+
+    <chapter title="Manage Permissions" id="manage-permissions">
+        <p>
+            To manage Permissions for a Role, view the Role then click the <emphasis>Manage Permissions</emphasis>
+            button on the Permissions tab.
+        </p>
+        <p>
+            The Manage Permissions page shows a list of Permissions granted by the Role being managed,
+            and a list of Roles that are not granted by it.
+        </p>
+
+        <chapter title="Grant a Permission" id="grant-a-permission">
+            <p>
+                To grant a Permission to the Role bing managed, click the <emphasis>Grant</emphasis> button for the
+                required Permission; the page updates to show the latest status.
+            </p>
+        </chapter>
+
+        <chapter title="Remove a Permission" id="remove-a-permission">
+            <p>
+                To remove a Permission from the Role being managed, click the <emphasis>Remove</emphasis> button for the
+                required Permission; the page updates to show the latest status. The <emphasis>Remove</emphasis> button
+                is disabled for Permissions that are not directly granted by the Role being managed.
+            </p>
+            <note>Removing a Permission does not delete it.</note>
+        </chapter>
+
+        <chapter title="Remove all Permission" id="remove-all-permission">
+            <p>
+                To remove a Permission from the Role being managed, click the <emphasis>Remove</emphasis> button for the
+                required Permission; the page updates to show the latest status. The <emphasis>Remove</emphasis> button
+                is disabled for Permissions that are not directly granted by the Role being managed.
+            </p>
+            <note>Removing Permissions does not delete them.</note>
+        </chapter>
+    </chapter>
+
+    <seealso>
+        <category ref="rbam">
+            <a href="Manage-Permissions.topic">Manage Permissions</a>
+            <a href="Manage-Rules.topic">Manage Rules</a>
+            <a href="Manage-Users.topic">Manage Users</a>
+        </category>
+    </seealso>
+</topic>

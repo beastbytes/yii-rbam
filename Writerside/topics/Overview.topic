@@ -30,6 +30,15 @@
             <li>
                 RBAC hierarchy visualisation
             </li>
+            <li>
+                Access checker middleware
+            </li>
+            <li>
+                Initialisation via web or console command
+            </li>
+            <li>
+                Permissions console command and Permission attribute
+            </li>
         </list>
     </chapter>
 
@@ -94,6 +103,14 @@
             <a href="https://en.wikipedia.org/wiki/Role-based_access_control">
                 Wikipedia RBAC page
             </a>
+        </category>
+        <category ref="rbam">
+            <a href="Manage-Permissions.topic">Manage Permissions</a>
+            <a href="Manage-Roles.topic">Manage Roles</a>
+            <a href="Manage-Rules.topic">Manage Rules</a>
+            <a href="Manage-Users.topic">Manage Users</a>
+            <a href="Access-Checker-Middleware.topic">Access Checker Middleware</a>
+            <a href="Console-Commands.topic">Console Commands</a>
         </category>
     </seealso>
 </topic>

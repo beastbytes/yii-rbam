@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="Console Commands" id="Console-Commands">
+
+    <p>
+        The RBAM package contains two console commands:
+    </p>
+
+    <deflist>
+        <def title="rbac:addPermissions">
+            Generate RBAC Permissions that have been defined using the Permission attribute
+        </def>
+        <def title="rbam:initialise">
+            Initialises RBAM
+        </def>
+    </deflist>
+
+    <chapter title="Configuration" id="configuration">
+        <p>
+            The Yii console application must be installed. To install the Yii console application add
+            <code>"yiisoft/yii-console": "{version constraint}"</code> to the <emphasis>require</emphasis> section
+            of your <emphasis>composer.json</emphasis>.
+        </p>
+        <p>
+            To use the console command it must be configured in <emphasis>params-console</emphasis> section of your
+            configuration.
+        </p>
+        <code-block lang="php">
+            use BeastBytes\Yii\Rbam\Command\PermissionsCommand;
+            use Yiisoft\Yii\Console\Application;
+
+            return [
+                'yiisoft/yii-console' => [
+                    'name' => Application::NAME,
+                    'version' => Application::VERSION,
+                    'autoExit' => false,
+                    'commands' => [
+                        // other console commands
+                        'rbac:addPermissions' => PermissionsCommand::class,
+                    ],
+                ],
+            ];
+         </code-block>
+
+        <p>
+            To check your configuration run <code>./yii</code> from the root of your project; the output should be
+            similar to that below;
+            if <emphasis>rbac:addPermissions</emphasis> is listed in the <emphasis>rbac</emphasis> section the command
+            has been successfully configured.
+        </p>
+
+        <code-block lang="Plain Text">
+Yii Console 1.0
+
+Usage:
+  command [options] [arguments]
+
+Options:
+  -h, --help            Display help for the given command. When no command is given display help for the list command
+  -q, --quiet           Do not output any message
+  -V, --version         Display this application version
+      --ansi|--no-ansi  Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction  Do not ask any interactive question
+      --config=CONFIG   Set alternative configuration name
+  -v|vv|vvv, --verbose  Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Available commands:
+  completion           Dump the shell completion script
+  help                 Display help for a command
+  list                 List commands
+  serve                Runs PHP built-in web server
+ debug
+  debug:routes         Show information about registered routes
+ rbac
+  rbac:addPermissions  Create RBAC permissions
+ rbam
+  rbam:intialise       Initialises RBAM
+        </code-block>
+    </chapter>
+
+    <chapter title="rbac:addPermissions Command Arguments and Options" id="rbac-addpermissions-command-arguments-and-options">
+        <p>
+            Run <code>./yii rbac:addPermissions -h</code> for command help.
+        </p>
+
+        <code-block lang="Plain Text">
+            ./yii rbac:addPermissions -h
+Description:
+  Create RBAC permissions
+
+Usage:
+  rbac:addPermissions [options] [--] [src]
+
+Arguments:
+  src                    Path for source files.
+
+Options:
+  -E, --except[=EXCEPT]  Exclude path from source files. (multiple values allowed)
+  -O, --only[=ONLY]      Use the Only specified pattern for matching source files. (multiple values allowed)
+  -h, --help             Display help for the given command. When no command is given display help for the list command
+  -q, --quiet            Do not output any message
+  -V, --version          Display this application version
+      --ansi|--no-ansi   Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction   Do not ask any interactive question
+      --config=CONFIG    Set alternative configuration name
+  -v|vv|vvv, --verbose   Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  Scans the project files and adds RBAC permissions based on the Permission attributes.
+        </code-block>
+
+        <chapter title="Defaults" id="command-defaults">
+            By default the command recursively scans files named <emphasis>*Controller.php</emphasis>
+            in the <emphasis>src</emphasis> directory for the <emphasis>Permissions</emphasis> attribute.
+            <deflist>
+                <def title="src">./src</def>
+                <def title="-E">'./config/**', './resources/**', './tests/**', './vendor/**'</def>
+                <def title="-O">'**Controller.php'</def>
+            </deflist>
+        </chapter>
+    </chapter>
+
+    <chapter title="Running the Command" id="running-the-command">
+        <p>
+            Run <code>./yii rbac:addPermissions</code>.
+        </p>
+
+        <p>
+            The command scans files for the Permission attribute and adds the RBAC permissions it finds.
+        </p>
+
+        <p>
+            If the command finds duplicate Permission attributes, the first is used.
+        </p>
+
+        <note>
+            As the command name implies, Permissions are added to any existing RBAC items.
+        </note>
+    </chapter>
+
+    <chapter title="Permission Attribute" id="permission-attribute">
+        The Permission attribute defines the RBAC Permission for a method; it has the following parameters:
+
+        <table>
+            <tr>
+                <td>Parameter</td>
+                <td>Description</td>
+                <td>Type</td>
+                <td>Required</td>
+            </tr>
+            <tr>
+                <td>name</td>
+                <td>Name of the Permission</td>
+                <td>StringBackedEnum|string</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>description</td>
+                <td>Description of the Permission</td>
+                <td>string</td>
+                <td>No</td>
+            </tr>
+            <tr>
+                <td>parent</td>
+                <td>Name of the Permission's parent item.
+                    <note>
+                        The parent Item must exist in RBAC Item storage before running the command
+                        for the child/parent relationship to be created
+                    </note>
+                </td>
+                <td>StringBackedEnum|string</td>
+                <td>No</td>
+            </tr>
+            <tr>
+                <td>rule</td>
+                <td>Name of Rule to be applied</td>
+                <td>StringBackedEnum|string</td>
+                <td>No</td>
+            </tr>
+        </table>
+
+        <chapter title="Defining a Method's RBAC Permission" id="defining-a-method-s-rbac-permission">
+            <p>
+                To define the RBAC Permission for a controller method, add the Permission attribute to the method.
+            </p>
+
+            <code-block lang="php">
+                final class RbamController
+                {
+                    public const RBAM_ROLE = 'Rbam';
+
+                    #[PermissionAttribute(
+                        name: RbamPermission::RbamIndex,
+                        description: 'Allows access to RBAM',
+                        parent: self::RBAM_ROLE
+                    )]
+                    public function index(
+                        // parameters
+                    ): ResponseInterface
+                    {
+                        // code
+                    }
+                }
+            </code-block>
+
+            <note>
+                The RBAM package defines its permissions using the Permission attribute;
+                look at Controller source code for examples
+            </note>
+
+        </chapter>
+    </chapter>
+
+    <chapter title="rbam:initialise Command Arguments" id="rbam-initialise-command-arguments">
+        The command has one required argument: the user ID of the user to be assigned the Rbam Role.
+        This user is granted full access to all RBAM functions.
+    </chapter>
+</topic>

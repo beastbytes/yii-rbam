@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="Initialise RBAM" id="Initialise-RBAM">
+
+    <p>Before RBAM can be used, it must be initialised to setup its own access control.</p>
+    <p>
+        There is one Role - <code>Rbam</code> - which grants all RBAM Permissions.
+        If this does not meet your requirements, use RBAM to change access control once it has been initialised.
+    </p>
+    <note>
+        Add additional Roles to setup access control to RBAM to meet your needs if required
+    </note>
+    <warning>
+        Do not change RBAM Permissions
+    </warning>
+
+    <p>The RBAM system can be initialised by:</p>
+    <list>
+        <li>
+            <p>Going to <code>/rbam/init</code> in the browser.</p>
+            <p>This method assigns the <code>Rbam</code> Role to the <emphasis>Current User</emphasis></p>
+        </li>
+        <li>
+            <p>Running the <code>rbam:init</code> console command.</p>
+            <p>This method asks for the user ID to assign to the <code>Rbam</code> Role.</p>
+        </li>
+    </list>
+
+    <p>Once intialised, RBAM cannot be initialised again without removing all Roles.</p>
+</topic>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="Manage Users" id="Manage-Users">
+
+    <chapter title="Overview" id="overview">
+        <p>
+            This section describes how Manage Users within RBAM.
+        </p>
+        <p>
+            Managing Users consists of assigning and revoking Roles to/from users.
+            The Users are defined elsewhere in the application.
+        </p>
+    </chapter>
+
+    <chapter title="Users" id="users">
+        <p>
+            On the RBAM home page, click the <emphasis>Manage Users</emphasis> button.
+            A paged list of users is displayed showing the number of Roles and Permissions for each user.
+        </p>
+        <p>
+            To view the details for a user, click the <emphasis>View</emphasis> button.
+        </p>
+    </chapter>
+
+    <chapter title="User" id="user">
+        <p>
+            The user page shows the Roles assigned to a user, Roles not currently assigned, and Permission that Role
+            assignments grant.
+        </p>
+        <p>
+            A user can be assigned a Role directly or indirectly; an indirectly assigned Role is a descendant of
+            a directly assigned Role.
+        </p>
+        <p>
+            Roles can be assigned to and revoked from the user; Roles can be revoked individually or all Roles
+            can be revoked.
+        </p>
+        <note>
+            <p>
+                Indirectly assigned Roles can not be individually revoked.
+            </p>
+            <p>
+                To revoke an indirectly assigned role the directly assigned ancestor Role must be revoked, or the
+                indirectly assigned Role removed from the directly assigned Role's hierarchy.
+            </p>
+        </note>
+
+        <chapter title="Assign a Role" id="assign-a-role">
+            <p>
+                To assign a Role to a user, click Assign button for an unassigned Role.
+                The user will be directly assigned this Role and indirectly assigned any descendant Roles,
+                and granted Permissions associated with all the assigned Roles.
+            </p>
+            <p>
+                The page will show the users new Role assignment(s) and Permissions.
+            </p>
+        </chapter>
+
+        <chapter title="Revoke a Role" id="revoke-a-role">
+            <p>
+                To revoke a Role from a user, click the Revoke button for an assigned Role.
+                The Role and any descendant Roles will be revoked,
+                as will Permissions associated with all the revoked Roles.
+            </p>
+            <p>
+                The page will show the users new Role assignment(s) and Permissions.
+            </p>
+        </chapter>
+
+        <chapter title="Revoke all Roles" id="revoke-all-roles">
+            <p>
+                Click the Revoke All button. All Roles and Permissions will be revoked.
+            </p>
+            <p>
+                The page will show the users new Role assignment(s) and Permissions.
+            </p>
+        </chapter>
+    </chapter>
+
+    <seealso>
+        <category ref="rbam">
+            <a href="Manage-Roles.topic">Manage Roles</a>
+        </category>
+    </seealso>
+</topic>

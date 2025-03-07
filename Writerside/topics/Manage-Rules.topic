@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="Manage Rules" id="Manage-Rules">
+
+    <chapter title="Overview" id="overview">
+        <p>
+            This section describes how manage Rules within RBAM.
+        </p>
+        <p>
+            Managing Rules consists of creating, updating, and deleting Rules,.
+        </p>
+    </chapter>
+
+    <chapter title="Rules" id="rules">
+        <p>
+            On the RBAM home page, click the <emphasis>Manage Rules</emphasis> button.
+            A paged list of Rules is displayed. The following information is given for each Rule:
+        </p>
+        <list>
+            <li>Name of the Rule</li>
+            <li>Description of the Rule</li>
+        </list>
+        <p>
+            To view the details for a Rule, click the <emphasis>View</emphasis> button.
+        </p>
+        <p>
+            To update a Rule, click the <emphasis>Update</emphasis> button.
+        </p>
+        <p>
+            To remove a Rule, click the <emphasis>Remove</emphasis> button.
+        </p>
+    </chapter>
+
+    <chapter title="Rule" id="rule">
+        <p>
+            The Rule page shows details for the Rule; the following details are shown:
+        </p>
+        <list>
+            <li>Name of the Rule</li>
+            <li>Description of the Rule</li>
+            <li>The Rule's <code>execute()</code> method</li>
+        </list>
+        <p>
+            To update the Rule, click the <emphasis>Update</emphasis> button.
+        </p>
+    </chapter>
+
+    <chapter title="Create a Rule" id="create-a-rule">
+        <p>
+            To create a Rule, click the <emphasis>Create Rule</emphasis> button on the Rules page then complete the
+            form. The form has the following fields:
+        </p>
+        <table>
+            <tr>
+                <td>Field</td>
+                <td>Required</td>
+                <td>Description</td>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td>Yes</td>
+                <td>Name of the Rule in PascalCase</td>
+            </tr>
+            <tr>
+                <td>Description</td>
+                <td>Yes</td>
+                <td>Description of the Rule</td>
+            </tr>
+            <tr>
+                <td>Execute Method</td>
+                <td>Yes</td>
+                <td>
+                    <p>Body of the execute() method</p>
+                    <p>
+                        The return value is a boolean:<br/>
+                        <code>true</code> if the Rule permits the Role or Permission it is attached to be considered<br/>
+                        <code>false</code> if the Rule denies authorisation
+                    </p>
+                </td>
+            </tr>
+        </table>
+    </chapter>
+
+    <chapter title="Update a Rule" id="update-a-rule">
+        <p>
+            To update a Rule, click the <emphasis>Update Rule</emphasis> button on the Rule's page then complete the
+            form. The form has the following fields:
+        </p>
+        <table>
+            <tr>
+                <td>Field</td>
+                <td>Required</td>
+                <td>Description</td>
+            </tr>
+            <tr>
+                <td>Description</td>
+                <td>Yes</td>
+                <td>Description of the Rule</td>
+            </tr>
+            <tr>
+                <td>Execute Method</td>
+                <td>Yes</td>
+                <td>Body of the execute() method</td>
+            </tr>
+        </table>
+    </chapter>
+
+    <chapter title="Remove a Rule" id="remove-a-rule">
+        <p>
+            To remove a Rule, click the Remove button for the Rule and confirm the removal in the dialog.
+            The Rule will be removed and Roles and Permissions using the Rule updated.
+        </p>
+    </chapter>
+
+    <seealso>
+        <category ref="rbam">
+            <a href="Manage-Permissions.topic">Manage Permissions</a>
+            <a href="Manage-Roles.topic">Manage Roles</a>
+            <a href="Manage-Users.topic">Manage Users</a>
+        </category>
+    </seealso>
+</topic>

@@ -7,4 +7,11 @@
                   start-page="Overview.topic">
 
     <toc-element topic="Overview.topic"/>
+    <toc-element topic="Initialise-RBAM.topic"/>
+    <toc-element topic="Manage-Permissions.topic"/>
+    <toc-element topic="Manage-Roles.topic"/>
+    <toc-element topic="Manage-Rules.topic"/>
+    <toc-element topic="Manage-Users.topic"/>
+    <toc-element topic="Access-Checker-Middleware.topic"/>
+    <toc-element topic="Console-Commands.topic"/>
 </instance-profile>

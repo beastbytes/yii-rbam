@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="Manage Permissions" id="Manage-Permissions">
+
+    <chapter title="Overview" id="overview">
+        <p>
+            This section describes how manage Permissions within RBAM.
+        </p>
+        <p>
+            Managing Permissions consists of creating, updating, and deleting Permissions.
+        </p>
+    </chapter>
+
+    <chapter title="Permissions" id="permissions">
+        <p>
+            On the RBAM home page, click the <emphasis>Manage Permissions</emphasis> button.
+            A paged list of Permissions is displayed. The following information is given for each Permission:
+        </p>
+        <list>
+            <li>Name of the Permission</li>
+            <li>Description of the Permission</li>
+            <li>Name of the Role that grants the Permission</li>
+            <li>Date and time the Permission was created</li>
+            <li>Date and time the Permission was last updated</li>
+        </list>
+        <p>
+            To view the details for a Permission, click the <emphasis>View</emphasis> button.
+        </p>
+        <p>
+            To remove a Permission, click the <emphasis>Remove</emphasis> button.
+        </p>
+    </chapter>
+
+    <chapter title="Permission" id="permission">
+        <p>
+            The Permission page shows details for the Permission. To update the Permission, click the
+            <emphasis>Update</emphasis> button.
+        </p>
+        <p>
+            The tabs show:
+        </p>
+        <deflist>
+            <def title="Permitted Users">
+                <p>
+                    List of the users granted the Permission.
+                </p>
+            </def>
+            <def title="Diagram">
+                <p>
+                    Diagram showing the Permission's place in the RBAC hierarchy.
+                </p>
+            </def>
+        </deflist>
+    </chapter>
+
+    <chapter title="Create a Permission" id="create-a-permission">
+        <p>
+            To create a Permission, click the <emphasis>Create Permission</emphasis> button on the Permissions page then
+            complete the form. The form has the following fields:
+        </p>
+        <table>
+            <tr>
+                <td>Field</td>
+                <td>Required</td>
+                <td>Description</td>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td>Yes</td>
+                <td><p>Name of the Permission in PascalCase</p></td>
+            </tr>
+            <tr>
+                <td>Description</td>
+                <td>No</td>
+                <td>Description of the Permission</td>
+            </tr>
+            <tr>
+                <td>Rule</td>
+                <td>No</td>
+                <td>Select which Rule - if any - is to be executed when the Permission is used to grant permission</td>
+            </tr>
+        </table>
+    </chapter>
+
+    <chapter title="Update a Permission" id="update-a-permission">
+        <p>
+            To update a Permission, click the <emphasis>Update Permission</emphasis> button on the Permission's page
+            then complete the form. The form has the following fields:
+        </p>
+        <table>
+            <tr>
+                <td>Field</td>
+                <td>Required</td>
+                <td>Description</td>
+            </tr>
+            <tr>
+                <td>Description</td>
+                <td>No</td>
+                <td>Description of the Permission</td>
+            </tr>
+            <tr>
+                <td>Rule</td>
+                <td>No</td>
+                <td>Select which Rule - if any - is to be executed when the Permission is used to grant permission</td>
+            </tr>
+        </table>
+    </chapter>
+
+    <chapter title="Remove a Permission" id="remove-a-permission">
+        <p>
+            To remove a Permission, click the Remove button for the Permission and confirm the removal in the dialog.
+            The Permission will be removed.
+        </p>
+    </chapter>
+
+    <seealso>
+        <category ref="rbam">
+            <a href="Manage-Permissions.topic">Manage Permissions</a>
+            <a href="Manage-Rules.topic">Manage Rules</a>
+            <a href="Manage-Users.topic">Manage Users</a>
+        </category>
+    </seealso>
+</topic>
