@@ -57,7 +57,11 @@
     text-decoration-line: none;
     user-select: none;
 }
-.rbam .btn_cancel {
+.rbam .btn_cancel,
+.rbam .btn_remove,
+.rbam .btn_remove-all,
+.rbam .btn_revoke,
+.rbam .btn_revoke-all {
     background: var(--yii-red);
     color: aliceblue;
 }
@@ -65,21 +69,22 @@
 .rbam .btn_update,
 .rbam .btn_view {
     background: var(--yii-blue);
-    color: aliceblue;
+    color: #222222;
 }
-.rbam .btn_remove,
-.rbam .btn_remove-all,
-.rbam .btn_revoke,
-.rbam .btn_revoke-all {
-    background: var(--yii-orange);
-    color: aliceblue;
-}
+.rbam .btn_add,
+.rbam .btn_assign,
 .rbam .btn_continue,
 .rbam .btn_create,
 .rbam .btn_done,
+.rbam .btn_grant,
 .rbam .btn_submit {
     background: var(--yii-green);
-    color: aliceblue;
+    color: #222222;
+}
+.rbam .btn[disabled] {
+    background: hsl(0, 0%, 50%);
+    color: hsl(0, 0%, 85%);;
+    cursor: default;
 }
 .rbam .cards {
     display: grid;
@@ -260,6 +265,9 @@
 }
 .rbam .grid tbody tr:nth-child(even) {
     background-color: hsl(0, 0%, 95%);
+}
+.rbam .indirect {
+    color: #4b4b4b;
 }
 .rbam .justify-evenly {
     justify-content: space-evenly;
