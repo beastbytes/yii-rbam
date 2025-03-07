@@ -67,11 +67,3 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
     ]
 )
 ?>
-
-<?= Html::a(
-    $translator->translate($rbamParameters->getButtons('done')['content']),
-    $urlGenerator->generate('rbam.rbam'),
-    $rbamParameters->getButtons('done')['attributes']
-)
-    ->render()
-?>

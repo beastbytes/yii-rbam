@@ -16,21 +16,18 @@ declare(strict_types=1);
  * @var Inflector $inflector
  * @var Item $item
  * @var RbamParameters $rbamParameters
- * @var Role[] $roles
  * @var WebView $this
  * @var TranslatorInterface $translator
+ * @var Role[] $unassignedRoles
  * @var UrlGeneratorInterface $urlGenerator
  * @var UserInterface $user
  */
 
 use BeastBytes\Yii\Rbam\Assets\RbamAsset;
-use BeastBytes\Yii\Rbam\ItemTypeService;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use BeastBytes\Yii\Rbam\UserInterface;
 use Yiisoft\Assets\AssetManager;
-use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Input\Checkbox;
 use Yiisoft\Rbac\Assignment;
 use Yiisoft\Rbac\Item;
 use Yiisoft\Rbac\ItemsStorageInterface;
@@ -40,12 +37,6 @@ use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
-use Yiisoft\Yii\DataView\Column\ActionButton;
-use Yiisoft\Yii\DataView\Column\Base\DataContext;
-use Yiisoft\Yii\DataView\Column\CheckboxColumn;
-use Yiisoft\Yii\DataView\Column\ActionColumn;
-use Yiisoft\Yii\DataView\Column\DataColumn;
-use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\View\Renderer\Csrf;
 
 $assetManager->register(RbamAsset::class);
@@ -65,133 +56,22 @@ $breadcrumbs = [
     Html::encode($this->getTitle())
 ];
 $this->setParameter('breadcrumbs', $breadcrumbs);
-
-$assignmentNames = array_keys($assignments);
 ?>
 
-<h1><?= Html::encode($this->getTitle()) ?></h1>
+<h2><?= Html::encode($this->getTitle()) ?></h2>
 
-<?= GridView::widget()
-    ->dataReader(new IterableDataReader($roles))
-    ->containerAttributes(['class' => 'grid-view roles', 'id' => 'roles'])
-    ->header($translator->translate('label.roles-assigned'))
-    ->headerAttributes(['class' => 'header'])
-    ->tableAttributes(['class' => 'grid'])
-    ->tbodyAttributes([
-        'data-csrf' => $csrf,
-        'data-checked_url' => $urlGenerator->generate('rbam.assign'),
-        'data-unchecked_url' => $urlGenerator->generate('rbam.revoke'),
-        'data-item' => $user->getId(),
-        'id' => 'js-items',
-    ])
-    ->layout("{header}\n<div class=\"toolbar\">{toolbar}</div>\n{items}")
-    ->toolbar(
-        !empty($roles)
-        ? Html::button(
-            $translator->translate($rbamParameters->getButtons('revokeAll')['content']),
-            array_merge(
-                $rbamParameters->getButtons('revokeAll')['attributes'],
-                [
-                    'id' => 'all_items',
-                    'data-url' => $urlGenerator->generate('rbam.revokeAll'),
-                    'type' => 'button'
-                ]
-            )
-        )
-            ->render()
-        : ''
-    )
-    ->emptyText($translator->translate('message.no-roles-assigned'))
-    ->columns(
-        new CheckboxColumn(
-            header: $translator->translate('label.assigned'),
-            content: static function (Checkbox $input, DataContext $context)
-                use ($assignedRoles, $assignmentNames, $inflector)
-            {
-                $checked = false;
-                $disabled = false;
-
-                foreach ($assignedRoles as $assignedRole):
-                    if ($context->data === $assignedRole):
-                        $checked = true;
-
-                        if (!in_array($context->data->getName(), $assignmentNames, true)) {
-                            $disabled = true;
-                        }
-
-                        break;
-                    endif;
-                endforeach;
-
-                return $input
-                    ->checked($checked)
-                    ->disabled($disabled)
-                    ->name($inflector->toSnakeCase($context->data->getName()))
-                ;
-            }
-        ),
-        new DataColumn(
-            header: $translator->translate('label.name'),
-            content: static fn(Item $item) => $item->getName()
-        ),
-        new DataColumn(
-            header: $translator->translate('label.description'),
-            content: static fn(Item $item) => $item->getDescription()
-        ),
-        new DataColumn(
-            header: $translator->translate('label.assigned'),
-            content: static function (Item $item) use ($assignments, $assignmentNames, $rbamParameters)
-            {
-                if (in_array($item->getName(), $assignmentNames, true)) {
-                    return (new DateTime())
-                        ->setTimestamp($assignments[$item->getName()]->getCreatedAt())
-                        ->format($rbamParameters->getDatetimeFormat())
-                    ;
-                }
-
-                return '';
-            }
-        ),
-        new ActionColumn(
-            template: '{view}',
-            urlCreator: static function($action, $context) use ($inflector, $urlGenerator)
-            {
-                return $urlGenerator->generate('rbam.' . $action . 'Item', [
-                    'name' => $inflector->toSnakeCase($context->key),
-                    'type' => ItemTypeService::getItemType($context->data)
-                ]);
-            },
-            buttons: [
-                'view' => new ActionButton(
-                    content: $translator->translate($rbamParameters->getButtons('view')['content']),
-                    attributes: $rbamParameters->getButtons('view')['attributes'],
-                ),
-            ],
-            bodyAttributes: ['class' => 'action'],
-        ),
-    )
-?>
-
-<?= $this->render(
-    '../item/_items',
-    [
-        'actionButtons' => ['view'],
-        'dataReader' => new IterableDataReader($permissionsGranted),
-        'header' => $translator->translate('label.permissions-granted'),
-        'emptyText' => $translator->translate('message.no-permissions-granted'),
-        'itemsStorage' => $itemsStorage,
-        'toolbar' => '',
-        'translator' => $translator,
-        'type' => 'permission',
-        'urlGenerator' => $urlGenerator,
-    ]
-)
-?>
-
-<?= Html::a(
-    $translator->translate($rbamParameters->getButtons('done')['content']),
-    $urlGenerator->generate('rbam.userIndex'),
-    $rbamParameters->getButtons('done')['attributes']
-)
-    ->render()
-?>
+<div id="js-items" data-csrf="<?= $csrf ?>" data-item="<?= $user->getId() ?>">
+    <?= $this->render(
+        '_assignments',
+        [
+            'assignments' => $assignments,
+            'assignedRoles' => $assignedRoles,
+            'itemsStorage' => $itemsStorage,
+            'permissionsGranted' => $permissionsGranted,
+            'rbamParameters' => $rbamParameters,
+            'translator' => $translator,
+            'unassignedRoles' => $unassignedRoles,
+            'urlGenerator' => $urlGenerator,
+        ]
+    ) ?>
+</div>

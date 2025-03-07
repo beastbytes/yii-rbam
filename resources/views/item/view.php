@@ -69,10 +69,7 @@ foreach ($rbamParameters->getMermaidDiagramStyles() as $class => $styles):
 endforeach;
 $this->registerCss($css);
 
-$this->setTitle($translator->translate(
-    'label.' . ItemTypeService::getItemType($item) . '-name',
-    ['name' => $item->getName()]
-));
+$this->setTitle($item->getName());
 
 $breadcrumbs = [
     [
@@ -169,16 +166,3 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
         'users' => $users,
     ]
 ) ?>
-
-<?= Html::a(
-    $translator->translate($rbamParameters->getButtons('done')['content']),
-    $urlGenerator->generate(
-        'rbam.itemIndex',
-        [
-            'type' => ItemTypeService::getItemType($item) . 's',
-        ]
-    ),
-    $rbamParameters->getButtons('done')['attributes']
-)
-    ->render()
-?>

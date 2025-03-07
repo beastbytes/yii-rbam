@@ -63,7 +63,13 @@ echo Tabs::widget(['data' => [
             ),
             new DataColumn(
                 header: $translator->translate('label.assigned'),
-                content: static function (UserInterface $user) use ($assignments, $rbamParameters, $translator) {
+                content: static function (UserInterface $user) use (
+                    $assignments,
+                    $item,
+                    $itemsStorage,
+                    $rbamParameters,
+                    $translator
+                ) {
                     $userId = $user->getId();
 
                     foreach ($assignments as $assignment) {
@@ -75,8 +81,13 @@ echo Tabs::widget(['data' => [
                         }
                     }
 
-                    // Assignment is via an ancestor
-                    return $translator->translate('label.via-ancestor-role');
+                    $ancestors = $itemsStorage
+                        ->getParents($item->getName())
+                    ;
+
+                    $parent = array_shift($ancestors);
+
+                    return $parent->getName();
                 }
             ),
             new ActionColumn(
@@ -110,7 +121,7 @@ echo Tabs::widget(['data' => [
             'toolbar' => Html::a(
                 content: $translator->translate($rbamParameters->getButtons('manageChildRoles')['content']),
                 url: $urlGenerator->generate(
-                    'rbam.children',
+                    'rbam.childRoles',
                     ['name' => $inflector->toSnakeCase($item->getName()), 'type' => Item::TYPE_ROLE]
                 ),
                 attributes: $rbamParameters->getButtons('manageChildRoles')['attributes']
@@ -134,7 +145,7 @@ echo Tabs::widget(['data' => [
             'toolbar' => Html::a(
                 content: $translator->translate($rbamParameters->getButtons('managePermissions')['content']),
                 url: $urlGenerator->generate(
-                    'rbam.children',
+                    'rbam.rolePermissions',
                     ['name' => $inflector->toSnakeCase($item->getName()), 'type' => Item::TYPE_PERMISSION]
                 ),
                 attributes: $rbamParameters->getButtons('managePermissions')['attributes']
