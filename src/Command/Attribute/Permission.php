@@ -7,7 +7,7 @@ namespace BeastBytes\Yii\Rbam\Command\Attribute;
 use Attribute;
 use StringBackedEnum;
 
-#[Attribute(Attribute::TARGET_METHOD | Attribute::IS_REPEATABLE)]
+#[Attribute(Attribute::TARGET_METHOD)]
 final class Permission
 {
     public function __construct(
