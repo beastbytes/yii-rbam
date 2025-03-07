@@ -9,6 +9,14 @@ declare(strict_types=1);
 return [
     'beastbytes/yii-rbam' => [
         'buttons' => [ // allows use of icon fonts and/or css frameworks to style buttons
+            'add' => [
+                'attributes' => ['class' => 'btn btn_add'],
+                'content' => 'button.add',
+            ],
+            'assign' => [
+                'attributes' => ['class' => 'btn btn_assign'],
+                'content' => 'button.assign',
+            ],
             'cancel' => [
                 'attributes' => ['class' => 'btn btn_cancel'],
                 'content' => 'button.cancel',
@@ -25,9 +33,17 @@ return [
                 'attributes' => ['class' => 'btn btn_create'],
                 'content' => 'button.create-rule',
             ],
+            'deny' => [
+                'attributes' => ['class' => 'btn btn_deny'],
+                'content' => 'button.deny',
+            ],
             'done' => [
                 'attributes' => ['class' => 'btn btn_done'],
                 'content' => 'button.done',
+            ],
+            'grant' => [
+                'attributes' => ['class' => 'btn btn_grant'],
+                'content' => 'button.grant',
             ],
             'manageChildRoles' => [
                 'attributes' => ['class' => 'btn btn_manage'],
@@ -48,6 +64,10 @@ return [
             'removeAll' => [
                 'attributes' => ['class' => 'btn btn_remove-all'],
                 'content' => 'button.remove-all',
+            ],
+            'revoke' => [
+                'attributes' => ['class' => 'btn btn_revoke'],
+                'content' => 'button.revoke',
             ],
             'revokeAll' => [
                 'attributes' => ['class' => 'btn btn_revoke-all'],

@@ -38,7 +38,7 @@ return [
             '@public' => '@root/public',
             '@rbac' => '@root/rbac',
             '@resources' => '@root/resources',
-            '@rbacRules' => '@rbac/rules',
+            '@rbacRules' => '@root/rbac/rules',
             '@runtime' => '@root/runtime',
             '@src' => '@root/src',
             '@vendor' => '@root/vendor',
