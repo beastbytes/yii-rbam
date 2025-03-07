@@ -13,9 +13,15 @@ use Yiisoft\Rbac\RuleInterface;
 
 Interface RuleServiceInterface
 {
+    public function delete(string $name): void;
+
+    /** @return string[] */
     public function getRuleNames(): array;
 
     public function getRule(string $name): ?RbamRuleInterface;
 
-    public function save(RuleForm $model, ?string $previousName = null): bool;
+    /** @return RbamRuleInterface[] */
+    public function getRules(): array;
+
+    public function save(string $name, string $description, string $code): bool;
 }
