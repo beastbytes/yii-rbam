@@ -4,66 +4,50 @@
  */
 
 const rbam = {
-    items: null,
-
     init: function() {
-        const itemList = document.getElementById("js-items")
-        const config = {
-            csrf: itemList.getAttribute("data-csrf"),
-            item: itemList.getAttribute("data-item"),
-            checkedUrl: itemList.getAttribute("data-checked_url"),
-            uncheckedUrl: itemList.getAttribute("data-unchecked_url")
-        }
-
-        rbam.items = document.querySelectorAll("#js-items input")
-
-        for (const item of rbam.items) {
-            item.addEventListener(
+        for (const button of document.querySelectorAll("tbody .action .btn")) {
+            button.addEventListener(
                 'click',
                 (e) => {
-                    rbam.action(e.target, config)
+                    e.preventDefault()
+                    rbam.action(e.target)
                 }
             )
         }
 
-        document.getElementById("all_items").addEventListener(
-            'click',
-            (e) => {
-                rbam.all(e.target, config)
-            }
-        )
-    },
-    action: function(target, config) {
-        const formData = new FormData()
-
-        formData.set("_csrf", config.csrf)
-        formData.set("name", target.name)
-        formData.set("item", config.item)
-
-        const request = new Request(target.checked ? config.checkedUrl: config.uncheckedUrl, {
-            method: "POST",
-            body: formData
-        })
-
-        fetch(request)
-    },
-    all: function(target, config) {
-        const formData = new FormData()
-
-        formData.set("_csrf", config.csrf)
-        formData.set("item", config.item)
-
-        const request = new Request(target.getAttribute("data-url"), {
-            method: "POST",
-            body: formData
-        })
-
-        fetch(request)
-            .then(r => {
-                for (const item of rbam.items) {
-                    item.checked = false
+        const allItems = document.getElementById("all_items")
+        if (allItems !== null) {
+            allItems.addEventListener(
+                'click',
+                (e) => {
+                    e.preventDefault()
+                    rbam.action(e.target)
                 }
-            })
+            )
+        }
+    },
+    action: async function(target) {
+        const container = document.getElementById("js-items")
+        const dataset = container.dataset
+        const formData = new FormData()
+
+        for (const property in dataset) {
+            formData.set(property, dataset[property])
+        }
+
+        if (target.dataset.hasOwnProperty('name')) {
+            formData.set("name", target.dataset.name)
+        }
+
+        const request = new Request(target.dataset.href, {
+            method: "POST",
+            body: formData
+        })
+
+        const response = await fetch(request)
+        container.innerHTML = await response.text()
+
+        rbam.init()
     }
 }
 
