@@ -29,7 +29,11 @@
         "yiisoft/strings": "^2.0",
         "yiisoft/translator": "^3.0",
         "yiisoft/translator-message-php": "^1.0",
+        "yiisoft/user": "^2.0",
+        "yiisoft/yii-console": "^2.0",
         "yiisoft/yii-dataview": "dev-master",
+        "yiisoft/yii-event": "^2.0",
+        "yiisoft/yii-runner-console": "^2.0",
         "yiisoft/yii-view-renderer": "^7.0"
     },
     "require-dev": {
@@ -49,8 +53,7 @@
         "yiisoft/config": "^1.0",
         "yiisoft/log-target-file": "dev-master",
         "yiisoft/rbac-php": "dev-master",
-        "yiisoft/router": "^3.0",
-        "yiisoft/router-fastroute": "^3.0",
+        "yiisoft/router-fastroute": "^4.0",
         "yiisoft/yii-runner-http": "^3.0"
     },
     "autoload": {
