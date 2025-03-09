@@ -11,9 +11,9 @@ use StringBackedEnum;
 final class Permission
 {
     public function __construct(
-        private StringBackedEnum|string $name,
+        private Enum|string $name,
         private ?string $description = null,
-        private StringBackedEnum|string|null $parent = null,
+        private Enum|string|null $parent = null,
         private StringBackedEnum|string|null $ruleName = null,
     )
     {

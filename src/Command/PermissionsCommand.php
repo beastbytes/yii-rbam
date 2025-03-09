@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace BeastBytes\Yii\Rbam\Command;
 
 use BeastBytes\Yii\Rbam\Command\Attribute\Permission as PermissionAttribute;
-use BeastBytes\Yii\Rbam\Permission as RbamPermission;
 use ReflectionClass;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -48,7 +47,7 @@ class PermissionsCommand extends Command
                 'only',
                 'O',
                 InputOption::VALUE_IS_ARRAY | InputOption::VALUE_OPTIONAL,
-                'Use the Only specified pattern for matching source files.',
+                'Use Only the specified pattern for matching source files.',
                 [],
             )
             ->addArgument(
@@ -130,7 +129,7 @@ class PermissionsCommand extends Command
                     return;
                 }
 
-                $name = is_string($arguments['name']) ? $arguments['name'] : $arguments['name']->value;
+                $name = is_string($arguments['name']) ? $arguments['name'] : $arguments['name']->name;
 
                 if (
                     $this->manager->getRole($name) !== null
@@ -149,7 +148,7 @@ class PermissionsCommand extends Command
 
                             $permission = $permission->$with((is_string($arguments[$argument]))
                                 ? $arguments[$argument]
-                                : $arguments[$argument]->value
+                                : $arguments[$argument]->name
                             );
                         }
                     }
