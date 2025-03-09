@@ -89,16 +89,6 @@ return [
         'datetimeFormat' => 'Y-m-d H:i:s',
         'defaultRoles' => [],
         'mermaidDiagramStyles' => [
-            'ancestor_permission' => [
-                'line.divider' => [
-                    'stroke' => 'hsl(195, 66%, 55%)',
-                ],
-                'rect' => [
-                    'fill' => 'hsl(195, 66%, 90%)',
-                    'stroke' => 'hsl(195, 66%, 55%)',
-                    'stroke-width' => '1',
-                ],
-            ],
             'ancestor_role' => [
                 'line.divider' => [
                     'stroke' => 'hsl(195, 66%, 55%)',
@@ -115,7 +105,7 @@ return [
                 ],
                 'rect' => [
                     'fill' => 'hsl(88, 60%, 90%)',
-                    'stroke' => 'hsl(88, 60%, 49%)',
+                    'stroke' => 'hsl(88, 60%, 29%)',
                     'stroke-width' => '1',
                 ],
             ],
@@ -135,7 +125,7 @@ return [
                 ],
                 'rect' => [
                     'fill' => 'hsl(29, 88%, 90%)',
-                    'stroke' => 'hsl(29, 88%, 55%)',
+                    'stroke' => 'hsl(29, 88%, 35%)',
                     'stroke-width' => '1',
                 ],
             ],
