@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="rbac:addPermissions Command" id="rbac-addPermissions-Command">
+
+    <chapter title="NAME" id="name">
+        <p>
+            rbac:addPermissions - scans project files and adds RBAC Permissions defined by the Permission attribute
+        </p>
+    </chapter>
+    <chapter title="SYNOPSIS" id="synopsis">
+        <p>
+            rbac:addPermissions [OPTION]... [SRC]
+        </p>
+    </chapter>
+    <chapter title="DESCRIPTION" id="description">
+        <p>
+            <code>rbac:addPermissions</code> is a Yii console command that adds RBAC Permissions defined by the Permission
+            attribute. If the Permission name already exists in RBAC the attribute is ignored.
+        </p>
+        <p>
+            The command recursively scans project files in the SRC directory and adds Permissions defined by the
+            Permission attribute to RBAC. The default SRC directory is the current working directory.
+        </p>
+    </chapter>
+    <chapter title="OPTIONS" id="options">
+        <p>
+            These options are in addition to the Yii console command options.
+        </p>
+        <p>
+            -E, --except<br/>
+            Exclude path(s) from source files. Use a comma separated list for multiple paths.<br/>
+            <b>Default</b>: ./config/**,./resources/**,./tests/**,./vendor/**
+        </p>
+        <p>
+            -O, --only<br/>
+            Use Only the specified pattern for matching source files.
+            Use a comma separated list for multiple patterns<br/>
+            <b>Default</b>: **Controller.php
+        </p>
+    </chapter>
+    <chapter title="EXAMPLES" id="examples">
+        <p>
+            <code>yii rbac:addPermissions src</code><br/>
+            Recursively scan the <emphasis>src</emphasis> directory
+            and add RBAC Permissions defined by the Permissions attribute.
+        </p>
+        <p>
+            <code>yii rbac:addPermissions -E ./config/**,./mydir/**,./resources/**,./tests/**,./vendor/**</code><br/>
+            Recursively scan all directories except ./config, ./mydir, ./resources, ./tests, and ./tests
+            and add RBAC Permissions defined by the Permissions attribute.
+        </p>
+        <p>
+            <code>yii rbac:addPermissions -O **Action.php,**Controller.php src</code><br/>
+            Recursively scan the <emphasis>src</emphasis> directory and add RBAC Permissions defined by the Permissions
+            attribute in files with names ending in <emphasis>Action.php</emphasis>
+            and <emphasis>Controller.php</emphasis>.
+        </p>
+    </chapter>
+    <seealso>
+        <category ref="rbam">
+            <a href="Permission-Attribute.topic"/>
+        </category>
+    </seealso>
+</topic>

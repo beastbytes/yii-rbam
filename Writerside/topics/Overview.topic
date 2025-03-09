@@ -7,19 +7,25 @@
 
     <p>
         Role Based Access Manager (RBAM) is a web UI for
-        the Yii3 <a href="https://github.com/yiisoft/rbac">Role Based Access Control (RBAC)</a> package.
+        the Yii3 <a href="https://github.com/yiisoft/rbac">Role Based Access Control (RBAC)</a> package
+        that greatly simplifies creating and managing a project's RBAC Roles, Permissions, Rules and hierarchy.
+    </p>
+    <p>The RBAM package also contains console commands to initialise RBAM,
+        to scan project source for RBAC Permissions defined by the Permission attribute and add them to RBAC,
+        and the Permission attribute that can be used to define Permissions in project source code,
+        and access checker middleware that can be used in route definitions.
     </p>
 
-    <chapter title="Features" id="overview-features" >
+    <chapter title="Features" id="overview-features">
         <list>
             <li>
-                Create, edit, and delete Permissions and Roles
+                Create, edit, and delete RBAC Permissions and Roles
             </li>
             <li>
                 Create and edit RBAC hierarchy
             </li>
             <li>
-                Assign users to and de-assign users from Roles
+                Assign users to and de-assign users from RBAC Roles
             </li>
             <li>
                 Create, edit, and delete Rules
@@ -37,7 +43,7 @@
                 Initialisation via web or console command
             </li>
             <li>
-                Permissions console command and Permission attribute
+                Add Permissions console command and Permission attribute
             </li>
         </list>
     </chapter>
@@ -47,7 +53,7 @@
             <def title="Permission" id="permission">
                 <p>
                     Permissions grant the ability to perform an action, e.g. create a post.
-                    Permissions often map directly to controller actions.
+                    Permissions often map to controller actions.
                 </p>
             </def>
             <def title="Role" id="role">
@@ -56,13 +62,13 @@
                     organisation. Users are assigned one or more Roles.
                 </p>
                 <p>
-                    A Role may have one or more child roles and/or Permissions. A Permission must always be at the end
+                    A Role may have one or more child roles and/or Permissions; a Permission must always be at the end
                     of a hierarchy. In this way, assigning a Role to a user defines which Permissions a user is granted.
                 </p>
                 <p>
-                    For example, a user may be assigned the <emphasis>User</emphasis> Role; 
-                    the <emphasis>User</emphasis> Role has the <emphasis>CreatePost</emphasis>,
-                    <emphasis>UpdateOwnPost</emphasis>, and <emphasis>DeleteOwnPost</emphasis> Permissions.
+                    For example, a user may be assigned the <emphasis>RegisteredUser</emphasis> Role;
+                    the <emphasis>RegisteredUser</emphasis> Role has the <emphasis>CreatePost</emphasis>,
+                    <emphasis>UpdateOwnPost</emphasis>, and <emphasis>DeleteOwnPost</emphasis> Permissions as children.
                     See <a href="Overview.topic#rule">Rule</a> for how RBAC determines whether a user owns a 
                     particular post.
                 </p>

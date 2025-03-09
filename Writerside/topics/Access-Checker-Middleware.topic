@@ -5,7 +5,12 @@
        xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
        title="Access Checker Middleware" id="Access-Checker-Middleware">
 
-    <p>The RBAM package contains Access Checker middleware that can be used in route definitions.</p>
+    <p>This section describes the Access Checker middleware that can be used in route definitions.</p>
+
+    <p>
+        The Access Checker middleware is added to route definitions to check the current user's ability
+        to perform the action associated with the route.
+    </p>
 
     <chapter title="Example Route Definition">
         <code-block lang="php">
@@ -17,8 +22,8 @@
         </code-block>
 
         <p>
-            <code>{permission}</code> is either a string giving the Permission name, or - better - a string backed enum
-            where the value is the Permission name.
+            <code>{permission}</code> is either a string giving the Permission name, or a string backed enum
+            where the value is the Permission name; the latter provides better type checking and IDE auto-completion.
         </p>
     </chapter>
 </topic>

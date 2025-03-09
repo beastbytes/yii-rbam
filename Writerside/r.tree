@@ -14,4 +14,7 @@
     <toc-element topic="Manage-Users.topic"/>
     <toc-element topic="Access-Checker-Middleware.topic"/>
     <toc-element topic="Console-Commands.topic"/>
+    <toc-element topic="rbac-addPermissions-Command.topic"/>
+    <toc-element topic="rbam-initialise-Command.topic"/>
+    <toc-element topic="Permission-Attribute.topic"/>
 </instance-profile>

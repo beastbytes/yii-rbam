@@ -7,7 +7,7 @@
 
     <chapter title="Overview" id="overview">
         <p>
-            This section describes how Manage Users within RBAM.
+            This section describes how to Manage Users within RBAM.
         </p>
         <p>
             Managing Users consists of assigning and revoking Roles to/from users.
@@ -27,12 +27,11 @@
 
     <chapter title="User" id="user">
         <p>
-            The user page shows the Roles assigned to a user, Roles not currently assigned, and Permission that Role
+            The user page shows the Roles assigned to a user, Roles not currently assigned, and Permissions that Role
             assignments grant.
         </p>
         <p>
-            A user can be assigned a Role directly or indirectly; an indirectly assigned Role is a descendant of
-            a directly assigned Role.
+            A user can be assigned a Role or inherit it; an inherited Role is a descendant of an assigned Role.
         </p>
         <p>
             Roles can be assigned to and revoked from the user; Roles can be revoked individually or all Roles
@@ -40,19 +39,19 @@
         </p>
         <note>
             <p>
-                Indirectly assigned Roles can not be individually revoked.
+                Inherited Roles can not be individually revoked.
             </p>
             <p>
-                To revoke an indirectly assigned role the directly assigned ancestor Role must be revoked, or the
-                indirectly assigned Role removed from the directly assigned Role's hierarchy.
+                To revoke an inherited role the assigned ancestor Role must be revoked, or the
+                inherited Role removed from the assigned Role's hierarchy.
             </p>
         </note>
 
         <chapter title="Assign a Role" id="assign-a-role">
             <p>
                 To assign a Role to a user, click Assign button for an unassigned Role.
-                The user will be directly assigned this Role and indirectly assigned any descendant Roles,
-                and granted Permissions associated with all the assigned Roles.
+                The user will be assigned this Role, inherit any descendant Roles,
+                and granted Permissions associated with the assigned and inherited Roles.
             </p>
             <p>
                 The page will show the users new Role assignment(s) and Permissions.
@@ -82,7 +81,8 @@
 
     <seealso>
         <category ref="rbam">
-            <a href="Manage-Roles.topic">Manage Roles</a>
+            <a href="Manage-Permissions.topic"/>
+            <a href="Manage-Roles.topic"/>
         </category>
     </seealso>
 </topic>

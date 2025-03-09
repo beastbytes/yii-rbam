@@ -7,7 +7,7 @@
 
     <chapter title="Overview" id="overview">
         <p>
-            This section describes how manage Roles within RBAM.
+            This section describes how to manage Roles within RBAM.
         </p>
         <p>
             Managing Roles consists of creating, updating, and deleting Roles, adding or removing child Roles,
@@ -37,7 +37,7 @@
 
     <chapter title="Role" id="role">
         <p>
-            The Role page shows details for the Role. To update the Role, click the <emphasis>Update</emphasis> button.
+            The Role page shows the details for a Role. To update the Role, click the <emphasis>Update</emphasis> button.
         </p>
         <p>
             The tabs show:
@@ -176,7 +176,15 @@
                 All descendant Roles can be removed by clicking the <emphasis>Remove All</emphasis> button; the page
                 updates to show the latest status.
             </p>
-            <note>Removing Child Roles does not delete them.</note>
+            <note>
+                <p>
+                    Removing descendant Roles does not delete them nor does it change the relationships between them.
+                </p>
+                <p>
+                    For example, if all descendants are removed from RoleA, that has RoleB as a child, which in turn has
+                    RoleC has a child (grandchild of RoleA), RoleC will remain a child of RoleB.
+                </p>
+            </note>
         </chapter>
     </chapter>
 
@@ -203,7 +211,19 @@
                 required Permission; the page updates to show the latest status. The <emphasis>Remove</emphasis> button
                 is disabled for Permissions that are not directly granted by the Role being managed.
             </p>
-            <note>Removing a Permission does not delete it.</note>
+            <note>
+                <p>
+                    Removing a Permission does not delete it
+                    nor does it remove it from other Roles the Permission may be granted by.
+                </p>
+                <p>
+                    For example, if RoleA has a child Role B which grants PermissionZ,
+                    and RoleM has a child RoleN which also grants PermissionZ,
+                    removing PermissionZ from RoleB does not remove it from RoleN
+                    and users assigned RoleM or RoleN are still granted PermissionZ,
+                    whereas users assigned RoleA or RoleB are not.
+                </p>
+            </note>
         </chapter>
 
         <chapter title="Remove all Permission" id="remove-all-permission">
@@ -212,7 +232,10 @@
                 required Permission; the page updates to show the latest status. The <emphasis>Remove</emphasis> button
                 is disabled for Permissions that are not directly granted by the Role being managed.
             </p>
-            <note>Removing Permissions does not delete them.</note>
+            <note>
+                Removing Permissions does not delete them
+                nor does it remove them from other Roles the Permissions may be granted by.
+            </note>
         </chapter>
     </chapter>
 

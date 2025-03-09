@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="rbam:initialise Command" id="rbam-initialise-Command">
+
+    <chapter title="NAME" id="name">
+        <p>
+            rbam:initialise - initialise Role Based Access Manager (RBAM)
+        </p>
+    </chapter>
+    <chapter title="SYNOPSIS" id="synopsis">
+        <p>
+            rbam:initialise UID
+        </p>
+    </chapter>
+    <chapter title="DESCRIPTION" id="description">
+        <p>
+            <code>rbam:initialise</code> is a Yii console command that initialises Role Based Access Manager (RBAM).
+        </p>
+        <p>
+            Creates the <emphasis>Rbam</emphasis> Role and assigns the user ID <emphasis>UID</emphasis> to it,
+            and creates RBAM Permissions and adds them as children of the <emphasis>Rbam</emphasis> Role.
+        </p>
+        <p>
+            The following RBAC Roles and Permissions are created:
+        </p>
+        <table>
+            <tr>
+                <td>Item</td><td>Type</td><td>Description</td>
+            </tr>
+            <tr>
+                <td>Rbam</td>
+                <td>Role</td>
+                <td>Assigned to UID. All RBAM Permissions are children.</td>
+            </tr>
+            <tr>
+                <td>ItemCreate</td>
+                <td>Permission</td>
+                <td>Can create RBAC Permissions and Roles</td>
+            </tr>
+            <tr>
+                <td>ItemRemove</td>
+                <td>Permission</td>
+                <td>Can remove RBAC Permissions and Roles</td>
+            </tr>
+            <tr>
+                <td>ItemUpdate</td>
+                <td>Permission</td>
+                <td>Can update RBAC Permissions and Roles</td>
+            </tr>
+            <tr>
+                <td>ItemView</td>
+                <td>Permission</td>
+                <td>Can view the list and individual RBAC Permissions and Roles</td>
+            </tr>
+            <tr>
+                <td>RbamIndex</td>
+                <td>Permission</td>
+                <td>Can view the RBAM home page</td>
+            </tr>
+            <tr>
+                <td>RuleCreate</td>
+                <td>Permission</td>
+                <td>Can create RBAC Rules</td>
+            </tr>
+            <tr>
+                <td>RuleDelete</td>
+                <td>Permission</td>
+                <td>Can delete RBAC Rules</td>
+            </tr>
+            <tr>
+                <td>RuleUpdate</td>
+                <td>Permission</td>
+                <td>Can update RBAC Rules</td>
+            </tr>
+            <tr>
+                <td>RuleView</td>
+                <td>Permission</td>
+                <td>Can view the list and individual RBAC Rules</td>
+            </tr>
+            <tr>
+                <td>UserView</td>
+                <td>Permission</td>
+                <td>Can view the list and individual Users</td>
+            </tr>
+        </table>
+    </chapter>
+    <chapter title="OPTIONS" id="options">
+        <p>
+            rbam:initialise does not have any options
+        </p>
+    </chapter>
+    <chapter title="EXAMPLES" id="examples">
+        <p>
+            <code> yii rbam:initialise 7</code><br/>
+            Initialise RBAM and assign the user whose ID is <emphasis>7</emphasis> to the <emphasis>Rbam</emphasis> Role
+        </p>
+        <p>
+            <code> yii rbam:initialise 01957adc-fdb5-703d-81c3-b08d71c55466</code><br/>
+            Initialise RBAM and assign the user whose ID is <emphasis>01957adc-fdb5-703d-81c3-b08d71c55466</emphasis>
+            (a Version 7 UUID) to the <emphasis>Rbam</emphasis> Role
+        </p>
+    </chapter>
+</topic>

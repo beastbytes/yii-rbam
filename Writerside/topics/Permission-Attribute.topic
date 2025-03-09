@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="Permission Attribute" id="Permission-Attribute">
+
+    <p>
+        This section describes the Permissions Attribute that can be used to define and add RBAC Permissions using
+        the <a href="rbac-addPermissions-Command.topic">rbac:addPermissions console command</a>.
+    </p>
+
+    <chapter title="Permission Attribute" id="permission-attribute">
+    The Permission attribute defines the RBAC Permission for a method; it has the following parameters:
+
+    <table>
+        <tr>
+            <td>Parameter</td>
+            <td>Type</td>
+            <td>Required</td>
+            <td>Description</td>
+        </tr>
+        <tr>
+            <td>name</td>
+            <td>Enum|string</td>
+            <td>Yes</td>
+            <td>Name of the Permission</td>
+        </tr>
+        <tr>
+            <td>description</td>
+            <td>string</td>
+            <td>Description of the Permission</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>parent</td>
+            <td>Enum|string</td>
+            <td>No</td>
+            <td>Name of the Permission's parent item.
+                <note>
+                    The parent Item must exist in RBAC Item storage before running the command
+                    for the parent/child relationship to be created
+                </note>
+            </td>
+        </tr>
+        <tr>
+            <td>rule</td>
+            <td>StringBackedEnum|string</td>
+            <td>No</td>
+            <td>Name of Rule to be applied</td>
+        </tr>
+    </table>
+    </chapter>
+
+    <chapter title="Defining a Method's RBAC Permission" id="defining-a-method-s-rbac-permission">
+        <p>
+            To define the RBAC Permission for a controller method, add the Permission attribute to the method.
+        </p>
+
+        <code-block lang="php">
+                    final class RbamController
+                    {
+                        public const RBAM_ROLE = 'Rbam';
+
+                        #[PermissionAttribute(
+                                name: RbamPermission::RbamIndex,
+                                description: 'Allows access to RBAM',
+                                parent: self::RBAM_ROLE
+                        )]
+                        public function index(
+                            // parameters
+                        ): ResponseInterface
+                        {
+                            // code
+                        }
+                    }
+                </code-block>
+
+        <note>
+            The RBAM package defines its permissions using the Permission attribute;
+            look at Controller source code for examples
+        </note>
+    </chapter>
+    <seealso>
+        <category ref="rbam">
+            <a href="rbac-addPermissions-Command.topic"/>
+        </category>
+    </seealso>
+</topic>

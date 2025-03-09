@@ -7,7 +7,7 @@
 
     <chapter title="Overview" id="overview">
         <p>
-            This section describes how manage Permissions within RBAM.
+            This section describes how to manage Permissions within RBAM.
         </p>
         <p>
             Managing Permissions consists of creating, updating, and deleting Permissions.
@@ -36,7 +36,7 @@
 
     <chapter title="Permission" id="permission">
         <p>
-            The Permission page shows details for the Permission. To update the Permission, click the
+            The Permission page shows the details for a Permission. To update the Permission, click the
             <emphasis>Update</emphasis> button.
         </p>
         <p>
@@ -118,9 +118,9 @@
 
     <seealso>
         <category ref="rbam">
-            <a href="Manage-Permissions.topic">Manage Permissions</a>
-            <a href="Manage-Rules.topic">Manage Rules</a>
-            <a href="Manage-Users.topic">Manage Users</a>
+            <a href="Manage-Roles.topic"/>
+            <a href="Manage-Rules.topic"/>
+            <a href="Manage-Users.topic"/>
         </category>
     </seealso>
 </topic>
