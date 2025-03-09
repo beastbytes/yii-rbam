@@ -10,8 +10,9 @@ namespace BeastBytes\Yii\Rbam\Dev\User;
 
 use BeastBytes\Yii\Rbam\UserInterface;
 use BeastBytes\Yii\Rbam\UserRepositoryInterface;
+use Yiisoft\Auth\IdentityRepositoryInterface;
 
-class UserRepository implements UserRepositoryInterface
+class UserRepository implements IdentityRepositoryInterface, UserRepositoryInterface
 {
     /** @var string[] $users */
     private array $users = [
@@ -89,6 +90,10 @@ class UserRepository implements UserRepositoryInterface
         return range(1, count($this->users));
     }
 
+    public function findById(string $id): UserInterface
+    {
+        return $this->findIdentity($id);
+    }
 
     /**
      * @param string[] $ids
@@ -111,7 +116,7 @@ class UserRepository implements UserRepositoryInterface
      * @psalm-param non-empty-string $id
      * @return UserInterface
      */
-    public function findById(string $id): UserInterface
+    public function findIdentity(string $id): UserInterface
     {
         return new User($id, $this->users[(int) $id - 1]);
     }
