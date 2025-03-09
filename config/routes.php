@@ -32,15 +32,15 @@ return [
         ->name('rbam.rolePermissions')
         //->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::ItemView))
         ->action([ItemController::class, 'children']),
-    Route::post('/rbam/remove/{type: permission|role}/{name: [a-z][\w]*}')
+    Route::post('/rbam/remove/{name: [a-z][\w]*}/{type: permission|role}')
         ->name('rbam.removeItem')
         //->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::ItemRemove))
         ->action([ItemController::class, 'remove']),
-    Route::methods([Method::GET, Method::POST], '/rbam/update/{type: permission|role}/{name: [a-z][\w]*}')
+    Route::methods([Method::GET, Method::POST], '/rbam/update/{name: [a-z][\w]*}/{type: permission|role}')
         ->name('rbam.updateItem')
         //->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::ItemUpdate))
         ->action([ItemController::class, 'update']),
-    Route::get('/rbam/{type: permission|role}/{name: [a-z][\w]*}')
+    Route::get('/rbam/{name: [a-z][\w]*}/{type: permission|role}')
         ->name('rbam.viewItem')
         //->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::ItemView))
         ->action([ItemController::class, 'view']),
@@ -61,9 +61,9 @@ return [
         ->name('rbam.rbam')
         //->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::RbamIndex))
         ->action([RbamController::class, 'index']),
-    Route::get('/rbam/init')
-        ->name('rbam.init')
-        ->action([RbamController::class, 'init']),
+    Route::methods([Method::GET, Method::POST], '/rbam/initialise')
+        ->name('rbam.initialise')
+        ->action([RbamController::class, 'initialise']),
 
     Route::methods([Method::GET, Method::POST], '/rbam/create/rule')
         ->name('rbam.createRule')
@@ -77,11 +77,11 @@ return [
         ->name('rbam.ruleIndex')
         //->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::RuleView))
         ->action([RuleController::class, 'index']),
-    Route::methods([Method::GET, Method::POST],'/rbam/update/rule/{name: [a-z][\w]*}')
+    Route::methods([Method::GET, Method::POST],'/rbam/update/{name: [a-z][\w]*}/rule')
         ->name('rbam.updateRule')
         //->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::RuleUpdate))
         ->action([RuleController::class, 'update']),
-    Route::get('/rbam/rule/{name: [a-z][\w]*}')
+    Route::get('/rbam/{name: [a-z][\w]*}/rule')
         ->name('rbam.viewRule')
         //->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::RuleView))
         ->action([RuleController::class, 'view']),
