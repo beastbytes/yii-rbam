@@ -32,8 +32,6 @@ return [
     'flash.item-created' => '{name} {type} Created',
     'flash.item-deleted' => '{name} {type} Deleted',
     'flash.item-updated' => '{name} {type} Updated',
-    'flash.rbam-already-initialised' => 'RBAM is already initialised',
-    'flash.rbam-initialised' => 'RBAM initialised',
     'flash.rule-created' => '{name} Rule Created',
     'flash.rule-deleted' => '{name} Rule Deleted',
     'flash.rule-updated' => '{name} Rule Updated',
@@ -97,13 +95,11 @@ return [
     'message.no-users-assigned' => 'No users assigned',
     'message.no-users-found' => 'No users found',
     'message.no-rule' => '---',
+    'message.rbam-already-initialised' => 'RBAM is already initialised',
+    'message.rbam-initialised' => 'RBAM initialised',
     'message.remove-permission' => '<p>Removing the |name| permission is permanent and can not be undone</p><p>Click Continue to remove the |name| permission or click Cancel to cancel the operation</p>',
     'message.remove-role' => '<p>Removing the |name| role is permanent and can not be undone</p><p>Click Continue to remove the |name| role or Cancel to cancel the operation</p>',
 
-    'permission.assignment-assign' => 'Assign Role',
-    'permission.assignment-revoke' => 'Revoke Role(s)',
-    'permission.child-add' => 'Add child item',
-    'permission.child-remove' => 'Remove child item(s)',
     'permission.item-create' => 'Create Permissions and Roles',
     'permission.item-remove' => 'Remove Permissions and Roles',
     'permission.item-update' => 'Update Permissions and Roles',
@@ -113,9 +109,15 @@ return [
     'permission.rule-delete' => 'Delete Rules',
     'permission.rule-update' => 'Update Rules',
     'permission.rule-view' => 'View Rules',
+    'permission.user-update' => 'Update Users',
     'permission.user-view' => 'View Users',
     
     'prompt.select-rule' => 'Select Rule',
+
+    'role.rbam' => 'Can perform all RBAM functions',
+    'role.rbam-items-manager' => 'Can view, create, update, and delete RBAC Roles and Permissions',
+    'role.rbam-rules-manager' => 'Can view, create, update, and delete RBAC Rules',
+    'role.rbam-users-manager' => 'Can view users, and assign and revoke RBAC Roles',
     
     'title.rbam' => 'Role Based Access Manager',
 ];
