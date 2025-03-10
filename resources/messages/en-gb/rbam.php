@@ -114,7 +114,7 @@ return [
     
     'prompt.select-rule' => 'Select Rule',
 
-    'role.rbam' => 'Can perform all RBAM functions',
+    'role.rbam' => 'Can perform all RBAM actions',
     'role.rbam-items-manager' => 'Can view, create, update, and delete RBAC Roles and Permissions',
     'role.rbam-rules-manager' => 'Can view, create, update, and delete RBAC Rules',
     'role.rbam-users-manager' => 'Can view users, and assign and revoke RBAC Roles',
