@@ -51,7 +51,7 @@ final class MermaidHierarchyDiagram implements HierarchyDiagramInterface
             ->withMember(new Attribute($this->item->getDescription()))
             ->withStyleClass('current_' . $this->item->getType())
         ;
-        $this->classes[] = $this->item->getRuleName()
+        $this->classes[$this->item->getName()] = $this->item->getRuleName()
             ? $currentItem->addMember(new Method($this->item->getRuleName()))
             : $currentItem
         ;
@@ -76,7 +76,14 @@ final class MermaidHierarchyDiagram implements HierarchyDiagramInterface
                     InteractionType::Link
                 )
             ;
-            $this->classes[] = $ancestor->getRuleName() ? $parent->addMember(new Method($ancestor->getRuleName())) : $parent;
+
+            if (!array_key_exists($ancestor->getName(), $this->classes)) {
+                $this->classes[$ancestor->getName()] = $ancestor->getRuleName()
+                    ? $parent->addMember(new Method($ancestor->getRuleName()))
+                    : $parent
+                ;
+            }
+
             $this->relationships[] = new Relationship($parent, $child, RelationshipType::Inheritance);
             $child = $parent;
         }
@@ -84,13 +91,13 @@ final class MermaidHierarchyDiagram implements HierarchyDiagramInterface
         $this->getDescendants($currentItem);
 
         return (new ClassDiagram())
-            ->withClass(...$this->classes)
+            ->withClass(...array_values($this->classes))
             ->withRelationship(...$this->relationships)
             ->render(['id' => 'mermaid'])
         ;
     }
 
-    function getDescendants(Classs $item): void
+    private function getDescendants(Classs $item): void
     {
         foreach ($this->itemsStorage->getDirectChildren($item->getId()) as $child) {
             $childClass = (new Classs(
@@ -110,9 +117,13 @@ final class MermaidHierarchyDiagram implements HierarchyDiagramInterface
                     InteractionType::Link
                 )
             ;
-            $this->classes[] = $child->getRuleName()
-                ? $childClass->addMember(new Method($child->getRuleName()))
-                : $childClass;
+
+            if (!array_key_exists($child->getName(), $this->classes)) {
+                $this->classes[$child->getName()] = $child->getRuleName()
+                    ? $childClass->addMember(new Method($child->getRuleName()))
+                    : $childClass
+                ;
+            }
             $this->relationships[] = new Relationship($item, $childClass, RelationshipType::Inheritance);
             $this->getDescendants($childClass);
         }
