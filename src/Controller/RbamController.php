@@ -19,7 +19,7 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class RbamController
 {
-    public const RBAM_ROLE = 'Rbam';
+    private const RBAM_ROLE = 'Rbam';
 
     public function __construct(
         private readonly ItemsStorageInterface $itemsStorage,
@@ -38,8 +38,7 @@ final class RbamController
     }
 
     #[PermissionAttribute(
-        name: RbamPermission::RbamIndex,
-        description: 'Allows access to RBAM',
+        name: RbamPermission::RbacRbamIndex,
         parent: self::RBAM_ROLE
     )]
     public function index(

@@ -17,9 +17,10 @@ use Yiisoft\Files\FileHelper;
 use Yiisoft\Files\PathMatcher\PathMatcher;
 use Yiisoft\Rbac\ManagerInterface;
 use Yiisoft\Rbac\Permission;
+use Yiisoft\Translator\TranslatorInterface;
 
 #[AsCommand(name: 'rbac:addPermissions', description: 'Create RBAC permissions')]
-class PermissionsCommand extends Command
+final class PermissionsCommand extends Command
 {
     private ?string $errorMessage = null;
     /** @var list<string> */
@@ -28,7 +29,10 @@ class PermissionsCommand extends Command
     private array $only = ['**Controller.php'];
     private SymfonyStyle $io;
 
-    public function __construct(private readonly ManagerInterface $manager)
+    public function __construct(
+        private readonly ManagerInterface $manager,
+        private readonly TranslatorInterface $translator,
+    )
     {
         parent::__construct();
     }
@@ -142,14 +146,17 @@ class PermissionsCommand extends Command
                         ->withUpdatedAt($now)
                     ;
 
+                    if ($arguments['description'] === null && $arguments['name'] instanceof \StringBackedEnum) {
+                        $arguments['description'] = $this
+                            ->translator
+                            ->translate($arguments['name']->value)
+                        ;
+                    }
+
                     foreach (['description', 'ruleName'] as $argument) {
                         if (key_exists($argument, $arguments)) {
                             $with = 'with' . ucfirst($argument);
-
-                            $permission = $permission->$with((is_string($arguments[$argument]))
-                                ? $arguments[$argument]
-                                : $arguments[$argument]->name
-                            );
+                            $permission = $permission->$with($arguments[$argument]);
                         }
                     }
 

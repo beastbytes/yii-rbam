@@ -40,6 +40,8 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class ItemController
 {
+    private const RBAM_ROLE = 'RbamItemsManager';
+
     public const TYPE = 'type';
 
     public function __construct(
@@ -63,9 +65,8 @@ final class ItemController
     }
 
     #[PermissionAttribute(
-        name: RbamPermission::ItemView,
-        description: 'View RBAC Item(s)',
-        parent: RbamController::RBAM_ROLE
+        name: RbamPermission::RbacItemView,
+        parent: self::RBAM_ROLE
     )]
     public function index(CurrentRoute $currentRoute, ServerRequest $request): ResponseInterface
     {
@@ -109,9 +110,8 @@ final class ItemController
     }
 
     #[PermissionAttribute(
-        name: RbamPermission::ItemCreate,
-        description: 'Create a RBAC Item',
-        parent: RbamController::RBAM_ROLE
+        name: RbamPermission::RbacItemCreate,
+        parent: self::RBAM_ROLE
     )]
     public function create(
         CurrentRoute $currentRoute,
@@ -192,9 +192,8 @@ final class ItemController
     }
 
     #[PermissionAttribute(
-        name: RbamPermission::ItemView,
-        description: 'View children of a RBAC Item',
-        parent: RbamController::RBAM_ROLE
+        name: RbamPermission::RbacItemView,
+        parent: self::RBAM_ROLE
     )]
     public function children(CurrentRoute $currentRoute): ResponseInterface
     {
@@ -216,9 +215,8 @@ final class ItemController
     }
 
     #[PermissionAttribute(
-        name: RbamPermission::ItemUpdate,
-        description: 'Update a RBAC Item',
-        parent: RbamController::RBAM_ROLE
+        name: RbamPermission::RbacItemUpdate,
+        parent: self::RBAM_ROLE
     )]
     public function update(
         CurrentRoute $currentRoute,
@@ -322,9 +320,8 @@ final class ItemController
     }
 
     #[PermissionAttribute(
-        name: RbamPermission::ItemView,
-        description: 'View RBAC Item(s)',
-        parent: RbamController::RBAM_ROLE
+        name: RbamPermission::RbacItemView,
+        parent: self::RBAM_ROLE
     )]
     public function view(
         AssignmentsStorageInterface $assignmentsStorage,
@@ -418,9 +415,8 @@ final class ItemController
     }
 
     #[PermissionAttribute(
-        name: RbamPermission::ItemUpdate,
-        description: 'Update a RBAC Item',
-        parent: RbamController::RBAM_ROLE
+        name: RbamPermission::RbacItemUpdate,
+        parent: self::RBAM_ROLE
     )]
     public function addChild(ServerRequestInterface $request): ResponseInterface
     {
@@ -441,9 +437,8 @@ final class ItemController
     }
 
     #[PermissionAttribute(
-        name: RbamPermission::ItemUpdate,
-        description: 'Update a RBAC Item',
-        parent: RbamController::RBAM_ROLE
+        name: RbamPermission::RbacItemUpdate,
+        parent: self::RBAM_ROLE
     )]
     public function removeChild(ServerRequestInterface $request): ResponseInterface
     {
@@ -464,9 +459,8 @@ final class ItemController
     }
 
     #[PermissionAttribute(
-        name: RbamPermission::ItemUpdate,
-        description: 'Update a RBAC Item',
-        parent: RbamController::RBAM_ROLE
+        name: RbamPermission::RbacItemUpdate,
+        parent: self::RBAM_ROLE
     )]
     public function removeAllChildren(ServerRequestInterface $request): ResponseInterface
     {
@@ -488,9 +482,8 @@ final class ItemController
 
     /** @psalm-suppress PossiblyNullArgument */
     #[PermissionAttribute(
-        name: RbamPermission::ItemRemove,
-        description: 'Remove a RBAC Item',
-        parent: RbamController::RBAM_ROLE
+        name: RbamPermission::RbacItemRemove,
+        parent: self::RBAM_ROLE
     )]
     public function remove(ServerRequestInterface $request): ResponseInterface
     {

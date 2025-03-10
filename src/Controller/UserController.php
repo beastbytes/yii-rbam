@@ -23,6 +23,8 @@ use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class UserController
 {
+    private const RBAM_ROLE = 'RbamUsersManager';
+
     public function __construct(
         private readonly AssignmentsStorageInterface $assignmentsStorage,
         private readonly ItemsStorageInterface $itemsStorage,
@@ -38,9 +40,8 @@ final class UserController
     }
 
     #[PermissionAttribute(
-        name: RbamPermission::UserView,
-        description: 'View user(s)',
-        parent: RbamController::RBAM_ROLE
+        name: RbamPermission::RbacUserView,
+        parent: self::RBAM_ROLE
     )]
     public function index(ServerRequest $request): ResponseInterface
     {
@@ -66,9 +67,8 @@ final class UserController
     }
 
     #[PermissionAttribute(
-        name: RbamPermission::UserView,
-        description: 'View user(s)',
-        parent: RbamController::RBAM_ROLE
+        name: RbamPermission::RbacUserView,
+        parent: self::RBAM_ROLE
     )]
     public function view(CurrentRoute $currentRoute): ResponseInterface
     {
@@ -86,9 +86,8 @@ final class UserController
     }
 
     #[PermissionAttribute(
-        name: RbamPermission::ItemUpdate,
-        description: 'Update a RBAC Item',
-        parent: RbamController::RBAM_ROLE
+        name: RbamPermission::RbacItemUpdate,
+        parent: self::RBAM_ROLE
     )]
     public function assignRole(ServerRequestInterface $request): ResponseInterface
     {
@@ -110,9 +109,8 @@ final class UserController
     }
 
     #[PermissionAttribute(
-        name: RbamPermission::ItemUpdate,
-        description: 'Update a RBAC Item',
-        parent: RbamController::RBAM_ROLE
+        name: RbamPermission::RbacItemUpdate,
+        parent: self::RBAM_ROLE
     )]
     public function revokeAssignment(ServerRequestInterface $request): ResponseInterface
     {
@@ -134,9 +132,8 @@ final class UserController
     }
 
     #[PermissionAttribute(
-        name: RbamPermission::ItemUpdate,
-        description: 'Update a RBAC Item',
-        parent: RbamController::RBAM_ROLE
+        name: RbamPermission::RbacItemUpdate,
+        parent: self::RBAM_ROLE
     )]
     public function revokeAllAssignments(ServerRequestInterface $request): ResponseInterface
     {

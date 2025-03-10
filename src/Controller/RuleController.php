@@ -34,6 +34,8 @@ use const DIRECTORY_SEPARATOR;
 
 final class RuleController
 {
+    private const RBAM_ROLE = 'RbamRulesManager';
+
     public function __construct(
         private readonly FlashInterface $flash,
         private readonly Inflector $inflector,
@@ -55,9 +57,8 @@ final class RuleController
     }
 
     #[PermissionAttribute(
-        name: RbamPermission::RuleView,
-        description: 'View Rule(s)',
-        parent: RbamController::RBAM_ROLE
+        name: RbamPermission::RbacRuleView,
+        parent: self::RBAM_ROLE
     )]
     public function index(ServerRequest $request): ResponseInterface
     {
@@ -85,9 +86,8 @@ final class RuleController
     }
 
     #[PermissionAttribute(
-        name: RbamPermission::RuleCreate,
-        description: 'Create a Rule',
-        parent: RbamController::RBAM_ROLE
+        name: RbamPermission::RbacRuleCreate,
+        parent: self::RBAM_ROLE
     )]
     public function create(
         FormHydrator $formHydrator,
@@ -104,7 +104,7 @@ final class RuleController
         ) {
             $this
                 ->ruleService
-                ->save($formModel)
+                ->save($formModel->getName(), $formModel->getDescription(), $formModel->getCode())
             ;
 
             $this
@@ -143,9 +143,8 @@ final class RuleController
     }
 
     #[PermissionAttribute(
-        name: RbamPermission::RuleDelete,
-        description: 'Delete a Rule',
-        parent: RbamController::RBAM_ROLE
+        name: RbamPermission::RbacRuleDelete,
+        parent: self::RBAM_ROLE
     )]
     public function delete(ServerRequestInterface $request): ResponseInterface
     {
@@ -179,9 +178,8 @@ final class RuleController
     }
 
     #[PermissionAttribute(
-        name: RbamPermission::RuleUpdate,
-        description: 'Update a Rule',
-        parent: RbamController::RBAM_ROLE
+        name: RbamPermission::RbacRuleUpdate,
+        parent: self::RBAM_ROLE
     )]
     public function update(
         CurrentRoute $currentRoute,
@@ -196,7 +194,6 @@ final class RuleController
             ->toPascalCase($currentRoute->getArgument('name'))
         ;
 
-        $previousName = $name;
         $rule = $this
             ->ruleService
             ->getRule($name)
@@ -224,7 +221,7 @@ final class RuleController
             if (
                 $this
                     ->ruleService
-                    ->save($formModel, $previousName)
+                    ->save($formModel->getName(), $formModel->getDescription(), $formModel->getCode())
             ) {
                 $this
                     ->flash
@@ -259,9 +256,8 @@ final class RuleController
     }
 
     #[PermissionAttribute(
-        name: RbamPermission::RuleView,
-        description: 'View Rule(s)',
-        parent: RbamController::RBAM_ROLE
+        name: RbamPermission::RbacRuleView,
+        parent: self::RBAM_ROLE
     )]
     public function view(
         CurrentRoute $currentRoute
