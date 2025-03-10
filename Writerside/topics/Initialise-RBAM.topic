@@ -6,22 +6,23 @@
        title="Initialise RBAM" id="Initialise-RBAM">
 
     <p>Before RBAM can be used, it must be initialised to setup its own access control.</p>
-    <p>
-        There is one Role - <code>Rbam</code> - which grants all RBAM Permissions.
-        If this does not meet your requirements, use RBAM to add additional Roles and change the hierarchy
-        after it has been initialised.
-    </p>
-    <warning>
-        Do not change RBAM Permissions
-    </warning>
 
     <p>The RBAM system is initialised using the <code>rbam:initialise</code> yii console command.</p>
+
     <p>
         Run <code>yii rbam:initialise UID</code><br/>
         where UID is the user ID to assign to the <code>Rbam</code> Role.
     </p>
 
     <p>Once initialised, RBAM cannot be initialised again without removing all Roles.</p>
+
+    <p>
+        If the default initialisation does not meet your requirements, use RBAM to change the Roles and/or hierarchy.
+    </p>
+
+    <warning>
+        Do not change RBAM Permissions
+    </warning>
 
     <seealso>
         <category ref="rbam">
