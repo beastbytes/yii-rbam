@@ -4,19 +4,13 @@ declare(strict_types=1);
 
 namespace BeastBytes\Yii\Rbam\Command;
 
-use BeastBytes\Yii\Rbam\Command\Attribute\Permission as PermissionAttribute;
-use BeastBytes\Yii\Rbam\Controller\RbamController;
 use BeastBytes\Yii\Rbam\Permission as RbamPermission;
-use ReflectionClass;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Yiisoft\Files\FileHelper;
-use Yiisoft\Files\PathMatcher\PathMatcher;
 use Yiisoft\Rbac\ItemsStorageInterface;
 use Yiisoft\Rbac\ManagerInterface;
 use Yiisoft\Rbac\Permission;
@@ -24,8 +18,47 @@ use Yiisoft\Rbac\Role;
 use Yiisoft\Translator\TranslatorInterface;
 
 #[AsCommand(name: 'rbam:initialise', description: 'Initialise RBAM')]
-class InitialiseCommand extends Command
+final class InitialiseCommand extends Command
 {
+    private array $roles = [
+        'RbamItemsManager' => [
+            'children' => [
+                'RbamIndex',
+                'RbacItemCreate',
+                'RbacItemRemove',
+                'RbacItemUpdate',
+                'RbacItemView',
+            ],
+            'description' => 'role.rbam-items-manager',
+        ],
+        'RbamRulesManager' => [
+            'children' => [
+                'RbamIndex',
+                'RbacRuleCreate',
+                'RbacRuleDelete',
+                'RbacRuleUpdate',
+                'RbacRuleView',
+            ],
+            'description' => 'role.rbam-rules-manager',
+        ],
+        'RbamUsersManager' => [
+            'children' => [
+                'RbamIndex',
+                'RbacUserUpdate',
+                'RbacUserView',
+            ],
+            'description' => 'role.rbam-users-manager',
+        ],
+        'Rbam' => [
+            'children' => [
+                'RbamItemsManager',
+                'RbamRulesManager',
+                'RbamUsersManager',
+            ],
+            'description' => 'role.rbam',
+        ],
+    ];
+
     public function __construct(
         private readonly ItemsStorageInterface $itemsStorage,
         private readonly ManagerInterface $manager,
@@ -53,17 +86,6 @@ class InitialiseCommand extends Command
 
         if (count($this->itemsStorage->getRoles()) === 0) {
             $now = time();
-            $this
-                ->manager
-                ->addRole((new Role(RbamController::RBAM_ROLE))
-                    ->withDescription($this->translator->translate('title.rbam'))
-                    ->withCreatedAt($now)
-                    ->withUpdatedAt($now)
-                )
-            ;
-            $this
-                ->manager
-                ->assign(RbamController::RBAM_ROLE, $input->getArgument('uid'));
 
             foreach (RbamPermission::cases() as $permission) {
                 $this
@@ -74,22 +96,40 @@ class InitialiseCommand extends Command
                         ->withUpdatedAt($now)
                     )
                 ;
+            }
 
+            foreach ($this->roles as $name => $config) {
                 $this
                     ->manager
-                    ->addChild(RbamController::RBAM_ROLE, $permission->name);
+                    ->addRole((new Role($name))
+                        ->withDescription($this->translator->translate($config['description']))
+                        ->withCreatedAt($now)
+                        ->withUpdatedAt($now)
+                    )
+                ;
+
+                foreach ($config['children'] as $child) {
+                    $this
+                        ->manager
+                        ->addChild($name, $child)
+                    ;
+                }
             }
+
+            $this
+                ->manager
+                ->assign('Rbam', $input->getArgument('uid'));
 
             $io->success(
                 $this
                     ->translator
-                    ->translate('flash.rbam-initialised')
+                    ->translate('message.rbam-initialised')
             );
         } else {
             $io->info(
                 $this
                     ->translator
-                    ->translate('flash.rbam-already-initialised')
+                    ->translate('message.rbam-already-initialised')
             );
         }
 
