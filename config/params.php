@@ -139,6 +139,8 @@ return [
                     'stroke-width' => '1',
                 ],
             ],
-        ]
+        ],
+        'pageSize' => 20,
+        'tabPageSize' => 10,
     ],
 ];

@@ -36,4 +36,14 @@ final class RbamParameters
     {
         return $this->parameters['mermaidDiagramStyles'];
     }
+
+    public function getPageSize(): array
+    {
+        return $this->parameters['pageSize'];
+    }
+
+    public function getTabPageSize(): array
+    {
+        return $this->parameters['tabPageSize'];
+    }
 }
