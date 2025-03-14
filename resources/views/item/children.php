@@ -27,7 +27,6 @@ use BeastBytes\Yii\Rbam\Assets\RbamAsset;
 use BeastBytes\Yii\Rbam\ItemTypeService;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use Yiisoft\Assets\AssetManager;
-use Yiisoft\Html\Html;
 use Yiisoft\Rbac\Item;
 use Yiisoft\Rbac\ManagerInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
