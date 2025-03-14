@@ -19,6 +19,7 @@ use Yiisoft\Rbac\AssignmentsStorageInterface;
 use Yiisoft\Rbac\ItemsStorageInterface;
 use Yiisoft\Rbac\ManagerInterface;
 use Yiisoft\Router\CurrentRoute;
+use Yiisoft\Strings\Inflector;
 use Yiisoft\Yii\View\Renderer\ViewRenderer;
 
 final class UserController
@@ -59,7 +60,6 @@ final class UserController
                 'index',
                 [
                     'currentPage' => (int) ArrayHelper::getValue($queryParams, 'page', 1),
-                    'pageSize' => (int) ArrayHelper::getValue($queryParams, 'pagesize', 20),
                     'users' => $users
                 ]
             )
@@ -150,6 +150,66 @@ final class UserController
             ->renderPartial(
                 '_assignments',
                 $this->getViewParameters($parsedBody['uid'])
+            )
+        ;
+    }
+
+    public function permissionsPagination(
+        ServerRequestInterface $request
+    ): ResponseInterface
+    {
+        $queryParams = $request
+            ->getQueryParams()
+        ;
+        $parsedBody = $request->getParsedBody();
+
+        $user = $this
+            ->userRepository
+            ->findById($parsedBody['userid'])
+        ;
+
+        return $this
+            ->viewRenderer
+            ->renderPartial(
+                '../item/_items',
+                [
+                    'actionButtons' => ['view'],
+                    'currentPage' => (int) ArrayHelper::getValue($queryParams, 'page', 1),
+                    'header' => 'label.permissions-granted',
+                    'emptyText' => 'message.no-permissions-granted',
+                    'item' => null,
+                    'items' => $this
+                        ->manager
+                        ->getPermissionsByUserId($parsedBody['userid']),
+                    'itemsStorage' => $this->itemsStorage,
+                    'toolbar' => '',
+                    'type' => 'permission',
+                    'user' => $user,
+                ]
+            )
+        ;
+    }
+
+    public function rolesPagination(
+        Inflector $inflector,
+        ServerRequestInterface $request
+    ): ResponseInterface
+    {
+        $queryParams = $request
+            ->getQueryParams()
+        ;
+        $parsedBody = $request->getParsedBody();
+
+        return $this
+            ->viewRenderer
+            ->renderPartial(
+                '_' . $inflector->toCamelCase($parsedBody['id']),
+                array_merge(
+                    $this->getViewParameters($parsedBody['userId']),
+                    [
+                        'currentPage' => (int) ArrayHelper::getValue($queryParams, 'page', 1),
+                    ]
+                )
             )
         ;
     }
