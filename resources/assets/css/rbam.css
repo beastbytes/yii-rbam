@@ -241,6 +241,20 @@
 .rbam .grid-view .toolbar {
     margin: 0.375rem 0;
 }
+.rbam .grid-view nav a {
+    background: aliceblue;
+    display: inline-flex;
+    border: 1px solid var(--yii-blue);
+    color: #222222;
+    margin: 1em 0.25em 1em 0;
+    padding: 0.25em 0.5em;
+    text-decoration: none;
+}
+.rbam .grid-view nav a:hover {
+    background: var(--yii-green);
+    border: 1px solid var(--yii-green);
+    color: aliceblue;
+}
 .rbam .grid .btn {
     height: 1.75rem;
     margin: 0 0.57em;
