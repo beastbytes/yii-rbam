@@ -39,6 +39,7 @@
                     Assigned to UID
                 </td>
                 <td>
+                    RbamIndex<br/>
                     RbamItemsManager<br/>
                     RbamRulesManager<br/>
                     RbamUsersManager
@@ -49,10 +50,10 @@
                 <td>Role</td>
                 <td>Can view, create, update, and delete RBAC Roles and Permissions</td>
                 <td>
-                    RbacItemCreate<br/>
-                    RbacItemRemove<br/>
-                    RbacItemUpdate<br/>
-                    RbacItemView<br/>
+                    RbamItemCreate<br/>
+                    RbamItemRemove<br/>
+                    RbamItemUpdate<br/>
+                    RbamItemView<br/>
                 </td>
             </tr>
             <tr>
@@ -60,10 +61,10 @@
                 <td>Role</td>
                 <td>Can view, create, update, and delete RBAC Rules</td>
                 <td>
-                    RbacRuleCreate<br/>
-                    RbacRuleDelete<br/>
-                    RbacRuleUpdate<br/>
-                    RbacRuleView<br/>
+                    RbamRuleCreate<br/>
+                    RbamRuleDelete<br/>
+                    RbamRuleUpdate<br/>
+                    RbamRuleView<br/>
                 </td>
             </tr>
             <tr>
@@ -71,30 +72,30 @@
                 <td>Role</td>
                 <td>Can view users, and assign and revoke RBAC Roles</td>
                 <td>
-                    UserUpdate<br/>
-                    UserView
+                    RbamUserUpdate<br/>
+                    RbamUserView
                 </td>
             </tr>
             <tr>
-                <td>RbacItemCreate</td>
+                <td>RbamItemCreate</td>
                 <td>Permission</td>
                 <td>Create RBAC Permissions and Roles</td>
                 <td> </td>
             </tr>
             <tr>
-                <td>RbacItemRemove</td>
+                <td>RbamItemRemove</td>
                 <td>Permission</td>
                 <td>Remove RBAC Permissions and Roles</td>
                 <td> </td>
             </tr>
             <tr>
-                <td>RbacItemUpdate</td>
+                <td>RbamItemUpdate</td>
                 <td>Permission</td>
                 <td>Update RBAC Permissions and Roles</td>
                 <td> </td>
             </tr>
             <tr>
-                <td>RbacItemView</td>
+                <td>RbamItemView</td>
                 <td>Permission</td>
                 <td>View the list and individual RBAC Permissions and Roles</td>
                 <td> </td>
@@ -106,37 +107,37 @@
                 <td> </td>
             </tr>
             <tr>
-                <td>RbacRuleCreate</td>
+                <td>RbamRuleCreate</td>
                 <td>Permission</td>
                 <td>Create RBAC Rules</td>
                 <td> </td>
             </tr>
             <tr>
-                <td>RbacRuleDelete</td>
+                <td>RbamRuleDelete</td>
                 <td>Permission</td>
                 <td>Delete RBAC Rules</td>
                 <td> </td>
             </tr>
             <tr>
-                <td>RbacRuleUpdate</td>
+                <td>RbamRuleUpdate</td>
                 <td>Permission</td>
                 <td>Update RBAC Rules</td>
                 <td> </td>
             </tr>
             <tr>
-                <td>RbacRuleView</td>
+                <td>RbamRuleView</td>
                 <td>Permission</td>
                 <td>View the list and individual RBAC Rules</td>
                 <td> </td>
             </tr>
             <tr>
-                <td>RbacUserUpdate</td>
+                <td>RbamUserUpdate</td>
                 <td>Permission</td>
                 <td>Assign Roles to and revoke them from Users</td>
                 <td> </td>
             </tr>
             <tr>
-                <td>RbacUserView</td>
+                <td>RbamUserView</td>
                 <td>Permission</td>
                 <td>View the list of and individual Users</td>
                 <td> </td>
