@@ -17,12 +17,10 @@ use BeastBytes\Yii\Rbam\Permission as RbamPermission;
 use BeastBytes\Yii\Rbam\RuleServiceInterface;
 use BeastBytes\Yii\Rbam\UserRepositoryInterface;
 use HttpSoft\Message\ServerRequest;
-use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\FormModel\FormHydrator;
-use Yiisoft\Http\Header;
 use Yiisoft\Http\Method;
 use Yiisoft\Http\Status;
 use Yiisoft\Rbac\AssignmentsStorageInterface;
@@ -32,7 +30,6 @@ use Yiisoft\Rbac\ManagerInterface;
 use Yiisoft\Rbac\Permission;
 use Yiisoft\Rbac\Role;
 use Yiisoft\Router\CurrentRoute;
-use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Session\Flash\FlashInterface;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Translator\TranslatorInterface;
@@ -51,7 +48,7 @@ final class ItemController
         private readonly ManagerInterface $manager,
         private readonly Redirect $redirect,
         private TranslatorInterface $translator,
-        private ViewRenderer $viewRenderer
+        private ViewRenderer $viewRenderer,
     )
     {
         $this->translator = $this
@@ -77,7 +74,7 @@ final class ItemController
         $type = $this
             ->inflector
             ->toSingular($currentRoute
-                ->getArgument('type')
+                ->getArgument('type'),
             )
         ;
 
@@ -87,7 +84,7 @@ final class ItemController
                 ->getPermissions(),
             Item::TYPE_ROLE => $this
                 ->itemsStorage
-                ->getRoles()
+                ->getRoles(),
         };
 
         uksort($items, function(string $a, string $b) {
@@ -102,9 +99,8 @@ final class ItemController
                     'currentPage' => (int) ArrayHelper::getValue($queryParams, 'page', 1),
                     'items' => $items,
                     'itemsStorage' => $this->itemsStorage,
-                    'pageSize' => (int) ArrayHelper::getValue($queryParams, 'pagesize', 20),
-                    'type' => $type
-                ]
+                    'type' => $type,
+                ],
             )
         ;
     }
@@ -117,7 +113,7 @@ final class ItemController
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
         ServerRequestInterface $request,
-        RuleServiceInterface $ruleService
+        RuleServiceInterface $ruleService,
     ): ResponseInterface
     {
         $type = $currentRoute
@@ -142,7 +138,7 @@ final class ItemController
                     ->withDescription($formModel->getDescription())
                     ->withRuleName($formModel->getRuleName())
                     ->withCreatedAt($now)
-                    ->withUpdatedAt($now)
+                    ->withUpdatedAt($now),
                 )
             ;
 
@@ -156,9 +152,9 @@ final class ItemController
                             'flash.item-created',
                             [
                                 'name' => $formModel->getName(),
-                                'type' => ucfirst($type)
-                            ]
-                        )
+                                'type' => ucfirst($type),
+                            ],
+                        ),
                 )
             ;
 
@@ -170,8 +166,8 @@ final class ItemController
                         'name' => $this
                             ->inflector
                             ->toSnakeCase($item->getName()),
-                        'type' => $type
-                    ]
+                        'type' => $type,
+                    ],
                 )
                 ->withStatusCode(Status::SEE_OTHER)
                 ->create()
@@ -185,8 +181,8 @@ final class ItemController
                 [
                     'formModel' => $formModel,
                     'ruleNames' => $ruleService->getRuleNames(),
-                    'type' => $type
-                ]
+                    'type' => $type,
+                ],
             )
         ;
     }
@@ -209,7 +205,77 @@ final class ItemController
             ->viewRenderer
             ->render(
                 'children',
-                $this->getViewParameters($name, $type)
+                $this->getViewParameters($name, $type),
+            )
+        ;
+    }
+
+    #[PermissionAttribute(
+        name: RbamPermission::RbacItemView,
+        parent: self::RBAM_ROLE
+    )]
+    public function assignmentPagination(
+        AssignmentsStorageInterface $assignmentsStorage,
+        ServerRequestInterface $request
+    ): ResponseInterface
+    {
+        $queryParams = $request
+            ->getQueryParams()
+        ;
+        /** @var array{name:string, id:string} $parsedBody */
+        $parsedBody = $request->getParsedBody();
+
+        return $this->viewRenderer->render(
+            '_assignments',
+            [
+                'assignments' => $assignmentsStorage->getByItemNames([$parsedBody['name']]),
+                'currentPage' => (int) ArrayHelper::getValue($queryParams, 'page', 1),
+                'item' => $this->manager->getRole($parsedBody['name']),
+            ]
+        );
+    }
+
+    #[PermissionAttribute(
+        name: RbamPermission::RbacItemView,
+        parent: self::RBAM_ROLE
+    )]
+    public function itemPagination(
+        ServerRequestInterface $request
+    ): ResponseInterface
+    {
+        $queryParams = $request
+            ->getQueryParams()
+        ;
+        /** @var array{name:string, id:string} $parsedBody */
+        $parsedBody = $request->getParsedBody();
+
+        if ($parsedBody['id'] === Item::TYPE_PERMISSION) {
+            $items = $this
+                ->manager
+                ->getPermissionsByRoleName($parsedBody['name'])
+            ;
+        } else {
+            $items = $this
+                ->manager
+                ->getChildRoles($parsedBody['name'])
+            ;
+        }
+
+        return $this
+            ->viewRenderer
+            ->renderPartial(
+                '_items',
+                [
+                    'actionButtons' => explode(',', $parsedBody['actionButtons']),
+                    'currentPage' => (int) ArrayHelper::getValue($queryParams, 'page', 1),
+                    'emptyText' => '',
+                    'header' => $parsedBody['header'],
+                    'item' => $this->manager->getRole($parsedBody['name']),
+                    'items' => $items,
+                    'itemsStorage' => $this->itemsStorage,
+                    'toolbar' => $parsedBody['toolbar'],
+                    'type' => $parsedBody['id']
+                ]
             )
         ;
     }
@@ -223,7 +289,7 @@ final class ItemController
         FormHydrator $formHydrator,
         NotFound $notFound,
         RuleServiceInterface $ruleService,
-        ServerRequestInterface $request
+        ServerRequestInterface $request,
     ): ResponseInterface
     {
         $name = $this
@@ -273,9 +339,9 @@ final class ItemController
                                 'flash.item-updated',
                                 [
                                     'name' => $name,
-                                    'type' => ucfirst($type)
-                                ]
-                            )
+                                    'type' => ucfirst($type),
+                                ],
+                            ),
                     )
                 ;
 
@@ -287,8 +353,8 @@ final class ItemController
                             'name' => $this
                                 ->inflector
                                 ->toSnakeCase($item->getName()),
-                            'type' => $type
-                        ]
+                            'type' => $type,
+                        ],
                     )
                     ->withStatusCode(Status::SEE_OTHER)
                     ->create()
@@ -302,7 +368,7 @@ final class ItemController
                     'name' => $item->getName(),
                     'ruleName' => $item->getRuleName(),
                 ],
-                scope: ''
+                scope: '',
             );
         }
 
@@ -313,8 +379,8 @@ final class ItemController
                 [
                     'formModel' => $formModel,
                     'type' => $type,
-                    'ruleNames' => $ruleService->getRuleNames()
-                ]
+                    'ruleNames' => $ruleService->getRuleNames(),
+                ],
             )
         ;
     }
@@ -327,9 +393,13 @@ final class ItemController
         AssignmentsStorageInterface $assignmentsStorage,
         CurrentRoute $currentRoute,
         NotFound $notFound,
-        UserRepositoryInterface $userRepository
+        ServerRequest $request,
+        UserRepositoryInterface $userRepository,
     ): ResponseInterface
     {
+        $queryParams = $request
+            ->getQueryParams()
+        ;
         /** @psalm-suppress PossiblyNullArgument */
         $name = $this
             ->inflector
@@ -365,7 +435,7 @@ final class ItemController
                 ->findByIds(
                     $this
                         ->manager
-                        ->getUserIdsByRoleName($name)
+                        ->getUserIdsByRoleName($name),
                 )
             ;
         } else {
@@ -409,7 +479,7 @@ final class ItemController
                     'permissions' => $permissions,
                     'roles' => $roles,
                     'users' => $users,
-                ]
+                ],
             )
         ;
     }
@@ -431,7 +501,7 @@ final class ItemController
             ->viewRenderer
             ->renderPartial(
                 '_children',
-                $this->getViewParameters($parsedBody['item'], $parsedBody['type'])
+                $this->getViewParameters($parsedBody['item'], $parsedBody['type']),
             )
         ;
     }
@@ -453,7 +523,7 @@ final class ItemController
             ->viewRenderer
             ->renderPartial(
                 '_children',
-                $this->getViewParameters($parsedBody['item'], $parsedBody['type'])
+                $this->getViewParameters($parsedBody['item'], $parsedBody['type']),
             )
         ;
     }
@@ -475,7 +545,7 @@ final class ItemController
             ->viewRenderer
             ->renderPartial(
                 '_children',
-                $this->getViewParameters($parsedBody['item'], $parsedBody['type'])
+                $this->getViewParameters($parsedBody['item'], $parsedBody['type']),
             )
         ;
     }
@@ -491,7 +561,7 @@ final class ItemController
 
         $type = ItemTypeService::getItemType($this
             ->itemsStorage
-            ->get($parsedBody['name'])
+            ->get($parsedBody['name']),
         );
 
         foreach ($this->itemsStorage->getRoles() as $role) {
@@ -514,9 +584,9 @@ final class ItemController
                     'flash.item-deleted',
                     [
                         'name' => $parsedBody['name'],
-                        'type' => $type
-                    ]
-                )
+                        'type' => $type,
+                    ],
+                ),
         );
 
         return $this
@@ -530,7 +600,7 @@ final class ItemController
     {
         $children = array_keys($this
             ->itemsStorage
-            ->getDirectChildren($name)
+            ->getDirectChildren($name),
         );
 
         if ($type === Item::TYPE_PERMISSION) {

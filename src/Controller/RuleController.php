@@ -78,7 +78,6 @@ final class RuleController
                 'index',
                 [
                     'currentPage' => (int) ArrayHelper::getValue($queryParams, 'page', 1),
-                    'pageSize' => (int) ArrayHelper::getValue($queryParams, 'pagesize', 20),
                     'rules' => $rules
                 ]
             )
