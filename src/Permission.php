@@ -6,15 +6,15 @@ namespace BeastBytes\Yii\Rbam;
 
 enum Permission: string
 {
-    case RbacItemCreate = 'item-create';
-    case RbacItemRemove = 'item-remove';
-    case RbacItemUpdate = 'item-update';
-    case RbacItemView = 'item-view';
+    case RbamItemCreate = 'item-create';
+    case RbamItemRemove = 'item-remove';
+    case RbamItemUpdate = 'item-update';
+    case RbamItemView = 'item-view';
     case RbamIndex = 'rbam-index';
-    case RbacRuleCreate = 'rule-create';
-    case RbacRuleDelete = 'rule-delete';
-    case RbacRuleUpdate = 'rule-update';
-    case RbacRuleView = 'rule-view';
-    case RbacUserUpdate = 'user-update';
-    case RbacUserView = 'user-view';
+    case RbamRuleCreate = 'rule-create';
+    case RbamRuleDelete = 'rule-delete';
+    case RbamRuleUpdate = 'rule-update';
+    case RbamRuleView = 'rule-view';
+    case RbamUserUpdate = 'user-update';
+    case RbamUserView = 'user-view';
 }

@@ -18,7 +18,7 @@ use Yiisoft\Router\Route;
 return [
     Route::get('/rbam')
         ->name('rbam.rbam')
-        //->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::RbamIndex))
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::RbamIndex))
         ->action([RbamController::class, 'index']),
     Route::methods([Method::GET, Method::POST], '/rbam/initialise')
         ->name('rbam.initialise')
@@ -26,100 +26,100 @@ return [
 
     Route::get('/rbam/users')
         ->name('rbam.userIndex')
-        //->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::UserView))
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::RbamUserView))
         ->action([UserController::class, 'index']),
     Route::get('/rbam/user/{id: [1-9]\d*}')
         ->name('rbam.viewUser')
-        //->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::UserView))
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::RbamUserView))
         ->action([UserController::class, 'view']),
     Route::post('/rbam/assign_role')
         ->name('rbam.assignRole')
-        //->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::ItemUpdate))
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::RbamItemUpdate))
         ->action([UserController::class, 'assignRole']),
     Route::post('/rbam/revoke_assignment')
         ->name('rbam.revokeAssignment')
-        //->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::ItemUpdate))
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::RbamItemUpdate))
         ->action([UserController::class, 'revokeAssignment']),
     Route::post('/rbam/revoke_all_assignments')
         ->name('rbam.revokeAllAssignments')
-        //->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::ItemUpdate))
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::RbamItemUpdate))
         ->action([UserController::class, 'revokeAllAssignments']),
     Route::post('/rbam/pagination/permissions')
         ->name('rbam.permissionsPagination')
-        //->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::ItemUpdate))
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::RbamItemUpdate))
         ->action([UserController::class, 'permissionsPagination']),
     Route::post('/rbam/pagination/roles')
         ->name('rbam.rolesPagination')
-        //->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::ItemUpdate))
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::RbamItemUpdate))
         ->action([UserController::class, 'rolesPagination']),
 
     Route::get('/rbam/{type: permissions|roles}')
         ->name('rbam.itemIndex')
-        //->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::ItemView))
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::RbamItemView))
         ->action([ItemController::class, 'index']),
     Route::methods([Method::GET, Method::POST], '/rbam/create/{type: permission|role}')
         ->name('rbam.createItem')
-        //->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::ItemCreate))
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::RbamItemCreate))
         ->action([ItemController::class, 'create']),
     Route::methods([Method::GET, Method::POST], '/rbam/{name: [a-z][\w]*}/child-{type: role}s')
         ->name('rbam.childRoles')
-        //->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::ItemView))
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::RbamItemView))
         ->action([ItemController::class, 'children']),
     Route::methods([Method::GET, Method::POST], '/rbam/{name: [a-z][\w]*}/{type: permission}s')
         ->name('rbam.rolePermissions')
-        //->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::ItemView))
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::RbamItemView))
         ->action([ItemController::class, 'children']),
     Route::post('/rbam/pagination/assignments')
         ->name('rbam.assignmentPagination')
-        //->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::ItemView))
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::RbamItemView))
         ->action([ItemController::class, 'assignmentPagination']),
     Route::post('/rbam/pagination/items')
         ->name('rbam.itemPagination')
-        //->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::ItemView))
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::RbamItemView))
         ->action([ItemController::class, 'itemPagination']),
     Route::post('/rbam/remove/{name: [a-z][\w]*}/{type: permission|role}')
         ->name('rbam.removeItem')
-        //->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::ItemRemove))
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::RbamItemRemove))
         ->action([ItemController::class, 'remove']),
     Route::methods([Method::GET, Method::POST], '/rbam/update/{name: [a-z][\w]*}/{type: permission|role}')
         ->name('rbam.updateItem')
-        //->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::ItemUpdate))
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::RbamItemUpdate))
         ->action([ItemController::class, 'update']),
     Route::methods([Method::GET, Method::POST], '/rbam/{name: [a-z][\w]*}/{type: permission|role}')
         ->name('rbam.viewItem')
-        //->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::ItemView))
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::RbamItemView))
         ->action([ItemController::class, 'view']),
     Route::post('/rbam/add_child')
         ->name('rbam.addChild')
-        //->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::ItemUpdate))
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::RbamItemUpdate))
         ->action([ItemController::class, 'addChild']),
     Route::post('/rbam/remove_all_children')
         ->name('rbam.removeAllChildren')
-        //->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::ItemUpdate))
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::RbamItemUpdate))
         ->action([ItemController::class, 'removeAllChildren']),
     Route::post('/rbam/remove_child')
         ->name('rbam.removeChild')
-        //->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::ItemUpdate))
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::RbamItemUpdate))
         ->action([ItemController::class, 'removeChild']),
 
     Route::methods([Method::GET, Method::POST], '/rbam/create/rule')
         ->name('rbam.createRule')
-        //->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::RuleCreate))
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::RbamRuleCreate))
         ->action([RuleController::class, 'create']),
     Route::post('/rbam/delete/rule')
         ->name('rbam.deleteRule')
-        //->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::RuleDelete))
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::RbamRuleDelete))
         ->action([RuleController::class, 'delete']),
     Route::get('/rbam/rules')
         ->name('rbam.ruleIndex')
-        //->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::RuleView))
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::RbamRuleView))
         ->action([RuleController::class, 'index']),
     Route::methods([Method::GET, Method::POST],'/rbam/update/{name: [a-z][\w]*}/rule')
         ->name('rbam.updateRule')
-        //->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::RuleUpdate))
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::RbamRuleUpdate))
         ->action([RuleController::class, 'update']),
     Route::get('/rbam/{name: [a-z][\w]*}/rule')
         ->name('rbam.viewRule')
-        //->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::RuleView))
+        ->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::RbamRuleView))
         ->action([RuleController::class, 'view']),
 ];
