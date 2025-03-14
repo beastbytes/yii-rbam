@@ -15,6 +15,7 @@
         "beastbytes/yii-http": "dev-master",
         "beastbytes/mermaid-class-diagram": "dev-master",
         "beastbytes/yii-widgets": "dev-master",
+        "beastbytes/yii-dataview-assets": "dev-main",
         "httpsoft/http-message": "^1.0",
         "yiisoft/aliases": "^3.0",
         "yiisoft/assets": "^5.0",
