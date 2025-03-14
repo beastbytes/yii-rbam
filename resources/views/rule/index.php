@@ -7,9 +7,9 @@
 declare(strict_types=1);
 
 /**
+ * @var AssetManager $assetManager
  * @var int $currentPage
  * @var Inflector $inflector
- * @var int $pageSize
  * @var RbamParameters $rbamParameters
  * @var array $rules
  * @var WebView $this
@@ -17,9 +17,12 @@ declare(strict_types=1);
  * @var UrlGeneratorInterface $urlGenerator
  */
 
+use BeastBytes\Yii\Dataview\Assets\PaginationAsset;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use BeastBytes\Yii\Rbam\RbamRuleInterface;
-use Yiisoft\Data\Paginator\OffsetPaginator;use Yiisoft\Data\Reader\Iterable\IterableDataReader;
+use Yiisoft\Assets\AssetManager;
+use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Html\Html;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Translator\TranslatorInterface;
@@ -29,6 +32,8 @@ use Yiisoft\Yii\DataView\Column\ActionButton;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
+
+$assetManager->register(PaginationAsset::class);
 
 $this->setTitle($translator->translate('label.rules'));
 
@@ -46,7 +51,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
     ->dataReader(
         (new OffsetPaginator(new IterableDataReader($rules)))
             ->withCurrentPage($currentPage)
-            ->withPageSize($pageSize)
+            ->withPageSize($rbamParameters->getPageSize())
     )
     ->containerAttributes(['class' => 'grid-view rules', 'id' => 'rules'])
     ->header($translator->translate('label.rules'))

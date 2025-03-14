@@ -10,8 +10,10 @@ declare(strict_types=1);
  * @var AssetManager $assetManager
  * @var Role[] $ancestors
  * @var AssignmentsStorageInterface $assignmentsStorage
- * @var HierarchyDiagramInterface $diagram
+ * @var int $currentPage
+ * @var Inflector $inflector
  * @var Permission $item
+ * @var ItemsStorageInterface $itemsStorage
  * @var RbamParameters $rbamParameters
  * @var WebView $this
  * @var TranslatorInterface $translator
@@ -19,17 +21,20 @@ declare(strict_types=1);
  * @var UserInterface[] $users
  */
 
-use BeastBytes\Yii\Rbam\HierarchyDiagramInterface;
+use BeastBytes\Yii\Rbam\MermaidHierarchyDiagram;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use BeastBytes\Yii\Rbam\UserInterface;
 use BeastBytes\Yii\Widgets\Assets\TabsAsset;
 use BeastBytes\Yii\Widgets\Tabs;
 use Yiisoft\Assets\AssetManager;
+use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Rbac\AssignmentsStorageInterface;
+use Yiisoft\Rbac\ItemsStorageInterface;
 use Yiisoft\Rbac\Permission;
 use Yiisoft\Rbac\Role;
 use Yiisoft\Router\UrlGeneratorInterface;
+use Yiisoft\Strings\Inflector;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\DataView\Column\ActionButton;
@@ -39,11 +44,15 @@ use Yiisoft\Yii\DataView\GridView;
 
 $assetManager->register(TabsAsset::class);
 $this->addJsFiles($assetManager->getJsFiles());
+$this->addJsStrings(['pagination.init("permitted-users")']);
 
 echo Tabs::widget(['data' => [
     $translator->translate('label.permitted-users') => GridView::widget()
-        ->dataReader(new IterableDataReader($users))
-        ->containerAttributes(['class' => 'grid-view permitted-users'])
+        ->dataReader((new OffsetPaginator(new IterableDataReader($users)))
+            ->withCurrentPage($currentPage ?? 1)
+            ->withPageSize($rbamParameters->getTabPageSize())
+        )
+        ->containerAttributes(['class' => 'grid-view permitted-users', 'id' => 'permitted-users'])
         ->header($translator->translate('label.permitted-users'))
         ->headerAttributes(['class' => 'header'])
         ->tableAttributes(['class' => 'grid'])
@@ -106,5 +115,11 @@ echo Tabs::widget(['data' => [
         )
         ->render()
     ,
-    $translator->translate('label.diagram') => $diagram->render(),
+    $translator->translate('label.diagram') => (new MermaidHierarchyDiagram(
+        $item,
+        $itemsStorage,
+        $inflector,
+        $translator,
+        $urlGenerator)
+    )->render(),
 ]]);

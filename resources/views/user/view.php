@@ -14,7 +14,6 @@ declare(strict_types=1);
  * @var Permission[] $permissionsGranted
  * @var Csrf $csrf
  * @var Inflector $inflector
- * @var Item $item
  * @var RbamParameters $rbamParameters
  * @var WebView $this
  * @var TranslatorInterface $translator
@@ -23,13 +22,13 @@ declare(strict_types=1);
  * @var UserInterface $user
  */
 
+use BeastBytes\Yii\Dataview\Assets\PaginationAsset;
 use BeastBytes\Yii\Rbam\Assets\RbamAsset;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use BeastBytes\Yii\Rbam\UserInterface;
 use Yiisoft\Assets\AssetManager;
 use Yiisoft\Html\Html;
 use Yiisoft\Rbac\Assignment;
-use Yiisoft\Rbac\Item;
 use Yiisoft\Rbac\ItemsStorageInterface;
 use Yiisoft\Rbac\Permission;
 use Yiisoft\Rbac\Role;
@@ -39,6 +38,7 @@ use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\View\Renderer\Csrf;
 
+$assetManager->register(PaginationAsset::class);
 $assetManager->register(RbamAsset::class);
 $this->addJsFiles($assetManager->getJsFiles());
 
@@ -60,7 +60,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
 
 <h2><?= Html::encode($this->getTitle()) ?></h2>
 
-<div id="js-items" data-csrf="<?= $csrf ?>" data-item="<?= $user->getId() ?>">
+<div id="js-items" data-_csrf="<?= $csrf ?>" data-item="<?= $user->getId() ?>">
     <?= $this->render(
         '_assignments',
         [
@@ -72,6 +72,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
             'translator' => $translator,
             'unassignedRoles' => $unassignedRoles,
             'urlGenerator' => $urlGenerator,
+            'user' => $user,
         ]
     ) ?>
 </div>

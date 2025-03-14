@@ -7,9 +7,9 @@
 declare(strict_types=1);
 
 /**
+ * @var AssetManager $assetManager
  * @var int $currentPage
  * @var Inflector $inflector
- * @var int $pageSize
  * @var ManagerInterface $rbacManager
  * @var RbamParameters $rbamParameters
  * @var TranslatorInterface $translator
@@ -18,11 +18,12 @@ declare(strict_types=1);
  * @var WebView $this
  */
 
+use BeastBytes\Yii\Dataview\Assets\PaginationAsset;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use BeastBytes\Yii\Rbam\UserInterface;
+use Yiisoft\Assets\AssetManager;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
-use Yiisoft\Html\Html;
 use Yiisoft\Rbac\ManagerInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Strings\Inflector;
@@ -32,7 +33,8 @@ use Yiisoft\Yii\DataView\Column\ActionButton;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
+
+$assetManager->register(PaginationAsset::class);
 
 $this->setTitle($translator->translate('label.users'));
 
@@ -47,11 +49,10 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
 ?>
 
 <?= GridView::widget()
-    ->urlCreator(new UrlCreator($urlGenerator))
     ->dataReader(
         (new OffsetPaginator(new IterableDataReader($users)))
             ->withCurrentPage($currentPage)
-            ->withPageSize($pageSize)
+            ->withPageSize($rbamParameters->getPageSize())
     )
     ->containerAttributes(['class' => 'grid-view users', 'id' => 'users'])
     ->header($this->getTitle())

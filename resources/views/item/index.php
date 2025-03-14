@@ -12,7 +12,6 @@ declare(strict_types=1);
  * @var Inflector $inflector
  * @var array $items
  * @var ItemsStorageInterface $itemsStorage
- * @var int $pageSize
  * @var RbamParameters $rbamParameters
  * @var WebView $this
  * @var TranslatorInterface $translator
@@ -22,8 +21,6 @@ declare(strict_types=1);
 
 use BeastBytes\Yii\Rbam\RbamParameters;
 use Yiisoft\Assets\AssetManager;
-use Yiisoft\Data\Paginator\OffsetPaginator;
-use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Html\Html;
 use Yiisoft\Rbac\ItemsStorageInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
@@ -47,12 +44,11 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
 '_items',
     [
         'actionButtons' => ['view', 'remove'],
-        'dataReader' => (new OffsetPaginator(new IterableDataReader($items)))
-            ->withCurrentPage($currentPage)
-            ->withPageSize($pageSize)
-        ,
-        'header' => $translator->translate($this->getTitle()),
-        'emptyText' => $translator->translate('message.no-' . $type . 's-found'),
+        'currentPage' => $currentPage,
+        'emptyText' => 'label.no-' . $type . 's-found',
+        'header' => $this->getTitle(),
+        'item' => null,
+        'items' => $items,
         'itemsStorage' => $itemsStorage,
         'toolbar' => Html::a(
             content: $translator->translate($rbamParameters->getButtons('create' . ucfirst($type))['content']),
@@ -64,6 +60,8 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
         'translator' => $translator,
         'type' => $type,
         'urlGenerator' => $urlGenerator,
+        'user' => null,
+
     ]
 )
 ?>

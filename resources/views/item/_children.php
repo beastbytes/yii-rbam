@@ -8,12 +8,11 @@ declare(strict_types=1);
 
 /**
  * @var Item[] $children
- * @var int $currentPage
+ * @var ?int $currentPage
  * @var Item[] $descendants
  * @var Inflector $inflector
  * @var Item[] $items
  * @var ManagerInterface $manager
- * @var int $pageSize
  * @var Item $parent
  * @var RbamParameters $rbamParameters
  * @var WebView $this
@@ -23,6 +22,7 @@ declare(strict_types=1);
  */
 
 use BeastBytes\Yii\Rbam\RbamParameters;
+use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Html\Html;
 use Yiisoft\Rbac\Item;
@@ -36,7 +36,10 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 
 echo GridView::widget()
-    ->dataReader(new IterableDataReader($descendants))
+    ->dataReader((new OffsetPaginator(new IterableDataReader($descendants)))
+        ->withCurrentPage($currentPage ?? 1)
+        ->withPageSize($rbamParameters->getTabPageSize())
+    )
     ->containerAttributes(['class' => 'grid-view children'])
     ->header($translator->translate(
         $type === Item::TYPE_PERMISSION ? 'label.permissions-granted' : 'label.descendant-roles'
@@ -100,7 +103,10 @@ echo GridView::widget()
 ;
 
 echo GridView::widget()
-    ->dataReader(new IterableDataReader($items))
+    ->dataReader((new OffsetPaginator(new IterableDataReader($items)))
+        ->withCurrentPage($currentPage)
+        ->withPageSize($rbamParameters->getTabPageSize())
+    )
     ->containerAttributes(['class' => 'grid-view children'])
     ->header($translator->translate(
         $type === Item::TYPE_PERMISSION ? 'label.permissions' : 'label.roles',
@@ -110,7 +116,7 @@ echo GridView::widget()
     ->tableAttributes(['class' => 'grid'])
     ->layout("{header}\n<div class=\"toolbar\">{toolbar}</div>\n{items}")
     ->emptyText($translator->translate(
-        $type === Item::TYPE_PERMISSION ? 'message.no-permissions' : 'message.no-roles',
+        $type === Item::TYPE_PERMISSION ? 'message.no-permissions-found' : 'message.no-roles-found',
     ))
     ->columns(
         new DataColumn(

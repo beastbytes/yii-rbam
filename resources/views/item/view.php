@@ -23,16 +23,9 @@ declare(strict_types=1);
  * @var UserInterface[] $users
  */
 
-use BeastBytes\Mermaid\ClassDiagram\Attribute;
-use BeastBytes\Mermaid\ClassDiagram\ClassDiagram;
-use BeastBytes\Mermaid\ClassDiagram\Classs;
-use BeastBytes\Mermaid\ClassDiagram\Method;
-use BeastBytes\Mermaid\ClassDiagram\Relationship;
-use BeastBytes\Mermaid\ClassDiagram\RelationshipType;
-use BeastBytes\Mermaid\InteractionType;
 use BeastBytes\Mermaid\Mermaid;
+use BeastBytes\Yii\Dataview\Assets\PaginationAsset;
 use BeastBytes\Yii\Rbam\ItemTypeService;
-use BeastBytes\Yii\Rbam\MermaidHierarchyDiagram;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use BeastBytes\Yii\Rbam\UserInterface;
 use Yiisoft\Assets\AssetManager;
@@ -56,6 +49,7 @@ $this->registerScriptTag(
         ->type('module')
         ->content(Mermaid::js(['startOnLoad' => true]))
 );
+$assetManager->register(PaginationAsset::class);
 
 $css = '';
 foreach ($rbamParameters->getMermaidDiagramStyles() as $class => $styles):
@@ -157,7 +151,6 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
         'ancestors' => $ancestors,
         'assignments' => $assignments,
         'assignmentsStorage' => $assignmentsStorage,
-        'diagram' => (new MermaidHierarchyDiagram($item, $itemsStorage, $inflector, $translator, $urlGenerator)),
         'item' => $item,
         'itemsStorage' => $itemsStorage,
         'permissions' => $permissions,

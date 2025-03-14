@@ -9,27 +9,31 @@ declare(strict_types=1);
 /**
  * @var array $actionButtons
  * @var AssetManager $assetManager
+ * @var ?int $currentPage
  * @var ItemsStorageInterface $itemsStorage
  * @var Csrf $csrf
- * @var DataReaderInterface $dataReader
  * @var string $emptyText
  * @var string $header
  * @var Inflector $inflector
- * @var string $layout
+ * @var Item $item
+ * @var Item[] $items
  * @var RbamParameters $rbamParameters
  * @var WebView $this
  * @var TranslatorInterface $translator
  * @var string $toolbar
  * @var string $type
  * @var UrlGeneratorInterface $urlGenerator
+ * @var ?UserInterface $user
  */
 
 use BeastBytes\Yii\Rbam\Assets\RemoveAsset;
 use BeastBytes\Yii\Rbam\ItemTypeService;
 use BeastBytes\Yii\Rbam\RbamParameters;
+use BeastBytes\Yii\Rbam\UserInterface;
 use BeastBytes\Yii\Widgets\Dialog;
 use Yiisoft\Assets\AssetManager;
-use Yiisoft\Data\Reader\DataReaderInterface;
+use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Html\Html;
 use Yiisoft\Rbac\Item;
 use Yiisoft\Rbac\ItemsStorageInterface;
@@ -45,6 +49,19 @@ use Yiisoft\Yii\View\Renderer\Csrf;
 
 $assetManager->register(RemoveAsset::class);
 $this->addJsFiles($assetManager->getJsFiles());
+$this->addJsStrings(['pagination.init("' . $type . '")']);
+
+if ($item instanceof Item) {
+    $this->setParameter(
+        'baseUrl',
+        $urlGenerator->generate('rbam.itemPagination')
+    );
+} else {
+    $this->setParameter(
+        'baseUrl',
+        $urlGenerator->generate('rbam.permissionsPagination')
+    );
+}
 
 $dialog = Dialog::widget()
     ->body($translator->translate('message.remove-' . $type))
@@ -73,15 +90,54 @@ $dialog = Dialog::widget()
 ;
 echo $dialog->render();
 
+$containerAttributes = [
+    'class' => 'grid-view ' . $type . 's',
+    'id' => $type,
+    'data-_csrf' => $csrf,
+    'data-action-buttons' => implode(',', $actionButtons),
+    'data-header' => $header,
+    'data-toolbar' => $toolbar,
+];
+
+if ($item instanceof Item) {
+    $containerAttributes['data-name'] = $item->getName();
+    $containerAttributes['data-type'] = $type;
+} elseif ($user instanceof UserInterface) {
+    $containerAttributes['data-userId'] = $user->getId();
+}
+
 echo GridView::widget()
-    ->dataReader($dataReader)
-    ->containerAttributes(['class' => 'grid-view ' . $type . 's', 'id' => $type . 's'])
-    ->header($header)
+    ->dataReader((new OffsetPaginator(new IterableDataReader($items)))
+        ->withCurrentPage($currentPage ?? 1)
+        ->withPageSize($rbamParameters->getTabPageSize())
+    )
+    ->containerAttributes($containerAttributes)
+    ->header($translator->translate($header))
     ->headerAttributes(['class' => 'header'])
     ->tableAttributes(['class' => 'grid'])
     ->layout("{header}\n<div class=\"toolbar\">{toolbar}</div>\n{summary}\n{items}\n{pager}")
     ->toolbar($toolbar)
-    ->emptyText($emptyText)
+    ->urlCreator(function (array $arguments, array $queryParameters): string {
+        $baseUrl = $this->getParameter('baseUrl');
+        $pathParams = [];
+
+        // Handle path parameters
+        foreach ($arguments as $name => $value) {
+            $pathParams[] = "$name-$value";
+        }
+
+        // Build final URL
+        $url = $baseUrl;
+        if ($pathParams) {
+            $url .= '/' . implode('/', $pathParams);
+        }
+        if ($queryParameters) {
+            $url .= '?' . http_build_query($queryParameters);
+        }
+
+        return $url;
+    })
+    ->emptyText($translator->translate($emptyText))
     ->columns(
         new DataColumn(
             header: $translator->translate('label.name'),
