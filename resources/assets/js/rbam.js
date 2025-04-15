@@ -7,7 +7,7 @@ const rbam = {
     init: function() {
         for (const button of document.querySelectorAll("tbody .action .btn")) {
             button.addEventListener(
-                'click',
+                "click",
                 (e) => {
                     e.preventDefault()
                     rbam.action(e.target)
@@ -18,10 +18,11 @@ const rbam = {
         const allItems = document.getElementById("all_items")
         if (allItems !== null) {
             allItems.addEventListener(
-                'click',
+                "click",
                 (e) => {
                     e.preventDefault()
                     rbam.action(e.target)
+                        .then(r => rbam.init())
                 }
             )
         }
@@ -35,7 +36,7 @@ const rbam = {
             formData.set(property, dataset[property])
         }
 
-        if (target.dataset.hasOwnProperty('name')) {
+        if (target.dataset.hasOwnProperty("name")) {
             formData.set("name", target.dataset.name)
         }
 
@@ -46,8 +47,6 @@ const rbam = {
 
         const response = await fetch(request)
         container.innerHTML = await response.text()
-
-        rbam.init()
     }
 }
 
