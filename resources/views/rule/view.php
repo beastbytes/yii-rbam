@@ -7,6 +7,7 @@
 declare(strict_types=1);
 
 /**
+ * @var AssetManager $assetManager
  * @var Inflector $inflector
  * @var RbamParameters $rbamParameters
  * @var RbamRuleInterface $rule
@@ -15,8 +16,10 @@ declare(strict_types=1);
  * @var UrlGeneratorInterface $urlGenerator
  */
 
+use BeastBytes\Yii\Rbam\Assets\PrismAsset;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use BeastBytes\Yii\Rbam\RbamRuleInterface;
+use Yiisoft\Assets\AssetManager;
 use Yiisoft\Html\Html;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Translator\TranslatorInterface;
@@ -24,6 +27,8 @@ use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\DataView\DetailView;
 use Yiisoft\Yii\DataView\Field\DataField;
+
+$assetManager->register(PrismAsset::class);
 
 $this->setTitle($translator->translate(
     'label.rule-name',
@@ -59,7 +64,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
         ),
         new DataField(
             label: $translator->translate('label.code'),
-            value: fn($rule) => '<pre><code>'
+            value: fn($rule) => '<pre><code class="language-php">'
                 . 'public function execute(?string $userId, Item $item, RuleContext $context): bool'
                 . "\n{\n"
                 . $rule->getCode()
