@@ -12,7 +12,7 @@ use BeastBytes\Yii\Rbam\UserInterface;
 
 class User implements UserInterface
 {
-    public function __construct(private string $id, private string $name)
+    public function __construct(private readonly string $id, private readonly string $name)
     {
     }
 

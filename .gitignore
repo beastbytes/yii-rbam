@@ -50,7 +50,7 @@ composer.lock
 package-lock.json
 
 # phpDocumentor cache
-/docs/cache
+/Writerside/cache
 
 /dev
 /runtime
