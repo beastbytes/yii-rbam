@@ -43,7 +43,6 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 
 $assetManager->register(TabsAsset::class);
-$this->addJsFiles($assetManager->getJsFiles());
 $this->addJsStrings(['pagination.init("permitted-users")']);
 
 echo Tabs::widget(['data' => [

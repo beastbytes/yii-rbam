@@ -48,7 +48,6 @@ use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\View\Renderer\Csrf;
 
 $assetManager->register(RemoveAsset::class);
-$this->addJsFiles($assetManager->getJsFiles());
 $this->addJsStrings(['pagination.init("' . $type . '")']);
 
 if ($item instanceof Item) {

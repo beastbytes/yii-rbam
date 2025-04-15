@@ -17,6 +17,7 @@ use Yiisoft\View\WebView;
 
 $assetManager->register(RbamAsset::class);
 $this->addCssFiles($assetManager->getCssFiles());
+$this->addJsFiles($assetManager->getJsFiles());
 
 $this->beginPage()
 ?>

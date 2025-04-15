@@ -40,7 +40,6 @@ use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\View\WebView;
 
 $assetManager->register(TabsAsset::class);
-$this->addJsFiles($assetManager->getJsFiles());
 
 echo Tabs::widget(['data' => [
     $translator->translate('label.assignments') => $this->render(

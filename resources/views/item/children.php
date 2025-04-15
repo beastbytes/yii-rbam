@@ -36,7 +36,6 @@ use Yiisoft\View\WebView;
 use Yiisoft\Yii\View\Renderer\Csrf;
 
 $assetManager->register(RbamAsset::class);
-$this->addJsFiles($assetManager->getJsFiles());
 
 $this->setTitle($translator->translate(
     $type === Item::TYPE_PERMISSION ? 'label.manage-permissions' : 'label.manage-child-roles',
