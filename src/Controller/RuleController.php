@@ -1,8 +1,4 @@
 <?php
-/**
- * @copyright Copyright © 2025 BeastBytes - All rights reserved
- * @license BSD 3-Clause
- */
 
 declare(strict_types=1);
 
@@ -10,10 +6,9 @@ namespace BeastBytes\Yii\Rbam\Controller;
 
 use BeastBytes\Yii\Http\Response\NotFound;
 use BeastBytes\Yii\Http\Response\Redirect;
-use BeastBytes\Yii\Rbam\Command\Attribute\Permission as PermissionAttribute;
+use BeastBytes\Yii\Rbam\Attribute\Permission as PermissionAttribute;
 use BeastBytes\Yii\Rbam\Form\RuleForm;
 use BeastBytes\Yii\Rbam\Permission as RbamPermission;
-use BeastBytes\Yii\Rbam\RbamRuleInterface;
 use BeastBytes\Yii\Rbam\RuleServiceInterface;
 use HttpSoft\Message\ServerRequest;
 use Psr\Http\Message\ResponseInterface;
@@ -23,18 +18,15 @@ use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Http\Status;
 use Yiisoft\Rbac\ItemsStorageInterface;
-use Yiisoft\Rbac\RuleInterface;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Session\Flash\FlashInterface;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
-
-use const DIRECTORY_SEPARATOR;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class RuleController
 {
-    private const RBAM_ROLE = 'RbamRulesManager';
+    private const RBAM_ROLE = 'rbam.rule-manager';
 
     public function __construct(
         private readonly FlashInterface $flash,
@@ -43,7 +35,7 @@ final class RuleController
         private readonly Redirect $redirect,
         private readonly RuleServiceInterface $ruleService,
         private TranslatorInterface $translator,
-        private ViewRenderer $viewRenderer
+        private WebViewRenderer $viewRenderer
     )
     {
         $this->translator = $this
@@ -56,8 +48,14 @@ final class RuleController
         ;
     }
 
+    /**
+     * List rules
+     *
+     * @param ServerRequest $request
+     * @return ResponseInterface
+     */
     #[PermissionAttribute(
-        name: RbamPermission::RbacRuleView,
+        name: RbamPermission::ruleView,
         parent: self::RBAM_ROLE
     )]
     public function index(ServerRequest $request): ResponseInterface
@@ -72,20 +70,41 @@ final class RuleController
 
         ksort($rules, SORT_STRING);
 
+        if ($request->hasHeader('Yii-Request')) {
+            return $this
+                ->viewRenderer
+                ->renderPartial(
+                    'index',
+                    [
+                        'currentPage' => (int) ArrayHelper::getValue($queryParams, 'page', 1),
+                        'rules' => $rules,
+                    ]
+                )
+            ;
+        }
+
         return $this
             ->viewRenderer
             ->render(
                 'index',
                 [
                     'currentPage' => (int) ArrayHelper::getValue($queryParams, 'page', 1),
-                    'rules' => $rules
+                    'rules' => $rules,
                 ]
             )
         ;
     }
 
+    /**
+     * Create a rule
+     *
+     * @param FormHydrator $formHydrator
+     * @param Redirect $redirect
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
     #[PermissionAttribute(
-        name: RbamPermission::RbacRuleCreate,
+        name: RbamPermission::ruleCreate,
         parent: self::RBAM_ROLE
     )]
     public function create(
@@ -113,7 +132,7 @@ final class RuleController
                     $this
                         ->translator
                         ->translate(
-                            'flash.rule-created',
+                            'flash.rule.created',
                             [
                                 'name' => $formModel->getName(),
                             ]
@@ -141,8 +160,16 @@ final class RuleController
         ;
     }
 
+    /**
+     * Delete a rule
+     *
+     * POST
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
     #[PermissionAttribute(
-        name: RbamPermission::RbacRuleDelete,
+        name: RbamPermission::ruleDelete,
         parent: self::RBAM_ROLE
     )]
     public function delete(ServerRequestInterface $request): ResponseInterface
@@ -176,8 +203,18 @@ final class RuleController
         ;
     }
 
+    /**
+     * Update a rule
+     *
+     * @param CurrentRoute $currentRoute
+     * @param FormHydrator $formHydrator
+     * @param NotFound $notFound
+     * @param Redirect $redirect
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
     #[PermissionAttribute(
-        name: RbamPermission::RbacRuleUpdate,
+        name: RbamPermission::ruleUpdate,
         parent: self::RBAM_ROLE
     )]
     public function update(
@@ -229,7 +266,7 @@ final class RuleController
                         $this
                             ->translator
                             ->translate(
-                                'flash.rule-updated',
+                                'flash.rule.updated',
                                 [
                                     'name' => $name,
                                 ]
@@ -242,7 +279,6 @@ final class RuleController
                     ->withStatusCode(Status::SEE_OTHER)
                     ->create()
                 ;
-
             }
 
             // @todo What if rule wasn't saved
@@ -254,8 +290,14 @@ final class RuleController
         ;
     }
 
+    /**
+     * View a rule
+     *
+     * @param CurrentRoute $currentRoute
+     * @return ResponseInterface
+     */
     #[PermissionAttribute(
-        name: RbamPermission::RbacRuleView,
+        name: RbamPermission::ruleView,
         parent: self::RBAM_ROLE
     )]
     public function view(

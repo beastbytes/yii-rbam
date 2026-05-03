@@ -1,30 +1,26 @@
 <?php
-/**
- * @copyright Copyright © 2025 BeastBytes - All rights reserved
- * @license BSD 3-Clause
- */
 
 declare(strict_types=1);
 
 namespace BeastBytes\Yii\Rbam\Controller;
 
-use BeastBytes\Yii\Rbam\Command\Attribute\Permission as PermissionAttribute;
+use BeastBytes\Yii\Rbam\Attribute\Permission as PermissionAttribute;
 use BeastBytes\Yii\Rbam\Permission as RbamPermission;
 use BeastBytes\Yii\Rbam\RuleServiceInterface;
 use BeastBytes\Yii\Rbam\UserRepositoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Yiisoft\Rbac\ItemsStorageInterface;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class RbamController
 {
-    private const RBAM_ROLE = 'Rbam';
+    private const RBAM_ROLE = 'rbam.admin';
 
     public function __construct(
         private readonly ItemsStorageInterface $itemsStorage,
         private TranslatorInterface $translator,
-        private ViewRenderer $viewRenderer
+        private WebViewRenderer $viewRenderer
     )
     {
         $this->translator = $this
@@ -37,8 +33,15 @@ final class RbamController
         ;
     }
 
+    /**
+     * Display the RBAM dashboard
+     *
+     * @param RuleServiceInterface $ruleService
+     * @param UserRepositoryInterface $userRepository
+     * @return ResponseInterface
+     */
     #[PermissionAttribute(
-        name: RbamPermission::RbacRbamIndex,
+        name: RbamPermission::index,
         parent: self::RBAM_ROLE
     )]
     public function index(

@@ -1,8 +1,4 @@
 <?php
-/**
- * @copyright Copyright © 2025 BeastBytes - All rights reserved
- * @license BSD 3-Clause
- */
 
 declare(strict_types=1);
 
@@ -10,9 +6,13 @@ namespace BeastBytes\Yii\Rbam\Controller;
 
 use BeastBytes\Yii\Http\Response\NotFound;
 use BeastBytes\Yii\Http\Response\Redirect;
-use BeastBytes\Yii\Rbam\Command\Attribute\Permission as PermissionAttribute;
+use BeastBytes\Yii\Rbam\Attribute\Permission as PermissionAttribute;
+use BeastBytes\Yii\Rbam\DTO\Assignment as RbamAssignment;
+use BeastBytes\Yii\Rbam\DTO\Item as RbamItem;
+use BeastBytes\Yii\Rbam\DTO\PermittedUser;
 use BeastBytes\Yii\Rbam\Form\ItemForm;
 use BeastBytes\Yii\Rbam\ItemTypeService;
+use BeastBytes\Yii\Rbam\MermaidHierarchyDiagram;
 use BeastBytes\Yii\Rbam\Permission as RbamPermission;
 use BeastBytes\Yii\Rbam\RuleServiceInterface;
 use BeastBytes\Yii\Rbam\UserRepositoryInterface;
@@ -23,6 +23,7 @@ use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\FormModel\FormHydrator;
 use Yiisoft\Http\Method;
 use Yiisoft\Http\Status;
+use Yiisoft\Rbac\Assignment;
 use Yiisoft\Rbac\AssignmentsStorageInterface;
 use Yiisoft\Rbac\Item;
 use Yiisoft\Rbac\ItemsStorageInterface;
@@ -30,25 +31,27 @@ use Yiisoft\Rbac\ManagerInterface;
 use Yiisoft\Rbac\Permission;
 use Yiisoft\Rbac\Role;
 use Yiisoft\Router\CurrentRoute;
+use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Session\Flash\FlashInterface;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\View\Renderer\ViewRenderer;
+use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
 final class ItemController
 {
-    private const RBAM_ROLE = 'RbamItemsManager';
-
-    public const TYPE = 'type';
+    private const RBAM_ROLE = 'rbam.item-manager';
 
     public function __construct(
+        private readonly AssignmentsStorageInterface $assignmentsStorage,
         private readonly FlashInterface $flash,
         private readonly Inflector $inflector,
         private readonly ItemsStorageInterface $itemsStorage,
         private readonly ManagerInterface $manager,
         private readonly Redirect $redirect,
         private TranslatorInterface $translator,
-        private ViewRenderer $viewRenderer,
+        private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly UserRepositoryInterface $userRepository,
+        private WebViewRenderer $viewRenderer
     )
     {
         $this->translator = $this
@@ -61,8 +64,15 @@ final class ItemController
         ;
     }
 
+    /**
+     * List items - Roles or Permissions
+     *
+     * @param CurrentRoute $currentRoute
+     * @param ServerRequest $request
+     * @return ResponseInterface
+     */
     #[PermissionAttribute(
-        name: RbamPermission::RbacItemView,
+        name: RbamPermission::itemView,
         parent: self::RBAM_ROLE
     )]
     public function index(CurrentRoute $currentRoute, ServerRequest $request): ResponseInterface
@@ -70,26 +80,53 @@ final class ItemController
         $queryParams = $request
             ->getQueryParams()
         ;
-        /** @psalm-suppress PossiblyNullArgument */
         $type = $this
             ->inflector
-            ->toSingular($currentRoute
-                ->getArgument('type'),
+            ->toSingular(
+                $currentRoute->getArgument('type')
             )
         ;
 
-        $items = match($type) {
-            Item::TYPE_PERMISSION => $this
+        if ($type === Item::TYPE_PERMISSION) {
+            $items = $this
                 ->itemsStorage
-                ->getPermissions(),
-            Item::TYPE_ROLE => $this
+                ->getPermissions()
+            ;
+            uksort($items, fn(string $a, string $b) => $a <=> $b);
+            array_walk($items, fn(Item &$item, $key, $ths)
+                => $item = new RbamItem($item, $ths->getGrantedBy($item)), $this)
+            ;
+        } else {
+            $items = $this
                 ->itemsStorage
-                ->getRoles(),
-        };
+                ->getRoles()
+            ;
+            uksort($items, fn(string $a, string $b) => $a <=> $b);
+            array_walk($items, fn(Item &$item) => $item = new RbamItem($item));
+        }
 
-        uksort($items, function(string $a, string $b) {
-            return $a <=> $b;
-        });
+        if ($request->getMethod() === Method::POST) {
+            $parsedBody = $request->getParsedBody();
+
+            return $this
+                ->viewRenderer
+                ->renderPartial(
+                    '_items',
+                    [
+                        'actionButtons' => explode(',', $parsedBody['action_buttons']),
+                        'currentPage' => (int) ArrayHelper::getValue($queryParams, 'page', 1),
+                        'noResultsText' => '',
+                        'header' => $parsedBody['header'] ?? '',
+                        'item' => null,
+                        'items' => $items,
+                        'paginationUrl' => $parsedBody['pagination_url'],
+                        'toolbar' => $parsedBody['toolbar'] ?? '',
+                        'type' => $type,
+                        'user' => null,
+                    ]
+                )
+            ;
+        }
 
         return $this
             ->viewRenderer
@@ -98,15 +135,23 @@ final class ItemController
                 [
                     'currentPage' => (int) ArrayHelper::getValue($queryParams, 'page', 1),
                     'items' => $items,
-                    'itemsStorage' => $this->itemsStorage,
                     'type' => $type,
                 ],
             )
         ;
     }
 
+    /**
+     * Create a new item - Role or Permission
+     *
+     * @param CurrentRoute $currentRoute
+     * @param FormHydrator $formHydrator
+     * @param ServerRequestInterface $request
+     * @param RuleServiceInterface $ruleService
+     * @return ResponseInterface
+     */
     #[PermissionAttribute(
-        name: RbamPermission::RbacItemCreate,
+        name: RbamPermission::itemCreate,
         parent: self::RBAM_ROLE
     )]
     public function create(
@@ -116,9 +161,7 @@ final class ItemController
         RuleServiceInterface $ruleService,
     ): ResponseInterface
     {
-        $type = $currentRoute
-            ->getArgument('type')
-        ;
+        $type = $currentRoute->getArgument('type');
 
         $formModel = new ItemForm($this->translator);
 
@@ -149,7 +192,7 @@ final class ItemController
                     $this
                         ->translator
                         ->translate(
-                            'flash.item-created',
+                            'flash.item.created',
                             [
                                 'name' => $formModel->getName(),
                                 'type' => ucfirst($type),
@@ -187,101 +230,18 @@ final class ItemController
         ;
     }
 
+    /**
+     * Update an item - Role or Permission
+     *
+     * @param CurrentRoute $currentRoute
+     * @param FormHydrator $formHydrator
+     * @param NotFound $notFound
+     * @param RuleServiceInterface $ruleService
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
     #[PermissionAttribute(
-        name: RbamPermission::RbacItemView,
-        parent: self::RBAM_ROLE
-    )]
-    public function children(CurrentRoute $currentRoute): ResponseInterface
-    {
-        $name = $this
-            ->inflector
-            ->toPascalCase($currentRoute->getArgument('name'))
-        ;
-        $type = $currentRoute
-            ->getArgument('type')
-        ;
-
-        return $this
-            ->viewRenderer
-            ->render(
-                'children',
-                $this->getViewParameters($name, $type),
-            )
-        ;
-    }
-
-    #[PermissionAttribute(
-        name: RbamPermission::RbacItemView,
-        parent: self::RBAM_ROLE
-    )]
-    public function assignmentPagination(
-        AssignmentsStorageInterface $assignmentsStorage,
-        ServerRequestInterface $request
-    ): ResponseInterface
-    {
-        $queryParams = $request
-            ->getQueryParams()
-        ;
-        /** @var array{name:string, id:string} $parsedBody */
-        $parsedBody = $request->getParsedBody();
-
-        return $this->viewRenderer->render(
-            '_assignments',
-            [
-                'assignments' => $assignmentsStorage->getByItemNames([$parsedBody['name']]),
-                'currentPage' => (int) ArrayHelper::getValue($queryParams, 'page', 1),
-                'item' => $this->manager->getRole($parsedBody['name']),
-            ]
-        );
-    }
-
-    #[PermissionAttribute(
-        name: RbamPermission::RbacItemView,
-        parent: self::RBAM_ROLE
-    )]
-    public function itemPagination(
-        ServerRequestInterface $request
-    ): ResponseInterface
-    {
-        $queryParams = $request
-            ->getQueryParams()
-        ;
-        /** @var array{name:string, id:string} $parsedBody */
-        $parsedBody = $request->getParsedBody();
-
-        if ($parsedBody['id'] === Item::TYPE_PERMISSION) {
-            $items = $this
-                ->manager
-                ->getPermissionsByRoleName($parsedBody['name'])
-            ;
-        } else {
-            $items = $this
-                ->manager
-                ->getChildRoles($parsedBody['name'])
-            ;
-        }
-
-        return $this
-            ->viewRenderer
-            ->renderPartial(
-                '_items',
-                [
-                    'actionButtons' => explode(',', $parsedBody['actionButtons']),
-                    'currentPage' => (int) ArrayHelper::getValue($queryParams, 'page', 1),
-                    'emptyText' => '',
-                    'header' => $parsedBody['header'],
-                    'item' => $this->manager->getRole($parsedBody['name']),
-                    'items' => $items,
-                    'itemsStorage' => $this->itemsStorage,
-                    'toolbar' => $parsedBody['toolbar'],
-                    'type' => $parsedBody['id']
-                ]
-            )
-        ;
-    }
-
-    #[PermissionAttribute(
-        name: RbamPermission::RbacItemUpdate,
+        name: RbamPermission::itemUpdate,
         parent: self::RBAM_ROLE
     )]
     public function update(
@@ -292,10 +252,7 @@ final class ItemController
         ServerRequestInterface $request,
     ): ResponseInterface
     {
-        $name = $this
-            ->inflector
-            ->toPascalCase($currentRoute->getArgument('name'))
-        ;
+        $name = $currentRoute->getArgument('name');
 
         if (!$this
             ->itemsStorage
@@ -336,7 +293,7 @@ final class ItemController
                         $this
                             ->translator
                             ->translate(
-                                'flash.item-updated',
+                                'flash.item.updated',
                                 [
                                     'name' => $name,
                                     'type' => ucfirst($type),
@@ -385,26 +342,20 @@ final class ItemController
         ;
     }
 
+    /**
+     * View an item - Role or Permission
+     *
+     * @param CurrentRoute $currentRoute
+     * @param NotFound $notFound
+     * @return ResponseInterface
+     */
     #[PermissionAttribute(
-        name: RbamPermission::RbacItemView,
+        name: RbamPermission::itemView,
         parent: self::RBAM_ROLE
     )]
-    public function view(
-        AssignmentsStorageInterface $assignmentsStorage,
-        CurrentRoute $currentRoute,
-        NotFound $notFound,
-        ServerRequest $request,
-        UserRepositoryInterface $userRepository,
-    ): ResponseInterface
+    public function view(CurrentRoute $currentRoute, NotFound $notFound): ResponseInterface
     {
-        $queryParams = $request
-            ->getQueryParams()
-        ;
-        /** @psalm-suppress PossiblyNullArgument */
-        $name = $this
-            ->inflector
-            ->toPascalCase($currentRoute->getArgument('name'))
-        ;
+        $name = $currentRoute->getArgument('name');
 
         if (!$this
             ->itemsStorage
@@ -418,74 +369,124 @@ final class ItemController
             ->get($name)
         ;
 
-        if ($item?->getType() === Item::TYPE_ROLE) {
-            $assignments = $assignmentsStorage->getByItemNames([$name]);
+        return $item->getType() === Item::TYPE_PERMISSION
+            ? $this->viewPermission($item)
+            : $this->viewRole($item)
+        ;
+    }
 
-            $permissions = $this
-                ->manager
-                ->getPermissionsByRoleName($name)
-            ;
+    private function viewPermission(Permission $item): ResponseInterface
+    {
+        $permittedUsers = $this->getPermittedUsers($item);
 
-            $roles = $this
-                ->manager
-                ->getChildRoles($name)
-            ;
+        return $this
+            ->viewRenderer
+            ->render(
+                'viewPermission',
+                [
+                    'diagram' => (new MermaidHierarchyDiagram(
+                        $this->itemsStorage,
+                        $this->translator,
+                        $this->urlGenerator
+                    ))
+                        ->withItem($item)
+                    ,
+                    'item' => new RbamItem($item, $this->getGrantedBy($item)),
+                    'permittedUsers' => $permittedUsers,
+                ]
+            )
+        ;
+    }
 
-            $users = $userRepository
-                ->findByIds(
-                    $this
-                        ->manager
-                        ->getUserIdsByRoleName($name),
-                )
-            ;
-        } else {
-            $assignments = $permissions = $roles = $userIds = [];
-
-            $ancestors = $this->itemsStorage->getParents($name);
-
-            foreach ($ancestors as $ancestor) {
-                if (
-                    $ancestor->getType() === Item::TYPE_ROLE
-                    && $this->manager->hasChild($ancestor->getName(), $name)
-                ) {
-                    $ids = $this
-                        ->manager
-                        ->getUserIdsByRoleName($ancestor->getName())
-                    ;
-                    array_push($userIds, ...$ids);
-                }
-            }
-
-            $users = $userRepository
-                ->findByIds(array_unique($userIds, SORT_NUMERIC))
-            ;
-        }
+    private function viewRole(Role $item): ResponseInterface
+    {
+        $name = $item->getName();
 
         $ancestors = $this
             ->itemsStorage
             ->getParents($name)
         ;
 
+        $assignments = [];
+
+        $rbacAssignments = $this
+            ->assignmentsStorage
+            ->getByItemNames([$name])
+        ;
+
+        foreach ($this
+            ->userRepository
+            ->findByIds(
+                $this
+                    ->manager
+                    ->getUserIdsByRoleName($name)
+            )
+        as $user) {
+            $assignment = array_find(
+                $rbacAssignments,
+                fn(Assignment $assignment) => $assignment->getUserId() === $user->getId()
+            );
+
+            $assignments[] = new RbamAssignment(
+                $user,
+                $assignment instanceof Assignment // direct assignment
+                    ? $item
+                    : array_first($ancestors) // inherited assignment
+            );
+        }
+
+        $permissions = $this
+            ->manager
+            ->getPermissionsByRoleName($name)
+        ;
+        uksort($permissions, fn(string $a, string $b) => $a <=> $b);
+        array_walk(
+            $permissions,
+            fn(Item &$item, $key, $ths) => $item = new RbamItem($item, $ths->getGrantedBy($item)), $this
+        );
+
+        $roles = $this
+            ->manager
+            ->getChildRoles($name)
+        ;
+        uksort($roles, fn(string $a, string $b) => $a <=> $b);
+        array_walk($roles, fn(Item &$item) => $item = new RbamItem($item));
+
         return $this
             ->viewRenderer
             ->render(
-                'view',
+                'viewRole',
                 [
-                    'ancestors' => $ancestors,
                     'assignments' => $assignments,
-                    'assignmentsStorage' => $assignmentsStorage,
+                    'diagram' => (new MermaidHierarchyDiagram(
+                        $this->itemsStorage,
+                        $this->translator,
+                        $this->urlGenerator
+                    ))
+                        ->withItem($item)
+                    ,
                     'item' => $item,
-                    'itemsStorage' => $this->itemsStorage,
                     'permissions' => $permissions,
                     'roles' => $roles,
-                    'users' => $users,
-                ],
+                ]
             )
         ;
     }
 
+    // -------- POST only methods -------- //
+
+    /**
+     * Add a child item - Role or Permission - to a Role
+     *
+     * Creates a parent/child relationship
+     *
+     * POST
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
     #[PermissionAttribute(
-        name: RbamPermission::RbacItemUpdate,
+        name: RbamPermission::itemUpdate,
         parent: self::RBAM_ROLE
     )]
     public function addChild(ServerRequestInterface $request): ResponseInterface
@@ -507,29 +508,229 @@ final class ItemController
     }
 
     #[PermissionAttribute(
-        name: RbamPermission::RbacItemUpdate,
+        name: RbamPermission::itemView,
         parent: self::RBAM_ROLE
     )]
-    public function removeChild(ServerRequestInterface $request): ResponseInterface
+    public function assignments(ServerRequestInterface $request): ResponseInterface
     {
+        /** @var array{name:string, id:string} $parsedBody */
         $parsedBody = $request->getParsedBody();
 
-        $this
+        $item = $this
             ->manager
-            ->removeChild($parsedBody['item'], $parsedBody['name'])
+            ->getRole($parsedBody['name'])
         ;
+
+        $ancestors = $this
+            ->itemsStorage
+            ->getParents($parsedBody['name'])
+        ;
+
+        $assignments = [];
+        $rbacAssignments = $this->assignmentsStorage->getByItemNames([$parsedBody['name']]);
+
+        foreach ($this->userRepository
+            ->findByIds(
+                $this
+                    ->manager
+                    ->getUserIdsByRoleName($parsedBody['name']),
+            )
+        as $user) {
+            $assignment = array_find(
+                $rbacAssignments,
+                fn(Assignment $assignment) => $assignment->getUserId() === $user->getId()
+            );
+
+            $assignments[] = new RbamAssignment(
+                $user,
+                $assignment instanceof Assignment // direct assignment
+                    ? $item
+                    : array_first($ancestors) // inherited assignment
+            );
+        }
 
         return $this
             ->viewRenderer
             ->renderPartial(
-                '_children',
-                $this->getViewParameters($parsedBody['item'], $parsedBody['type']),
+                '_assignments',
+                [
+                    'assignments' => $assignments,
+                    'currentPage' => (int) ArrayHelper::getValue($request->getQueryParams(), 'page', 1),
+                    'item' => $item,
+                ]
+            )
+        ;
+    }
+
+    /**
+     * Manage children - child Roles or Permissions - of a Role
+     *
+     * @param CurrentRoute $currentRoute
+     * @return ResponseInterface
+     */
+    #[PermissionAttribute(
+        name: RbamPermission::itemView,
+        parent: self::RBAM_ROLE
+    )]
+    public function children(CurrentRoute $currentRoute): ResponseInterface
+    {
+        return $this
+            ->viewRenderer
+            ->render(
+                'children',
+                $this->getViewParameters(
+                    $currentRoute->getArgument('name'),
+                    $currentRoute->getArgument('childType')
+                ),
+            )
+        ;
+    }
+
+    /**
+     * Paginator for child roles
+     *
+     * POST
+     */
+    public function childItems(CurrentRoute $currentRoute, ServerRequestInterface $request): ResponseInterface
+    {
+        $name = $currentRoute->getArgument('name');
+        /** @var array{name:string, id:string} $parsedBody */
+        $parsedBody = $request->getParsedBody();
+        $type = $parsedBody['type'];
+
+        if ($type === Item::TYPE_PERMISSION) {
+            $items = $this
+                ->manager
+                ->getPermissionsByRoleName($name)
+            ;
+            uksort($items, fn(string $a, string $b) => $a <=> $b);
+            array_walk($items, fn(Item &$item, $key, $ths)
+                => $item = new RbamItem($item, $ths->getGrantedBy($item)), $this)
+            ;
+        } else {
+            $items = $this
+                ->manager
+                ->getChildRoles($name)
+            ;
+            uksort($items, fn(string $a, string $b) => $a <=> $b);
+            array_walk($items, fn(Item &$item) => $item = new RbamItem($item));
+        }
+
+        return $this
+            ->viewRenderer
+            ->renderPartial(
+                '_items',
+                [
+                    'actionButtons' => explode(',', $parsedBody['action_buttons']),
+                    'currentPage' => (int) ArrayHelper::getValue($request->getQueryParams(), 'page', 1),
+                    'noResultsText' => '',
+                    'header' => $parsedBody['header'] ?? '',
+                    'item' => $this
+                        ->itemsStorage
+                        ->get($name)
+                    ,
+                    'items' => $items,
+                    'paginationUrl' => $parsedBody['pagination_url'],
+                    'toolbar' => $parsedBody['toolbar'],
+                    'type' => $type,
+                ]
             )
         ;
     }
 
     #[PermissionAttribute(
-        name: RbamPermission::RbacItemUpdate,
+        name: RbamPermission::itemView,
+        parent: self::RBAM_ROLE
+    )]
+    public function permittedUsers(CurrentRoute $currentRoute, ServerRequest $request): ResponseInterface
+    {
+        $permission = $this->itemsStorage->getPermission($currentRoute->getArgument('name'));
+
+        return $this
+            ->viewRenderer
+            ->renderPartial(
+                '_permittedUsers',
+                [
+                    'currentPage' => (int) ArrayHelper::getValue($request->getQueryParams(), 'page', 1),
+                    'permission' => $permission,
+                    'permittedUsers' => $this->getPermittedUsers($permission),
+                ]
+            )
+        ;
+    }
+
+    /**
+     * Remove - delete - an item - Role or Permission
+     *
+     * If the item has child items the parent/child relationships are deleted, but the child items are not
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     * @psalm-suppress PossiblyNullArgument
+     */
+    #[PermissionAttribute(
+        name: RbamPermission::itemRemove,
+        parent: self::RBAM_ROLE
+    )]
+    public function remove(ServerRequestInterface $request): ResponseInterface
+    {
+        $parsedBody = $request->getParsedBody();
+
+        $type = ItemTypeService::getItemType($this
+            ->itemsStorage
+            ->get($parsedBody['item']),
+        );
+
+        foreach ($this->itemsStorage->getRoles() as $role) {
+            if ($this->itemsStorage->hasChild($parsedBody['item'], $role->getName())) {
+                $this->itemsStorage->removeChild($parsedBody['item'], $role->getName());
+            }
+        }
+
+        $method = 'remove' . ucfirst($type);
+        $this
+            ->manager
+            ->$method($parsedBody['item'])
+        ;
+
+        $items = $this->getViewParameters($parsedBody['item'], $parsedBody['type'])['items'];
+
+        foreach ($items as $i => $item) {
+            $items[$i] = new \BeastBytes\Yii\Rbam\DTO\Item($item);
+        }
+
+        return $this
+            ->viewRenderer
+            ->renderPartial(
+                '_items',
+                [
+                    'actionButtons' => explode(',', $parsedBody['action_buttons']),
+                    'currentPage' => 1,
+                    'header' => $parsedBody['header'] ?? '',
+                    'item' => null,
+                    'items' => $items,
+                    'noResultsText' => '',
+                    'paginationUrl' => $parsedBody['pagination_url'],
+                    'toolbar' => $parsedBody['toolbar'] ?? '',
+                    'type' => $type,
+                    'user' => null,
+                ]
+            )
+            ;
+    }
+
+    /**
+     * Remove all child items - Roles or Permissions - from a Role
+     *
+     * The child items are not deleted, only the parent/child relationships
+     *
+     * POST
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
+    #[PermissionAttribute(
+        name: RbamPermission::itemUpdate,
         parent: self::RBAM_ROLE
     )]
     public function removeAllChildren(ServerRequestInterface $request): ResponseInterface
@@ -550,50 +751,91 @@ final class ItemController
         ;
     }
 
-    /** @psalm-suppress PossiblyNullArgument */
+    /**
+     * Remove a child item - Role or Permission - from a Role
+     *
+     * The child item is not deleted, only the parent/child relationship
+     *
+     * POST
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
     #[PermissionAttribute(
-        name: RbamPermission::RbacItemRemove,
+        name: RbamPermission::itemUpdate,
         parent: self::RBAM_ROLE
     )]
-    public function remove(ServerRequestInterface $request): ResponseInterface
+    public function removeChild(ServerRequestInterface $request): ResponseInterface
     {
         $parsedBody = $request->getParsedBody();
 
-        $type = ItemTypeService::getItemType($this
-            ->itemsStorage
-            ->get($parsedBody['name']),
-        );
+        $this
+            ->manager
+            ->removeChild($parsedBody['item'], $parsedBody['name'])
+        ;
 
-        foreach ($this->itemsStorage->getRoles() as $role) {
-            if ($this->itemsStorage->hasChild($parsedBody['name'], $role->getName())) {
-                $this->itemsStorage->removeChild($parsedBody['name'], $role->getName());
+        return $this
+            ->viewRenderer
+            ->renderPartial(
+                '_children',
+                $this->getViewParameters($parsedBody['item'], $parsedBody['type']),
+            )
+        ;
+    }
+
+    private function getGrantedBy(Permission $permission): array
+    {
+        $parents = [];
+
+        foreach ($this->itemsStorage->getParents($permission->getName()) as $ancestor) {
+            if ($this->itemsStorage->hasDirectChild($ancestor->getName(), $permission->getName())) {
+                $parents[] = $ancestor;
             }
         }
 
-        $method = 'remove' . ucfirst($type);
-        $this
-            ->manager
-            ->$method($parsedBody['name'])
+        return $parents;
+    }
+
+    private function getPermittedUsers(Permission $permission): array
+    {
+        $ancestors = $this
+            ->itemsStorage
+            ->getParents($permission->getName())
+        ;
+        $permittedUsers = [];
+        $userIds = [];
+
+        foreach ($ancestors as $ancestor) {
+            if (
+                $ancestor->getType() === Item::TYPE_ROLE
+                && $this->manager->hasChild($ancestor->getName(), $permission->getName())
+            ) {
+                $ids = $this
+                    ->manager
+                    ->getUserIdsByRoleName($ancestor->getName())
+                ;
+                array_push($userIds, ...$ids);
+            }
+        }
+
+        $users = $this
+            ->userRepository
+            ->findByIds(array_unique($userIds, SORT_REGULAR))
         ;
 
-        $this->flash->add(
-            'success',
-            $this
-                ->translator
-                ->translate(
-                    'flash.item-deleted',
-                    [
-                        'name' => $parsedBody['name'],
-                        'type' => $type,
-                    ],
-                ),
-        );
+        foreach ($users as $user) {
+            foreach ($ancestors as $ancestor) {
+                $assignment = $this
+                    ->assignmentsStorage
+                    ->get($ancestor->getName(), $user->getId())
+                ;
+                if ($assignment !== null) {
+                    $permittedUsers[] = new PermittedUser($user, $ancestor, $assignment);
+                }
+            }
+        }
 
-        return $this
-            ->redirect
-            ->toRoute('rbam.itemIndex')
-            ->create()
-        ;
+        return $permittedUsers;
     }
 
     private function getViewParameters(string $name, string $type): array
