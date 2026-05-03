@@ -39,13 +39,8 @@
         "yiisoft/yii-widgets": "^2.0"
     },
     "require-dev": {
-        "codeception/c3": "^2.6.0",
-        "codeception/codeception": "^5.0",
-        "codeception/module-asserts": "^3.0",
-        "codeception/module-phpbrowser": "^3.0",
-        "codeception/module-cli": "^2.0",
-        "codeception/module-db": "^3.0",
         "dg/bypass-finals": "^v1.0",
+        "pestphp/pest": "^4.0",
         "roave/infection-static-analysis-plugin": "^1.7",
         "roave/security-advisories": "dev-latest",
         "spatie/phpunit-watcher": "^1.23",
@@ -84,9 +79,9 @@
     "config": {
         "sort-packages": true,
         "allow-plugins": {
-            "yiisoft/config": true,
             "infection/extension-installer": true,
-            "codeception/c3": true
+            "pestphp/pest-plugin": true,
+            "yiisoft/config": true
         }
     },
     "scripts": {
