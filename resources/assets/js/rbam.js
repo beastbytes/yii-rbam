@@ -1,53 +1,45 @@
-/**
- * @copyright Copyright © 2025 BeastBytes - All rights reserved
- * @license BSD 3-Clause
- */
+class Rbam {
+    #id = ''
 
-const rbam = {
-    init: function() {
-        for (const button of document.querySelectorAll("tbody .action .btn")) {
-            button.addEventListener(
-                "click",
-                (e) => {
-                    e.preventDefault()
-                    rbam.action(e.target)
-                }
-            )
+    /**
+     * @param {string} id - DataView container element ID
+     */
+    constructor(id) {
+        if (typeof id === 'undefined') {
+            console.log("id must be defined")
+        } else {
+            this.#id = id
         }
+    }
 
-        const allItems = document.getElementById("all_items")
-        if (allItems !== null) {
-            allItems.addEventListener(
-                "click",
-                (e) => {
-                    e.preventDefault()
-                    rbam.action(e.target)
-                        .then(r => rbam.init())
-                }
-            )
-        }
-    },
-    action: async function(target) {
-        const container = document.getElementById("js-items")
-        const dataset = container.dataset
+    /**
+     * Fetch data from the defined URL using POST.
+     * The request body is formData consisting of container and target data-* attributes;
+     * target attributes take precedence.
+     * The text response replaces the outerHTML of the container element and paginators have event listeners added.
+     *
+     * @param {{href: string, data: Object}} args
+     * @returns {Promise<void>}
+     */
+    async action(args) {
+        const container = document.getElementById(this.#id)
+        const dataset = { ...container.dataset, ...args.data }
         const formData = new FormData()
 
-        for (const property in dataset) {
-            formData.set(property, dataset[property])
-        }
+        Object.entries(dataset).forEach(([key, value]) => {
+            formData.set(key, value)
+        })
 
-        if (target.dataset.hasOwnProperty("name")) {
-            formData.set("name", target.dataset.name)
-        }
-
-        const request = new Request(target.dataset.href, {
+        const request = new Request(args.href, {
             method: "POST",
             body: formData
         })
 
         const response = await fetch(request)
-        container.innerHTML = await response.text()
+        container.outerHTML = await response.text()
+
+        window.paginators.forEach((paginator) => {
+            paginator.addEventListeners()
+        })
     }
 }
-
-rbam.init()
