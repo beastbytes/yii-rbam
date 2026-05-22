@@ -2,7 +2,7 @@
 
 namespace BeastBytes\Yii\Rbam\DTO;
 
-use BeastBytes\Yii\Rbam\UserInterface;
+use BeastBytes\Yii\Rbam\User\UserInterface;
 use Yiisoft\Rbac\Role;
 
 final class Assignment
