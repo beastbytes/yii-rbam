@@ -1,0 +1,202 @@
+<?php
+
+namespace Tests\Support;
+
+use Yiisoft\Rbac\AssignmentsStorageInterface;
+use Yiisoft\Rbac\ItemsStorageInterface;
+use Yiisoft\Rbac\Manager;
+use Yiisoft\Rbac\ManagerInterface;
+use Yiisoft\Rbac\Permission;
+use Yiisoft\Rbac\Php\AssignmentsStorage;
+use Yiisoft\Rbac\Php\ItemsStorage;
+use Yiisoft\Rbac\Role;
+
+trait RbacTrait
+{
+    private static ?AssignmentsStorageInterface $assignmentsStorage  = null;
+    private static ?ItemsStorageInterface $itemsStorage = null;
+
+    private static array $rbam = [
+        'roles' => [
+            [
+                'name' => 'rbam.admin',
+                'description' => 'rbam.admin.description',
+            ],
+            [
+                'name' => 'rbam.item.manager',
+                'description' => 'rbam.item.manager.description',
+            ],
+            [
+                'name' => 'rbam.rule.manager',
+                'description' => 'rbam.rule.manager.description',
+            ],
+            [
+                'name' => 'rbam.user.manager',
+                'description' => 'rbam.user.manager.description',
+            ],
+        ],
+        'permissions' => [
+            [
+                'name' => 'rbam.item.create',
+                'description' => 'rbam.item.create.description',
+            ],
+            [
+                'name' => 'rbam.item.remove',
+                'description' => 'rbam.item.remove.description',
+            ],
+            [
+                'name' => 'rbam.item.update',
+                'description' => 'rbam.item.update.description',
+            ],
+            [
+                'name' => 'rbam.item.view',
+                'description' => 'rbam.item.view.description',
+            ],
+            [
+                'name' => 'rbam.index',
+                'description' => 'rbam.index.description',
+            ],
+            [
+                'name' => 'rbam.rule.create',
+                'description' => 'rbam.rule.create.description',
+            ],
+            [
+                'name' => 'rbam.rule.delete',
+                'description' => 'rbam.rule.delete.description',
+            ],
+            [
+                'name' => 'rbam.rule.update',
+                'description' => 'rbam.rule.update.description',
+            ],
+            [
+                'name' => 'rbam.rule.view',
+                'description' => 'rbam.rule.view.description',
+            ],
+            [
+                'name' => 'rbam.user.update',
+                'description' => 'rbam.user.update.description',
+            ],
+            [
+                'name' => 'rbam.user.view',
+                'description' => 'rbam.user.view.description',
+            ],
+        ],
+        'assignments' => [
+            'rbam.admin' => [
+                self::CURRENT_USER,
+            ],
+        ],
+        'children' => [
+            'rbam.admin' => [
+                'rbam.index',
+                'rbam.item.manager',
+                'rbam.rule.manager',
+                'rbam.user.manager',
+            ],
+            'rbam.item.manager' => [
+                'rbam.index',
+                'rbam.item.create',
+                'rbam.item.remove',
+                'rbam.item.update',
+                'rbam.item.view',
+            ],
+            'rbam.rule.manager' => [
+                'rbam.index',
+                'rbam.rule.create',
+                'rbam.rule.delete',
+                'rbam.rule.update',
+                'rbam.rule.view',
+            ],
+            'rbam.user.manager' => [
+                'rbam.index',
+                'rbam.user.update',
+                'rbam.user.view',
+            ],
+        ],
+    ];
+
+    protected function applyRule(?string $rule, string $name): void
+    {
+        $item = self::getRbacManager()->getPermission($name) ?? self::getRbacManager()->getRole($name);
+
+        $item = $item->withRuleName(is_string($rule)
+            ? 'BeastBytes\\Yii\\Rbam\\Rbac\\Rule\\' . $rule . 'Rule'
+            : $rule
+        );
+
+        $item instanceof Permission
+            ? self::getRbacManager()->updatePermission($name, $item)
+            : self::getRbacManager()->updateRole($name, $item)
+        ;
+
+        if (function_exists('opcache_invalidate')) {
+            opcache_invalidate(
+                __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'items/php',
+                force: true)
+            ;
+        }
+    }
+
+    protected function getPermission(string $name): Permission
+    {
+        return self::getRbacManager()->getPermission($name);
+    }
+
+    public static function initRbac(): void
+    {
+        $rbacManager = self::getRbacManager();
+
+        foreach (self::$rbam['permissions'] as $permission) {
+            $rbacManager->addPermission((new Permission($permission['name']))
+                ->withDescription($permission['description'])
+            );
+        }
+
+        foreach (self::$rbam['roles'] as $role) {
+            $rbacManager->addRole((new Role($role['name']))
+                ->withDescription($role['description'])
+            );
+        }
+
+        foreach (self::$rbam['children'] as $parent => $children) {
+            foreach ($children as $child) {
+                $rbacManager->addChild($parent, $child);
+            }
+        }
+
+        foreach (self::$rbam['assignments'] as $role => $users) {
+            foreach ($users as $user) {
+                $rbacManager->assign($role, $user);
+            }
+        }
+    }
+
+    public static function clearRbac(): void
+    {
+        self::getAssignmentsStorage()->clear();
+        self::getItemsStorage()->clear();
+    }
+
+    protected static function getRbacManager(): ManagerInterface
+    {
+        return new Manager(self::getItemsStorage(), self::getAssignmentsStorage());
+    }
+
+    protected static function getAssignmentsStorage(): AssignmentsStorageInterface
+    {
+        if (self::$assignmentsStorage === null) {
+            self::$assignmentsStorage = new AssignmentsStorage(__DIR__ . DIRECTORY_SEPARATOR . 'Rbac' . DIRECTORY_SEPARATOR . 'assignments.php');
+        }
+
+        return self::$assignmentsStorage;
+    }
+
+    protected static function getItemsStorage(): ItemsStorageInterface
+    {
+        if (self::$itemsStorage === null) {
+            self::$itemsStorage = new ItemsStorage(__DIR__ . DIRECTORY_SEPARATOR . 'Rbac' . DIRECTORY_SEPARATOR . 'items.php');
+        }
+
+        return self::$itemsStorage;
+    }
+}
