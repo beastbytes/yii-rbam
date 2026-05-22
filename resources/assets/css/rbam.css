@@ -8,14 +8,23 @@
 }
 
 .rbam {
-    --contaier-border: 1px solid hsl(0, 0%, 80%);
-    --overlay: hsla(0, 0%, 20%, 0.5);
-    --shadow: 5px 5px 15px #aaaaaa;
-    --shadow-dark: 5px 5px 15px #333333;
-    --yii-blue: hsl(195, 66%, 55%);
-    --yii-green: hsl(88, 60%, 49%);
-    --yii-orange: hsl(29, 88%, 55%);
-    --yii-red: hsl(9, 88%, 55%);
+    --container-background: oklch(0.95 0 0);
+    --contaier-border: 1px solid oklch(0.845 0 0);
+
+    --disabled-background: oklch(0.95 0 0);
+
+    --overlay: oklch(0.321 0 0 / 0.5);
+    --inset: inset 2px 2px 6px oklch(0.738 0 0);
+    --shadow: 5px 5px 15px oklch(0.738 0 0);
+    --shadow-dark: 5px 5px 15px oklch(0.321 0 0);
+
+    --yii-blue: oklch(0.7156 0.1136 224.1826);
+    --yii-blue-light: oklch(0.99 0.1136 224.1826);
+    --yii-green: oklch(0.759 0.19 131.803);
+    --yii-green-light: oklch(0.99 0.19 131.803);
+    --yii-orange: oklch(0.7285 0.1622 57.4256);
+    --yii-red: oklch(0.638 0.212 32.357);
+    --yii-red-light: oklch(0.95 0.212 32.357);
 
     font-family: "trebuchet ms", verdana, arial, sans-serif;
 
@@ -112,13 +121,13 @@
         }
 
         &[disabled] {
-            background: hsl(0, 0%, 70%);
-            color: hsl(0, 0%, 85%);
+            background: oklch(0.75 0 0);
+            color: oklch(0.85 0 0);
             cursor: default;
 
             &:hover {
                 box-shadow: 0 0 0 transparent;
-                color: hsl(0, 0%, 85%);
+                color: oklch(0.85 0 0);
                 transform: scale(1);
             }
         }
@@ -136,6 +145,7 @@
         column-gap: 3.33em;
 
         .card {
+            background: var(--container-background);
             border: var(--contaier-border);
             border-radius: 1rem;
             box-shadow: var(--shadow);
@@ -154,8 +164,8 @@
                     align-items: center;
                     background: var(--yii-green);
                     border-radius: 2rem;
-                    box-shadow: var(--shadow);
-                    color: aliceblue;
+                    box-shadow: var(--inset);
+                    color: oklch(0.95 0 0);
                     display: inline-flex;
                     font-size: 0.875rem;
                     height: 1.25rem;
@@ -203,7 +213,7 @@
 
         dd:nth-child(4n),
         dt:nth-child(4n-1) {
-            background-color: hsl(0, 0%, 95%);
+            background-color: oklch(0.85 0 0);
         }
     }
 
@@ -250,6 +260,13 @@
         display: flex;
     }
 
+    form {
+        background: var(--container-background);
+        border: var(--contaier-border);
+        border-radius: 0.375rem;
+        width: 50%;
+    }
+
     .form-buttons {
         display: flex;
         justify-content: space-around;
@@ -258,21 +275,17 @@
     }
 
     .form-control-container {
-        background-color: hsl(0, 0%, 97%);
-        border: var(--contaier-border);
-        border-radius: 0.375rem;
-        display: block;
         font-size: 1rem;
         line-height: 1.5rem;
-        margin-bottom: 0.75em;
-        padding-left: 0.75rem;
-        padding-right: 0.75rem;
-        padding-top: 0.375rem;
-        padding-bottom: 0.375rem;
-        width: 50%;
+        padding: 0.75rem 0.75rem;
+        position: relative;
+
+        &:nth-last-child(2) {
+            border-bottom: var(--contaier-border);
+        }
 
         .form-label {
-            color: hsl(0, 0%, 0%);
+            color: oklch(0 0 0);
             display: block;
             font-size: 0.875rem;
             font-weight: 800;
@@ -280,22 +293,60 @@
             text-align: left;
         }
 
+        .form-input-container {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
         .form-input {
-            background-color: hsl(0, 0%, 97%);
-            border: none;
-            color: hsl(0, 0%, 33%);
-            display: block;
+            background-color: var(--yii-blue-light);
+            border: 2px solid transparent;
+            border-radius: 0.5rem;
+            color: oklch(0.333 0 0);
+            margin-right: 0.75rem;
             outline: none;
+            padding: 0.5rem 1rem;
+
+            &:disabled {
+                background-color: var(--disabled-background);
+            }
 
             &:focus {
-                border-bottom: 1px solid var(--yii-blue);
+                border-bottom: 2px solid var(--yii-blue);
+            }
+
+            &:user-invalid {
+                background-color: var(--yii-red-light);
+
+                + span::before {
+                    content: "✖";
+                    color: var(--yii-red);
+                }
+
+                &:focus {
+                    border-bottom: 2px solid var(--yii-red);
+                }
+            }
+
+            &:user-valid {
+                background-color: var(--yii-green-light);
+
+                + span::before {
+                    content: "✓";
+                    color: var(--yii-green);
+                }
+
+                &:focus {
+                    border-bottom: 2px solid var(--yii-green);
+                }
             }
         }
 
         &.disabled {
             .form-input,
             .form-label {
-                color: hsl(0, 0%, 60%);
+                color: oklch(0.5 0 0);
             }
         }
     }
@@ -319,7 +370,7 @@
             display: inline-flex;
             border: 1px solid var(--yii-blue);
             border-radius: 50%;
-            color: whitesmoke;
+            color: oklch(0.95 0 0);
             font-weight: bold;
             height: 2em;
             justify-content: center;
@@ -352,17 +403,17 @@
         }
 
         thead {
-            background-color: hsl(0, 0%, 0%);
-            color: hsl(0, 0%, 100%);
+            background-color: oklch(0 0 0);
+            color: oklch(1 0 0);
         }
 
         tbody tr:nth-child(even) {
-            background-color: hsl(0, 0%, 95%);
+            background-color: oklch(0.95 0 0);
         }
     }
 
     .indirect {
-        color: #4b4b4b;
+        color: oklch(0.5 0 0);
     }
 
     .justify-evenly {
@@ -485,14 +536,14 @@
             background: transparent;
             border: none;
             border-bottom: 2px solid transparent;
-            color: #888;
+            color: oklch(0.75 0 0);
             display: flex;
             padding: 0.75em 3em;
             font-size: medium;
 
             &.selected {
                 border-bottom-color: var(--yii-green);
-                color: #1e1e1e;
+                color: oklch(0.45 0 0);
                 font-weight: bold;
             }
 
