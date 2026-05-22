@@ -22,6 +22,7 @@ final class AccessChecker implements MiddlewareInterface
     private ?string $permission = null;
     private array $queryParameters = [];
     private ?string $route = null;
+    private ?string $hash = null;
 
     public function __construct(
         private readonly CurrentUser $currentUser,
@@ -55,7 +56,7 @@ final class AccessChecker implements MiddlewareInterface
                 Header::LOCATION,
                 $this
                     ->urlGenerator
-                    ->generate($this->route, $this->arguments, $this->queryParameters)
+                    ->generate($this->route, $this->arguments, $this->queryParameters, $this->hash)
             )
         ;
     }
@@ -67,12 +68,18 @@ final class AccessChecker implements MiddlewareInterface
         return $new;
     }
 
-    public function withRoute(string $route, array $arguments = [], array $queryParameters = []): self
+    public function withRoute(
+        string $route,
+        array $arguments = [],
+        array $queryParameters = [],
+        ?string $hash = null
+    ): self
     {
         $new = clone $this;
         $new->route = $route;
         $new->arguments = $arguments;
         $new->queryParameters = $queryParameters;
+        $new->hash = $hash;
         return $new;
     }
 }
