@@ -1,0 +1,119 @@
+<?php
+
+namespace BeastBytes\Yii\Rbam\Alpine;
+
+use Yiisoft\Widget\Widget;
+
+final class Tabs extends Widget
+{
+    /** @var string $containerClass CSS class for the container tag */
+    private string $containerClass = 'tabs';
+    /** @var string $headerClass CSS class for tab headers */
+    private string $headerClass = 'header';
+    /** @var string $headerContainerClass CSS class for tab headers container */
+    private string $headerContainerClass = 'headers';
+    /** @var string $panelClass CSS class for tab content panels */
+    private string $panelClass = 'panel';
+    /** @var string $panelContainerClass CSS class fortab content panels container */
+    private string $panelContainerClass = 'panels';
+    /** @var string $selectedClass CSS class for the selected tab header */
+    private string $selectedClass = 'selected';
+    /** @var string $unselectedClass CSS class for unselected tab headers */
+    private string $unselectedClass = 'unselected';
+
+    /**
+     * @param array<string, string> $tabs Tabs, content indexed by header
+     */
+    public function __construct(private readonly array $tabs)
+    {
+    }
+
+    public function containerClass(string $containerClass): self
+    {
+        $new = clone $this;
+        $new->containerClass = $containerClass;
+        return $new;
+    }
+
+    public function headerClass(string $headerClass): self
+    {
+        $new = clone $this;
+        $new->headerClass = $headerClass;
+        return $new;
+    }
+
+    public function headerContainerClass(string $headerContainerClass): self
+    {
+        $new = clone $this;
+        $new->headerContainerClass = $headerContainerClass;
+        return $new;
+    }
+
+    public function panelClass(string $panelClass): self
+    {
+        $new = clone $this;
+        $new->panelClass = $panelClass;
+        return $new;
+    }
+
+    public function panelContainerClass(string $panelContainerClass): self
+    {
+        $new = clone $this;
+        $new->panelContainerClass = $panelContainerClass;
+        return $new;
+    }
+
+    public function selectedClass(string $selectedClass): self
+    {
+        $new = clone $this;
+        $new->selectedClass = $selectedClass;
+        return $new;
+    }
+
+    public function unselectedClass(string $unselectedClass): self
+    {
+        $new = clone $this;
+        $new->unselectedClass = $unselectedClass;
+        return $new;
+    }
+
+    public function render(): string
+    {
+        return sprintf(
+            '<div x-data x-tabs class="%s"><div x-tabs:list class="%s">%s</div><div x-tabs:panels class="%s">%s</div></div>',
+            $this->containerClass,
+            $this->headerContainerClass,
+            $this->renderHeadings(),
+            $this->panelContainerClass,
+            $this->renderPanels()
+        );
+    }
+
+    private function renderHeadings(): string
+    {
+        $headings = [];
+
+        foreach (array_keys($this->tabs) as $heading) {
+            $headings[] = sprintf(
+                '<button x-tabs:tab type="button" :class="$tab.isSelected ? \'%s\' : \'%s\'" class="%s">%s</button>',
+                $this->selectedClass,
+                $this->unselectedClass,
+                $this->headerClass,
+                $heading
+            );
+        }
+
+        return implode('', $headings);
+    }
+
+    private function renderPanels(): string
+    {
+        $panels = [];
+
+        foreach ($this->tabs as $panel) {
+            $panels[] = sprintf('<section x-tabs:panel class="%s">%s</section>', $this->panelClass, $panel);
+        }
+
+        return implode('', $panels);
+    }
+}

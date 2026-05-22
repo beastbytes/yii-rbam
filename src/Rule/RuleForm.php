@@ -1,12 +1,8 @@
 <?php
-/**
- * @copyright Copyright © 2025 BeastBytes - All rights reserved
- * @license BSD 3-Clause
- */
 
 declare(strict_types=1);
 
-namespace BeastBytes\Yii\Rbam\Form;
+namespace BeastBytes\Yii\Rbam\Rule;
 
 use JetBrains\PhpStorm\ArrayShape;
 use Yiisoft\FormModel\FormModel;
@@ -14,25 +10,29 @@ use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Validator\PropertyTranslator\ArrayPropertyTranslator;
 use Yiisoft\Validator\PropertyTranslatorInterface;
 use Yiisoft\Validator\PropertyTranslatorProviderInterface;
+use Yiisoft\Validator\Result;
+use Yiisoft\Validator\Rule\Callback;
 use Yiisoft\Validator\Rule\Regex;
 use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\Rule\StringValue;
 
-final class RuleForm extends FormModel implements PropertyTranslatorProviderInterface
+abstract class RuleForm extends FormModel implements PropertyTranslatorProviderInterface
 {
     #[Required]
     #[StringValue]
-    private string $code = '';
+    protected string $code = '';
     #[Required]
     #[StringValue]
-    private string $description = '';
+    protected string $description = '';
     #[Required]
     #[StringValue]
     #[Regex('/^([A-Z][a-zA-Z0-9]*)+/')]
-    private string $name = '';
+    #[Callback(method: 'unique')]
+    protected string $name = '';
 
     public function __construct(
-        private readonly TranslatorInterface $translator
+        private readonly TranslatorInterface $translator,
+        private readonly ?RuleServiceInterface $ruleService = null,
     )
     {
     }
@@ -69,5 +69,26 @@ final class RuleForm extends FormModel implements PropertyTranslatorProviderInte
     public function getPropertyTranslator(): ?PropertyTranslatorInterface
     {
         return new ArrayPropertyTranslator($this->getPropertyLabels());
+    }
+
+    public function isCreate(): bool
+    {
+        return $this instanceof CreateRuleForm;
+    }
+
+    public function isUpdate(): bool
+    {
+        return $this instanceof UpdateRuleForm;
+    }
+
+    public function unique(string $value): Result
+    {
+        if ($this->ruleService instanceof RuleServiceInterface && !$this->ruleService->isUnique($value)) {
+            return (new Result())
+                ->addError($this->translator->translate('message.error.not-unique', ['item' => $value]))
+            ;
+        }
+
+        return new Result();
     }
 }

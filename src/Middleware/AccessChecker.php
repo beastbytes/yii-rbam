@@ -4,23 +4,29 @@ declare(strict_types=1);
 
 namespace BeastBytes\Yii\Rbam\Middleware;
 
+use BeastBytes\Yii\Rbam\Rbac\Permission;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use StringBackedEnum;
+use Yiisoft\Http\Header;
 use Yiisoft\Http\Status;
+use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\User\CurrentUser;
 
 final class AccessChecker implements MiddlewareInterface
 {
+    private array $arguments = [];
     private ?string $permission = null;
+    private array $queryParameters = [];
+    private ?string $route = null;
 
     public function __construct(
         private readonly CurrentUser $currentUser,
         private readonly ResponseFactoryInterface $responseFactory,
+        private readonly UrlGeneratorInterface $urlGenerator,
     )
     {
     }
@@ -28,23 +34,45 @@ final class AccessChecker implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         if ($this->permission === null) {
-            throw new InvalidArgumentException('Permission not set.');
+            throw new InvalidArgumentException('Permission not set');
         }
 
-        if (!$this->currentUser->can($this->permission)) {
-            return $this
-                ->responseFactory
-                ->createResponse(Status::FORBIDDEN)
-            ;
+        if ($this->currentUser->can($this->permission)) {
+            return $handler->handle($request);
         }
 
-        return $handler->handle($request);
+        $response = $this
+            ->responseFactory
+            ->createResponse(Status::FORBIDDEN)
+        ;
+
+        if ($this->route === null) {
+            return $response;
+        }
+
+        return $response
+            ->withHeader(
+                Header::LOCATION,
+                $this
+                    ->urlGenerator
+                    ->generate($this->route, $this->arguments, $this->queryParameters)
+            )
+        ;
     }
 
-    public function withPermission(StringBackedEnum|string $permission): self
+    public function withPermission(Permission|string $permission): self
     {
         $new = clone $this;
-        $new->permission = is_string($permission) ? $permission : $permission->value;
+        $new->permission = $permission instanceof Permission ? $permission->getItemName() : $permission;
+        return $new;
+    }
+
+    public function withRoute(string $route, array $arguments = [], array $queryParameters = []): self
+    {
+        $new = clone $this;
+        $new->route = $route;
+        $new->arguments = $arguments;
+        $new->queryParameters = $queryParameters;
         return $new;
     }
 }

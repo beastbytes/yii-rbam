@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace BeastBytes\Yii\Rbam\Controller;
+namespace BeastBytes\Yii\Rbam\User;
 
-use BeastBytes\Yii\Rbam\Attribute\Permission as PermissionAttribute;
 use BeastBytes\Yii\Rbam\DTO\Item;
-use BeastBytes\Yii\Rbam\Permission as RbamPermission;
-use BeastBytes\Yii\Rbam\SecFetchMode;
-use BeastBytes\Yii\Rbam\UserRepositoryInterface;
+use BeastBytes\Yii\Rbam\Rbac\Attribute\Permission as PermissionAttribute;
+use BeastBytes\Yii\Rbam\Rbac\Attribute\Role as RoleAttribute;
+use BeastBytes\Yii\Rbam\Rbac\Permission as RbamPermission;
+use BeastBytes\Yii\Rbam\Rbac\Role as RbamRole;
 use HttpSoft\Message\ServerRequest;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Http\Header;
+use Yiisoft\Http\Method;
 use Yiisoft\Rbac\AssignmentsStorageInterface;
 use Yiisoft\Rbac\ItemsStorageInterface;
 use Yiisoft\Rbac\ManagerInterface;
@@ -22,10 +22,9 @@ use Yiisoft\Rbac\Role;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
+#[RoleAttribute(name: RbamRole::userManager, parent: RbamRole::admin)]
 final class UserController
 {
-    private const RBAM_ROLE = 'rbam.user-manager';
-
     public function __construct(
         private readonly AssignmentsStorageInterface $assignmentsStorage,
         private readonly ItemsStorageInterface $itemsStorage,
@@ -46,7 +45,7 @@ final class UserController
      * @param ServerRequest $request
      * @return ResponseInterface
      */
-    #[PermissionAttribute(name: RbamPermission::userView, parent: self::RBAM_ROLE)]
+    #[PermissionAttribute(RbamPermission::userView)]
     public function index(ServerRequest $request): ResponseInterface
     {
         $queryParams = $request
@@ -57,7 +56,7 @@ final class UserController
             ->findAll()
         ;
 
-        if ($request->getHeader(Header::SEC_FETCH_MODE)[0] === SecFetchMode::cors->value) {
+        if ($request->getMethod() === Method::POST) {
             return $this
                 ->viewRenderer
                 ->renderPartial(
@@ -88,7 +87,7 @@ final class UserController
      * @param CurrentRoute $currentRoute
      * @return ResponseInterface
      */
-    #[PermissionAttribute(name: RbamPermission::userView, parent: self::RBAM_ROLE)]
+    #[PermissionAttribute(RbamPermission::userView)]
     public function view(CurrentRoute $currentRoute): ResponseInterface
     {
         return $this
@@ -108,7 +107,6 @@ final class UserController
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    #[PermissionAttribute(name: RbamPermission::itemUpdate, parent: self::RBAM_ROLE)]
     public function assign(ServerRequestInterface $request): ResponseInterface
     {
         /** @var array{name:string, item:string} $parsedBody */
@@ -135,7 +133,6 @@ final class UserController
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    #[PermissionAttribute(name: RbamPermission::itemUpdate, parent: self::RBAM_ROLE)]
     public function revoke(ServerRequestInterface $request): ResponseInterface
     {
         /** @var array{item:string, user:string} $parsedBody */
@@ -180,7 +177,8 @@ final class UserController
         ksort($permissions, SORT_STRING);
         array_walk(
             $permissions,
-            fn(\Yiisoft\Rbac\Item &$item, $key, $ths) => $item = new Item($item, $ths->getGrantedBy($item)), $this
+            fn(\Yiisoft\Rbac\Item &$item, $key, $ths) => $item
+                = (new Item($item))->withParents($ths->getGrantedBy($item)), $this
         );
 
         return $this
@@ -264,7 +262,8 @@ final class UserController
         ksort($permissionsGranted, SORT_STRING);
         array_walk(
             $permissionsGranted,
-            fn(Permission &$item, $key, $ths) => $item = new Item($item, $ths->getGrantedBy($item)), $this
+            fn(Permission &$item, $key, $ths) => $item
+                = (new Item($item))->withParents($ths->getGrantedBy($item)), $this
         );
 
         return [

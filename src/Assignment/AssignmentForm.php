@@ -1,12 +1,8 @@
 <?php
-/**
- * @copyright Copyright © 2025 BeastBytes - All rights reserved
- * @license BSD 3-Clause
- */
 
 declare(strict_types=1);
 
-namespace BeastBytes\Yii\Rbam\Form;
+namespace BeastBytes\Yii\Rbam\Assignment;
 
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Validator\Rule\Regex;

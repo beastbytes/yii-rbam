@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace BeastBytes\Yii\Rbam;
+namespace BeastBytes\Yii\Rbam\Rule;
 
+use phpDocumentor\Reflection\Types\This;
 use ReflectionClass;
 
-use const DIRECTORY_SEPARATOR;
-
-trait RbamRuleTrait
-{    public function getCode(): string
+trait RuleTrait
+{
+    public function getCode(): string
     {
         $reflectionClass = new ReflectionClass($this);
         $executeMethod = $reflectionClass->getMethod('execute');
@@ -19,9 +19,7 @@ trait RbamRuleTrait
 
         $lines = array_slice(file($reflectionClass->getFileName()), $offset, $length);
 
-        foreach ($lines as &$line) {
-            $line = str_repeat(' ', 4) . mb_trim($line);
-        }
+        array_walk($lines, fn(string &$line) => $line = substr($line, 4, -1));
 
         return implode("\n", $lines);
     }
