@@ -1,21 +1,17 @@
 <?php
-/**
- * @copyright Copyright © 2025 BeastBytes - All rights reserved
- * @license BSD 3-Clause
- */
 
 declare(strict_types=1);
 
-namespace BeastBytes\Yii\Rbam\Dev\User;
+namespace BeastBytes\Yii\Rbam\Support\User;
 
-use BeastBytes\Yii\Rbam\UserInterface;
-use BeastBytes\Yii\Rbam\UserRepositoryInterface;
+use BeastBytes\Yii\Rbam\User\UserInterface;
+use BeastBytes\Yii\Rbam\User\UserRepositoryInterface;
 use Yiisoft\Auth\IdentityRepositoryInterface;
 
 class UserRepository implements IdentityRepositoryInterface, UserRepositoryInterface
 {
     /** @var string[] $users */
-    private array $users = [
+    private array $users = [ // UK Prime Ministers to date
         'Robert Walpole',
         'Spencer Compton',
         'Henry Pelham',
@@ -67,7 +63,19 @@ class UserRepository implements IdentityRepositoryInterface, UserRepositoryInter
         'Margaret Thatcher',
         'John Major',
         'Tony Blair',
+        'Gordon Brown',
+        'David Cameron',
+        'Theresa May',
+        'Boris Johnson',
+        'Liz Truss',
+        'Rishi Sunak',
+        'Kier Starmer',
     ];
+
+    public function count(): int
+    {
+        return count($this->users);
+    }
 
     /**
      * @return UserInterface[]
@@ -82,12 +90,6 @@ class UserRepository implements IdentityRepositoryInterface, UserRepositoryInter
         }
 
         return $users;
-    }
-
-    /** @return int[] */
-    public function findAllIds(): array
-    {
-        return range(1, count($this->users));
     }
 
     public function findById(string $id): UserInterface

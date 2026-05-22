@@ -1,12 +1,8 @@
 <?php
-/**
- * @copyright Copyright © 2025 BeastBytes - All rights reserved
- * @license BSD 3-Clause
- */
 
 declare(strict_types=1);
 
-namespace BeastBytes\Yii\Rbam\Dev\ViewInjection;
+namespace BeastBytes\Yii\Rbam\Support\ViewInjection;
 
 use BeastBytes\Yii\Rbam\RbamParameters;
 use JetBrains\PhpStorm\ArrayShape;
