@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BeastBytes\Yii\Rbam;
+namespace BeastBytes\Yii\Rbam\Diagram;
 
 use BeastBytes\Mermaid\ClassDiagram\Attribute;
 use BeastBytes\Mermaid\ClassDiagram\ClassDiagram;
@@ -12,11 +12,9 @@ use BeastBytes\Mermaid\ClassDiagram\Relationship;
 use BeastBytes\Mermaid\ClassDiagram\RelationshipType;
 use BeastBytes\Mermaid\InteractionType;
 use BeastBytes\Mermaid\Mermaid;
-use RuntimeException;
 use Yiisoft\Rbac\Item;
 use Yiisoft\Rbac\ItemsStorageInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
-use Yiisoft\Strings\Inflector;
 use Yiisoft\Translator\TranslatorInterface;
 
 final class MermaidHierarchyDiagram implements HierarchyDiagramInterface
@@ -48,14 +46,14 @@ final class MermaidHierarchyDiagram implements HierarchyDiagramInterface
     public function render(): string
     {
         $currentItem = (new Classs(
-            $this->item->getName(),
-            $this->translator->translate('label.' . ItemTypeService::getItemType($this->item))
+            $this->translator->translate($this->item->getName()),
+            $this->translator->translate(sprintf('label.%s', $this->item->getType()))
         ))
-            ->withAttribute(new Attribute($this->item->getDescription()))
-            ->withStyleClass('current_' . ItemTypeService::getItemType($this->item))
+            ->withAttribute(new Attribute($this->translator->translate($this->item->getDescription())))
+            ->withStyleClass(sprintf('current_%s', $this->item->getType()))
         ;
         $this->classes[$this->item->getName()] = is_string($this->item->getRuleName())
-            ? $currentItem->withMethod(new Method($this->item->getRuleName()))
+            ? $currentItem->withMethod(new Method(substr($this->item->getRuleName(), 30, -4)))
             : $currentItem
         ;
 
@@ -79,10 +77,10 @@ final class MermaidHierarchyDiagram implements HierarchyDiagramInterface
 
         foreach ($parentItems as $parentItem) {
             $parent = (new Classs(
-                $parentItem->getName(),
+                $this->translator->translate($parentItem->getName()),
                 $this->translator->translate('label.' . $parentItem->getType())
             ))
-                ->withAttribute(new Attribute($parentItem->getDescription()))
+                ->withAttribute(new Attribute($this->translator->translate($parentItem->getDescription())))
                 ->withStyleClass('ancestor_' . $parentItem->getType())
                 ->withInteraction(
                     $this->urlGenerator->generate(
@@ -109,16 +107,16 @@ final class MermaidHierarchyDiagram implements HierarchyDiagramInterface
     {
         foreach ($this->itemsStorage->getDirectChildren($parent->getId()) as $item) {
             $child = (new Classs(
-                $item->getName(),
-                $this->translator->translate('label.' . ItemTypeService::getItemType($item))
+                $this->translator->translate($item->getName()),
+                $this->translator->translate(sprintf('label.%s', $this->item->getType()))
             ))
-                ->withAttribute(new Attribute($item->getDescription()))
-                ->withStyleClass('descendant_' . ItemTypeService::getItemType($item))
+                ->withAttribute(new Attribute($this->translator->translate($item->getDescription())))
+                ->withStyleClass(sprintf('descendant_%s', $this->item->getType()))
                 ->withInteraction(
                     $this->urlGenerator->generate(
                         'rbam.item.view',
                         [
-                            'type' => ItemTypeService::getItemType($item),
+                            'type' => $item->getType(),
                             'name' => $item->getName()
                         ]
                     ),

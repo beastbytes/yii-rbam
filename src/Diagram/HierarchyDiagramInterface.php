@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BeastBytes\Yii\Rbam;
+namespace BeastBytes\Yii\Rbam\Diagram;
 
 use Stringable;
 use Yiisoft\Rbac\Item;
