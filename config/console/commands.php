@@ -3,11 +3,10 @@
 declare(strict_types=1);
 
 use BeastBytes\Yii\Rbam\Command\InitialiseCommand;
-use BeastBytes\Yii\Rbam\Command\PermissionsCommand;
+use BeastBytes\Yii\Rbam\Command\RbacCommand;
 
 return [
-    'rbac:addPermissions' => PermissionsCommand::class,
-    'rbam:initialise' => InitialiseCommand::class
+    'rbac:initialise' => RbacCommand::class,
     /*
     'serve' => Serve::class,
     'user:create' => App\User\Console\CreateCommand::class,

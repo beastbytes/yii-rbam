@@ -1,21 +1,17 @@
 <?php
-/**
- * @copyright Copyright © 2025 BeastBytes - All rights reserved
- * @license BSD 3-Clause
- */
 
 declare(strict_types=1);
 
 return [
     'beastbytes/yii-rbam' => [
-        'buttons' => [ // allows use of icon fonts and/or css frameworks to style buttons
+        'buttons' => [ // allows use of icon fonts and/or CSS frameworks to style buttons
             'add' => [
                 'attributes' => ['class' => 'btn btn_add'],
                 'content' => 'button.add',
             ],
             'assign' => [
                 'attributes' => ['class' => 'btn btn_assign'],
-                'content' => 'button.assign',
+                'content' => 'button.role.assignment.create',
             ],
             'cancel' => [
                 'attributes' => ['class' => 'btn btn_cancel'],
@@ -23,15 +19,15 @@ return [
             ],
             'createPermission' => [
                 'attributes' => ['class' => 'btn btn_create'],
-                'content' => 'button.create-permission',
+                'content' => 'button.permission.create',
             ],
             'createRole' => [
                 'attributes' => ['class' => 'btn btn_create'],
-                'content' => 'button.create-role',
+                'content' => 'button.role.create',
             ],
             'createRule' => [
                 'attributes' => ['class' => 'btn btn_create'],
-                'content' => 'button.create-rule',
+                'content' => 'button.rule.create',
             ],
             'deny' => [
                 'attributes' => ['class' => 'btn btn_deny'],
@@ -45,17 +41,21 @@ return [
                 'attributes' => ['class' => 'btn btn_grant'],
                 'content' => 'button.grant',
             ],
+            'manageChildPermissions' => [
+                'attributes' => ['class' => 'btn btn_manage'],
+                'content' => 'button.permission.child-permissions.manage',
+            ],
             'manageChildRoles' => [
                 'attributes' => ['class' => 'btn btn_manage'],
-                'content' => 'button.manage-child-roles',
+                'content' => 'button.role.child-roles.manage',
             ],
             'managePermissions' => [
                 'attributes' => ['class' => 'btn btn_manage'],
-                'content' => 'button.manage-permissions',
+                'content' => 'button.permission.manage',
             ],
             'manageRoleAssignments' => [
                 'attributes' => ['class' => 'btn btn_manage'],
-                'content' => 'button.manage-role-assignments',
+                'content' => 'button.role.assignment.manage',
             ],
             'remove' => [
                 'attributes' => ['class' => 'btn btn_remove'],
@@ -67,11 +67,11 @@ return [
             ],
             'revoke' => [
                 'attributes' => ['class' => 'btn btn_revoke'],
-                'content' => 'button.revoke',
+                'content' => 'button.role.assignment.revoke',
             ],
             'revokeAll' => [
                 'attributes' => ['class' => 'btn btn_revoke-all'],
-                'content' => 'button.revoke-all',
+                'content' => 'button.role.assignment.revoke-all',
             ],
             'submit' => [
                 'attributes' => ['class' => 'btn btn_submit'],
@@ -90,53 +90,33 @@ return [
         'defaultRoles' => [],
         'mermaidDiagramStyles' => [
             'ancestor_role' => [
-                'line.divider' => [
-                    'stroke' => 'hsl(195, 66%, 55%)',
-                ],
-                'rect' => [
-                    'fill' => 'hsl(195, 66%, 90%)',
-                    'stroke' => 'hsl(195, 66%, 55%)',
-                    'stroke-width' => '1',
+                '.label-group .nodeLabel' => [
+                    'color' => 'hsl(29, 88%, 55%)',
+                    'font-size' => '1.125rem',
                 ],
             ],
             'current_permission' => [
-                'line.divider' => [
-                    'stroke' => 'hsl(88, 60%, 49%)',
-                ],
-                'rect' => [
-                    'fill' => 'hsl(88, 60%, 90%)',
-                    'stroke' => 'hsl(88, 60%, 29%)',
-                    'stroke-width' => '1',
+                '.label-group .nodeLabel' => [
+                    'color' => 'hsl(88, 60%, 49%)',
+                    'font-size' => '1.25rem',
                 ],
             ],
             'current_role' => [
-                'line.divider' => [
-                    'stroke' => 'hsl(88, 60%, 49%)',
-                ],
-                'rect' => [
-                    'fill' => 'hsl(88, 60%, 90%)',
-                    'stroke' => 'hsl(88, 60%, 49%)',
-                    'stroke-width' => '2',
+                '.label-group .nodeLabel' => [
+                    'color' => 'hsl(88, 60%, 49%)',
+                    'font-size' => '1.25rem',
                 ],
             ],
             'descendant_permission' => [
-                'line.divider' => [
-                    'stroke' => 'hsl(29, 88%, 55%)',
-                ],
-                'rect' => [
-                    'fill' => 'hsl(29, 88%, 90%)',
-                    'stroke' => 'hsl(29, 88%, 35%)',
-                    'stroke-width' => '1',
+                '.label-group .nodeLabel' => [
+                    'color' => 'hsl(195, 66%, 55%)',
+                    'font-size' => '1.125rem',
                 ],
             ],
             'descendant_role' => [
-                'line.divider' => [
-                    'stroke' => 'hsl(29, 88%, 55%)',
-                ],
-                'rect' => [
-                    'fill' => 'hsl(29, 88%, 90%)',
-                    'stroke' => 'hsl(29, 88%, 55%)',
-                    'stroke-width' => '1',
+                '.label-group .nodeLabel' => [
+                    'color' => 'hsl(195, 66%, 55%)',
+                    'font-size' => '1.125rem',
                 ],
             ],
         ],

@@ -1,11 +1,8 @@
 <?php
-/**
- * @copyright Copyright © 2025 BeastBytes - All rights reserved
- * @license BSD 3-Clause
- */
 
 declare(strict_types=1);
 
+use Yiisoft\Access\AccessCheckerInterface;
 use Yiisoft\Rbac\Manager;
 use Yiisoft\Rbac\ManagerInterface;
 
@@ -14,8 +11,9 @@ use Yiisoft\Rbac\ManagerInterface;
 return [
     ManagerInterface::class => [
         'class' => Manager::class,
-        'setGuestRoleName()' => [
-            'name' => $params['yiisoft/rbac']['guestRole']
+        '__construct()' => [
+            'includeRolesInAccessChecks' => true,
         ],
     ],
+    AccessCheckerInterface::class => ManagerInterface::class,
 ];

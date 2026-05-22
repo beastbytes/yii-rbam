@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use BeastBytes\Yii\Rbam\Dev\ViewInjection\CommonViewInjection;
-use BeastBytes\Yii\Rbam\Dev\ViewInjection\LayoutViewInjection;
+use BeastBytes\Yii\Rbam\Support\ViewInjection\CommonViewInjection;
+use BeastBytes\Yii\Rbam\Support\ViewInjection\LayoutViewInjection;
 use Yiisoft\Csrf\CsrfTokenMiddleware;
 use Yiisoft\Definitions\Reference;
 use Yiisoft\ErrorHandler\Middleware\ErrorCatcher;
@@ -25,6 +25,7 @@ return [
         CsrfTokenMiddleware::class,
         Router::class,
     ],
+    'traceLink' => 'phpstorm://open?url=file://{file}&line={line}',
     'yiisoft/aliases' => [
         'aliases' => [
             '@root' => dirname(__DIR__, 3),
@@ -37,8 +38,8 @@ return [
             '@messages' => '@resources/messages',
             '@public' => '@root/public',
             '@rbac' => '@root/rbac',
-            '@resources' => '@root/resources',
             '@rbacRules' => '@root/rbac/rules',
+            '@resources' => '@root/resources',
             '@runtime' => '@root/runtime',
             '@src' => '@root/src',
             '@vendor' => '@root/vendor',
@@ -50,9 +51,6 @@ return [
             'forceCopy' => true,
             'linkAssets' => false,
         ],
-    ],
-    'yiisoft/rbac' => [
-        'guestRole' => 'guest',
     ],
     'yiisoft/translator' => [
         'locale' => LOCALE,

@@ -1,15 +1,11 @@
 <?php
-/**
- * @copyright Copyright © 2025 BeastBytes - All rights reserved
- * @license BSD 3-Clause
- */
 
 declare(strict_types=1);
 
-use BeastBytes\Yii\Rbam\Dev\User\User;
-use BeastBytes\Yii\Rbam\Dev\User\UserRepository;
-use BeastBytes\Yii\Rbam\UserInterface;
-use BeastBytes\Yii\Rbam\UserRepositoryInterface;
+use BeastBytes\Yii\Rbam\Support\User\User;
+use BeastBytes\Yii\Rbam\Support\User\UserRepository;
+use BeastBytes\Yii\Rbam\User\UserInterface;
+use BeastBytes\Yii\Rbam\User\UserRepositoryInterface;
 
 return [
     UserInterface::class => User::class,

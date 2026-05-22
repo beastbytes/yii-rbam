@@ -80,13 +80,13 @@ return [
             'yiisoft/assets' => [
                 'config/params.php',
             ],
-            'yiisoft/widget' => [
-                'config/params.php',
-            ],
             'yiisoft/auth' => [
                 'config/params.php',
             ],
             'yiisoft/form' => [
+                'config/params.php',
+            ],
+            'yiisoft/widget' => [
                 'config/params.php',
             ],
             'yiisoft/validator' => [
@@ -159,17 +159,20 @@ return [
             'yiisoft/log' => [
                 'config/events-web.php',
             ],
-        ],
-        'widgets' => [
-            '/' => [],
+            'yiisoft/middleware-dispatcher' => [
+                'config/events-web.php',
+            ],
         ],
         'bootstrap' => [
-            'yiisoft/widget' => [
-                'config/bootstrap.php',
-            ],
             'yiisoft/form' => [
                 'config/bootstrap.php',
             ],
+            'yiisoft/widget' => [
+                'config/bootstrap.php',
+            ],
+            '/' => [],
+        ],
+        'widgets' => [
             '/' => [],
         ],
         'di-console' => [

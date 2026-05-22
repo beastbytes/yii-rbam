@@ -1,16 +1,12 @@
 <?php
-/**
- * @copyright Copyright © 2025 BeastBytes - All rights reserved
- * @license BSD 3-Clause
- */
 
 declare(strict_types=1);
 
-use BeastBytes\Yii\Rbam\HierarchyDiagramInterface;
-use BeastBytes\Yii\Rbam\MermaidHierarchyDiagram;
+use BeastBytes\Yii\Rbam\Diagram\HierarchyDiagramInterface;
+use BeastBytes\Yii\Rbam\Diagram\MermaidHierarchyDiagram;
 use BeastBytes\Yii\Rbam\RbamParameters;
-use BeastBytes\Yii\Rbam\RuleService;
-use BeastBytes\Yii\Rbam\RuleServiceInterface;
+use BeastBytes\Yii\Rbam\Rule\RuleService;
+use BeastBytes\Yii\Rbam\Rule\RuleServiceInterface;
 use Yiisoft\Aliases\Aliases;
 
 /** @var array $params */
