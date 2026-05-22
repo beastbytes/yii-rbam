@@ -3,162 +3,156 @@
 declare(strict_types=1);
 
 /**
- * @var Assignment[] $assignments
+ * @var Role[] $assignedRoles
+ * @var string[] $assignments
  * @var Csrf $csrf
- * @var int $currentPage
- * @var ItemsStorageInterface $itemsStorage
- * @var Permission[] $permissionsGranted
- * @var Inflector $inflector
+ * @var ?int $currentPage
  * @var RbamParameters $rbamParameters
- * @var Role[] $roles
  * @var WebView $this
  * @var TranslatorInterface $translator
  * @var UrlGeneratorInterface $urlGenerator
  * @var UserInterface $user
  */
 
+use BeastBytes\Yii\Rbam\DTO\Item;
+use BeastBytes\Yii\Rbam\PaginatorUrlCreator;
 use BeastBytes\Yii\Rbam\RbamParameters;
-use BeastBytes\Yii\Rbam\UserInterface;
+use BeastBytes\Yii\Rbam\User\UserInterface;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Html\Html;
+use Yiisoft\Json\Json;
 use Yiisoft\Rbac\Assignment;
-use Yiisoft\Rbac\Item;
-use Yiisoft\Rbac\ItemsStorageInterface;
-use Yiisoft\Rbac\Permission;
 use Yiisoft\Rbac\Role;
 use Yiisoft\Router\UrlGeneratorInterface;
-use Yiisoft\Strings\Inflector;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
-use Yiisoft\Yii\DataView\BodyRowContext;
-use Yiisoft\Yii\DataView\Column\ActionColumn;
-use Yiisoft\Yii\DataView\Column\DataColumn;
-use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\Filter\Factory\LikeFilterFactory;
+use Yiisoft\Yii\DataView\GridView\Column\ActionColumn;
+use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
+use Yiisoft\Yii\DataView\GridView\GridView;
+use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 use Yiisoft\Yii\View\Renderer\Csrf;
 
-$this->addJsStrings(['pagination.init("assigned-roles")']);
-
-$this->setParameter(
-    'baseUrl',
-    $urlGenerator->generate('rbam.rolesPagination')
-);
-
-$assignmentNames = array_keys($assignments);
+$this->registerJs('paginators.push(new Paginator("assigned-roles", ".grid-view nav a"));');
 
 echo GridView::widget()
-    ->dataReader((new OffsetPaginator(new IterableDataReader($roles)))
+    ->containerAttributes([
+        'class' => 'grid-view roles',
+        'data-_csrf' => $csrf,
+        'data-user' => $user->getId(),
+        'id' => 'assigned-roles',
+    ])
+    ->containerTag('div')
+    ->dataReader((new OffsetPaginator(new IterableDataReader($assignedRoles)))
         ->withCurrentPage($currentPage ?? 1)
         ->withPageSize($rbamParameters->getPageSize())
     )
-    ->containerAttributes([
-        'class' => 'grid-view roles',
-        'id' => 'assigned-roles',
-        'data-_csrf' => $csrf,
-        'data-userId' => $user->getId(),
-    ])
-    ->header($translator->translate('label.roles-assigned'))
+    ->paginationWidget(OffsetPagination::widget())
+    ->urlCreator(new PaginatorUrlCreator($urlGenerator->generate('rbam.user.roles', ['status' => 'assigned'])))
+    ->header($translator->translate('label.role.assigned'))
     ->headerAttributes(['class' => 'header'])
     ->tableAttributes(['class' => 'grid'])
-    ->layout("{header}\n<div class=\"toolbar\">{toolbar}</div>\n{items}")
-    ->toolbar(
-        !empty($roles)
-            ? Html::button(
-            $translator->translate($rbamParameters->getButtons('removeAll')['content']),
-            array_merge(
-                $rbamParameters->getButtons('revokeAll')['attributes'],
-                [
-                    'data-href' => $urlGenerator->generate('rbam.revokeAllAssignments'),
-                    'id' => 'all_items',
-                    'type' => 'button',
-                ],
+    ->tbodyAttributes(['class' => 'grid-body'])
+    ->layout("{header}\n{toolbar}\n{summary}\n{items}\n{pager}")
+    ->toolbar(!empty($assignedRoles)
+        ? Html::div(
+            content: Html::button(
+                content: $translator->translate($rbamParameters->getButtons('revokeAll')['content']),
+                attributes: array_merge(
+                    $rbamParameters->getButtons('revokeAll')['attributes'],
+                    [
+                        'type' => 'button',
+                        '@click.prevent' => sprintf(
+                            "\$dispatch('modal', %s)",
+                            Json::encode([
+                                'buttons' => [
+                                    'continue' => [
+                                        'href' => $urlGenerator->generate('rbam.user.assignment.revoke'),
+                                        'data' => [],
+                                    ],
+                                ],
+                                'closeDialog' => $translator->translate('label.close-dialog'),
+                                'content' => $translator->translate(
+                                    'message.user.assignment.revoke-all',
+                                    [
+                                        'user' => $user->getName(),
+                                    ]
+                                ),
+                                'title' => $translator->translate('header.user.assignment.revoke-all'),
+                            ])
+                        ),
+                    ]
+                )
             ),
+            attributes: ['class' => 'toolbar']
         )
             ->render()
-            : ''
+        : ''
     )
-    ->emptyText($translator->translate('message.no-roles-assigned'))
-    ->bodyRowAttributes(
-        static function (Role $role, BodyRowContext $context) use ($assignmentNames)
-        {
-            return [
-                'class' => in_array($role->getName(), $assignmentNames, true)
-                    ? 'direct'
-                    : 'indirect'
-            ];
-        }
-    )
-    ->urlCreator(function (array $arguments, array $queryParameters): string {
-        $baseUrl = $this->getParameter('baseUrl');
-        $pathParams = [];
-
-        // Handle path parameters
-        foreach ($arguments as $name => $value) {
-            $pathParams[] = "$name-$value";
-        }
-
-        // Build final URL
-        $url = $baseUrl;
-        if ($pathParams) {
-            $url .= '/' . implode('/', $pathParams);
-        }
-        if ($queryParameters) {
-            $url .= '?' . http_build_query($queryParameters);
-        }
-
-        return $url;
-    })
+    ->noResultsText($translator->translate('message.role.none-assigned'))
     ->columns(
         new DataColumn(
             header: $translator->translate('label.name'),
-            content: static fn(Role $role) => $role->getName()
-
+            content: static fn(Item $item) => $translator->translate($item->getItem()->getName()),
+            filter: true,
+            filterFactory: LikeFilterFactory::class,
+            filterEmpty: true,
         ),
         new DataColumn(
             header: $translator->translate('label.description'),
-            content: static fn(Role $role) => $role->getDescription()
-        ),
-        new DataColumn(
-            header: $translator->translate('label.assigned'),
-            content: static function (Role $role) use ($assignments, $assignmentNames, $itemsStorage, $rbamParameters)
-            {
-                if (in_array($role->getName(), $assignmentNames, true)) {
-                    return (new DateTime())
-                        ->setTimestamp($assignments[$role->getName()]->getCreatedAt())
-                        ->format($rbamParameters->getDatetimeFormat())
-                    ;
-                }
-
-                $ancestors = $itemsStorage
-                    ->getParents($role->getName())
-                ;
-
-                $parent = array_shift($ancestors);
-
-                return $parent === null ? '' : $parent->getName();
-            }
+            content: static fn(Item $item) => $translator->translate($item->getItem()->getDescription()),
         ),
         new ActionColumn(
-            content: static function (Item $item) use (
-                $assignmentNames,
-                $rbamParameters,
-                $translator,
-                $urlGenerator
+            content: static fn($data) => array_reduce(
+                $assignments,
+                fn(bool $carry, Assignment $assignment)
+                => $carry || $assignment->getItemName() === $data->getItem()->getName()
+                ,
+                false
             )
-            {
-                return Html::button(
-                    $translator->translate($rbamParameters->getButtons('revoke')['content']),
-                    array_merge(
+                ? Html::button(
+                    content: $translator->translate($rbamParameters->getButtons('revoke')['content']),
+                    attributes: array_merge(
                         $rbamParameters->getButtons('revoke')['attributes'],
                         [
-                            'data-name' => $item->getName(),
-                            'data-href' => $urlGenerator->generate('rbam.revokeAssignment'),
-                            'disabled' => !in_array($item->getName(), $assignmentNames),
+                            'type' => 'button',
+                            '@click.prevent' => sprintf(
+                                "\$dispatch('modal', %s)",
+                                Json::encode([
+                                    'buttons' => [
+                                        'continue' => [
+                                            'href' => $urlGenerator->generate('rbam.user.assignment.revoke'),
+                                            'data' => [
+                                                'item' => $data->getItem()->getName(),
+                                            ],
+                                        ],
+                                    ],
+                                    'closeDialog' => $translator->translate('label.close-dialog'),
+                                    'content' => $translator->translate(
+                                        'message.user.assignment.revoke',
+                                        [
+                                            'item' => $data->getItem()->getName(),
+                                            'user' => $user->getName(),
+                                        ]
+                                    ),
+                                    'title' => $translator->translate(
+                                        'header.user.assignment.revoke',
+                                        [
+                                            'item' => $data->getItem()->getName(),
+                                        ]
+                                    ),
+                                ])
+                            )
                         ]
                     )
-                );
-            },
-            bodyAttributes: ['class' => 'action'],
+                )
+                : ''
+            ,
+            bodyAttributes: [
+                'class' => 'action',
+                'x-data' => true
+            ]
         ),
     )
 ;

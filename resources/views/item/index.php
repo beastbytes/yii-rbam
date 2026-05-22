@@ -1,8 +1,4 @@
 <?php
-/**
- * @copyright Copyright © 2025 BeastBytes - All rights reserved
- * @license BSD 3-Clause
- */
 
 declare(strict_types=1);
 
@@ -11,7 +7,6 @@ declare(strict_types=1);
  * @var int $currentPage
  * @var Inflector $inflector
  * @var array $items
- * @var ItemsStorageInterface $itemsStorage
  * @var RbamParameters $rbamParameters
  * @var WebView $this
  * @var TranslatorInterface $translator
@@ -22,13 +17,13 @@ declare(strict_types=1);
 use BeastBytes\Yii\Rbam\RbamParameters;
 use Yiisoft\Assets\AssetManager;
 use Yiisoft\Html\Html;
-use Yiisoft\Rbac\ItemsStorageInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
 
 $this->setTitle($translator->translate('label.' . $type . 's'));
+$this->registerJs(sprintf('rbam = new Rbam("%s")', $type));
 
 $breadcrumbs = [
     [
@@ -38,30 +33,25 @@ $breadcrumbs = [
     $this->getTitle()
 ];
 $this->setParameter('breadcrumbs', $breadcrumbs);
-?>
 
-<?= $this->render(
+echo $this->render(
 '_items',
     [
-        'actionButtons' => ['view', 'remove'],
+        'actionButtons' => ['view', 'update', 'remove'],
         'currentPage' => $currentPage,
-        'emptyText' => 'label.no-' . $type . 's-found',
+        'noResultsText' => 'message.no-' . $type . 's-found',
         'header' => $this->getTitle(),
         'item' => null,
         'items' => $items,
-        'itemsStorage' => $itemsStorage,
-        'toolbar' => Html::a(
+        'paginationUrl' => $urlGenerator->generate('rbam.item.index', ['type' => $type . 's']),
+        'toolbar' => Html::div(Html::a(
             content: $translator->translate($rbamParameters->getButtons('create' . ucfirst($type))['content']),
-            url: $urlGenerator->generate('rbam.createItem', ['type' => $type]),
-            attributes: $rbamParameters->getButtons('create' . ucfirst($type))['attributes'],
-        )
-            ->render()
-        ,
+            url: $urlGenerator->generate('rbam.item.create', ['type' => $type]),
+            attributes: $rbamParameters->getButtons('create' . ucfirst($type))['attributes']
+        )),
         'translator' => $translator,
         'type' => $type,
         'urlGenerator' => $urlGenerator,
         'user' => null,
-
     ]
-)
-?>
+);

@@ -1,22 +1,18 @@
 <?php
-/**
- * @copyright Copyright © 2025 BeastBytes - All rights reserved
- * @license BSD 3-Clause
- */
 
 declare(strict_types=1);
 
 /**
  * @var Csrf $csrf
- * @var ItemForm $formModel
+ * @var RuleForm $formModel
  * @var RbamParameters $rbamParameters
  * @var TranslatorInterface $translator
  * @var UrlGeneratorInterface $urlGenerator
  * @var WebView $this
  */
 
-use BeastBytes\Yii\Rbam\Form\ItemForm;
 use BeastBytes\Yii\Rbam\RbamParameters;
+use BeastBytes\Yii\Rbam\Rule\RuleForm;
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Router\UrlGeneratorInterface;
@@ -25,16 +21,16 @@ use Yiisoft\View\WebView;
 use Yiisoft\Yii\View\Renderer\Csrf;
 
 $this->setTitle(
-    ($formModel->getName() === ''
-        ? $translator->translate('label.create-rule')
-        : $translator->translate('label.update-rule')
+    ($formModel->isCreate()
+        ? $translator->translate('label.rule.create')
+        : $translator->translate('label.rule.update')
     )
 );
 
 $breadcrumbs = [
     [
         'label' => $translator->translate('label.rules'),
-        'url' => $urlGenerator->generate('rbam.ruleIndex')
+        'url' => $urlGenerator->generate('rbam.rule.index')
     ],
     $this->getTitle()
 ];
@@ -50,9 +46,10 @@ $tabIndex = 1;
     ->id('form-rule')
     ->open()
 ?>
+<?= Field::errorSummary($formModel) ?>
 <?= Field::text($formModel, 'name')
-    ->autofocus($formModel->getName() === '')
-    ->disabled($formModel->getName() !== '')
+    ->autofocus($formModel->isCreate())
+    ->disabled($formModel->isUpdate())
     ->containerClass('form-control-container')
     ->addInputClass('form-input')
     ->addLabelClass('form-label')
@@ -61,7 +58,7 @@ $tabIndex = 1;
     ->tabindex($tabIndex++)
 ?>
 <?= Field::text($formModel, 'description')
-    ->autofocus($formModel->getName() !== '')
+    ->autofocus($formModel->isUpdate())
     ->containerClass('form-control-container')
     ->addInputClass('form-input')
     ->addLabelClass('form-label')
@@ -70,7 +67,7 @@ $tabIndex = 1;
     ->tabindex($tabIndex++)
 ?>
 <?= Field::textarea($formModel, 'code')
-    ->beforeInput("public function execute(?string \$userId, Item \$item, RuleContext \$context): bool\n{")
+    ->beforeInput("public function execute(?string \$userId, Permission \$item, RuleContext \$context): bool\n{")
     ->afterInput('}')
     ->containerClass('form-control-container')
     ->addInputClass('form-input')
@@ -89,7 +86,7 @@ $tabIndex = 1;
         ?>
         <?= Field::button()
             ->containerClass('form-button')
-            ->buttonAttributes(['onClick' => 'history.back()'])
+            ->buttonAttributes(['onClick' => sprintf('window.location.href = "%s"', $urlGenerator->generate('rbam.rule.index'))])
             ->buttonClass($rbamParameters->getButtons('cancel')['attributes']['class'])
             ->tabindex($tabIndex)
             ->content($translator->translate($rbamParameters->getButtons('cancel')['content']))

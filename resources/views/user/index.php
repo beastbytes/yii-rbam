@@ -1,13 +1,9 @@
 <?php
-/**
- * @copyright Copyright © 2025 BeastBytes - All rights reserved
- * @license BSD 3-Clause
- */
 
 declare(strict_types=1);
 
 /**
- * @var AssetManager $assetManager
+ * @var string $csrf
  * @var int $currentPage
  * @var Inflector $inflector
  * @var ManagerInterface $rbacManager
@@ -18,10 +14,9 @@ declare(strict_types=1);
  * @var WebView $this
  */
 
-use BeastBytes\Yii\Dataview\Assets\PaginationAsset;
+use BeastBytes\Yii\Rbam\PaginatorUrlCreator;
 use BeastBytes\Yii\Rbam\RbamParameters;
-use BeastBytes\Yii\Rbam\UserInterface;
-use Yiisoft\Assets\AssetManager;
+use BeastBytes\Yii\Rbam\User\UserInterface;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Rbac\ManagerInterface;
@@ -29,12 +24,14 @@ use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
-use Yiisoft\Yii\DataView\Column\ActionButton;
-use Yiisoft\Yii\DataView\Column\ActionColumn;
-use Yiisoft\Yii\DataView\Column\DataColumn;
-use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\GridView\Column\ActionButton;
+use Yiisoft\Yii\DataView\GridView\Column\ActionColumn;
+use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
+use Yiisoft\Yii\DataView\GridView\GridView;
+use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 
-$assetManager->register(PaginationAsset::class);
+$this->registerJs(sprintf('rbam = new Rbam("users")'));
+$this->registerJs(sprintf('paginators.push(new Paginator("users", ".grid-view nav a"));'));
 
 $this->setTitle($translator->translate('label.users'));
 
@@ -46,24 +43,36 @@ $breadcrumbs = [
     $this->getTitle()
 ];
 $this->setParameter('breadcrumbs', $breadcrumbs);
+
+$this->setParameter(
+    'baseUrl',
+    $urlGenerator->generate('rbam.user.index')
+);
 ?>
 
 <?= GridView::widget()
-    ->dataReader(
-        (new OffsetPaginator(new IterableDataReader($users)))
-            ->withCurrentPage($currentPage)
-            ->withPageSize($rbamParameters->getPageSize())
+    ->containerAttributes([
+        'class' => 'grid-view users',
+        'data-_csrf' => $csrf,
+        'id' => 'users',
+    ])
+    ->containerTag('div')
+    ->dataReader((new OffsetPaginator(new IterableDataReader($users)))
+        ->withCurrentPage($currentPage)
+        ->withPageSize($rbamParameters->getPageSize())
     )
-    ->containerAttributes(['class' => 'grid-view users', 'id' => 'users'])
+    ->paginationWidget(OffsetPagination::widget())
+    ->urlCreator(new PaginatorUrlCreator($urlGenerator->generate('rbam.user.index')))
     ->header($this->getTitle())
     ->headerAttributes(['class' => 'header'])
     ->tableAttributes(['class' => 'grid'])
     ->layout("{header}\n{summary}\n{items}\n{pager}")
-    ->emptyText($translator->translate('message.no-users-found'))
+    ->noResultsText($translator->translate('message.user.none-found'))
     ->columns(
         new DataColumn(
+
             header: $translator->translate('label.name'),
-            content: static fn(UserInterface $user) => $user->getName()
+            content: static fn(UserInterface $user) => $user->getName(),
         ),
         new DataColumn(
             header: $translator->translate('label.roles'),
@@ -83,7 +92,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
             template: '{view}',
             urlCreator: static function($action, $context) use ($urlGenerator)
             {
-                return $urlGenerator->generate('rbam.viewUser', [
+                return $urlGenerator->generate('rbam.user.view', [
                     'id' => $context->data->getId()
                 ]);
             },

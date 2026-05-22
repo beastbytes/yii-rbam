@@ -1,28 +1,23 @@
 <?php
-/**
- * @copyright Copyright © 2025 BeastBytes - All rights reserved
- * @license BSD 3-Clause
- */
 
 declare(strict_types=1);
 
 /**
- * @var Permission[] $permissions
- * @var Role[] $roles
- * @var RbamRuleInterface[] $rules
+ * @var CurrentUser $currentUser
+ * @var int $permissions
+ * @var int $roles
+ * @var int $rules
  * @var WebView $this
  * @var TranslatorInterface $translator
  * @var UrlGeneratorInterface $urlGenerator
- * @var UserInterface $users
+ * @var int $users
  */
 
-use BeastBytes\Yii\Rbam\RbamRuleInterface;
-use BeastBytes\Yii\Rbam\UserInterface;
+use BeastBytes\Yii\Rbam\Rbac\Role;
 use Yiisoft\Rbac\Item;
-use Yiisoft\Rbac\Permission;
-use Yiisoft\Rbac\Role;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\User\CurrentUser;
 use Yiisoft\View\WebView;
 
 $this->setTitle($translator->translate('label.rbam'));
@@ -35,39 +30,45 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
 
 <div class="cards">
     <?php foreach ([Item::TYPE_ROLE, Item::TYPE_PERMISSION] as $type): ?>
-        <?php $type = $type . 's'; ?>
+        <?php $types = $type . 's'; ?>
         <div class="card <?= $type ?>">
             <div class="card-header">
-                <span><?= $translator->translate('label.' . $type) ?><span class='badge'><?= count($$type) ?></span></span>
+                <span><?= $translator->translate(sprintf('label.%s', $types)) ?><span class='badge'><?= $$types ?></span></span>
             </div>
             <div class="card-body">
+                <?php if($currentUser->can(Role::itemManager->getItemName())): ?>
                 <a class="btn btn_manage" href="<?= $urlGenerator->generate(
-                    'rbam.itemIndex',
-                    ['type' => $type]
+                    'rbam.item.index',
+                    ['type' => $types]
                 ) ?>">
-                    <?= $translator->translate('label.manage-' . $type) ?>
+                    <?= $translator->translate(sprintf('label.%s.manage', $types)) ?>
                 </a>
+                <?php endif; ?>
             </div>
         </div>
     <?php endforeach; ?>
     <div class="card rules">
         <div class="card-header">
-            <span><?= $translator->translate('label.rules')?><span class='badge'><?= count($rules) ?></span></span>
+            <span><?= $translator->translate('label.rules')?><span class='badge'><?= $rules ?></span></span>
         </div>
         <div class="card-body">
-            <a class="btn btn_manage" href="<?= $urlGenerator->generate('rbam.ruleIndex') ?>">
-                <?= $translator->translate('label.manage-rules')?>
+            <?php if($currentUser->can(Role::ruleManager->getItemName())): ?>
+            <a class="btn btn_manage" href="<?= $urlGenerator->generate('rbam.rule.index') ?>">
+                <?= $translator->translate('label.rules.manage')?>
             </a>
+            <?php endif; ?>
         </div>
     </div>
     <div class="card users">
         <div class="card-header">
-            <span><?= $translator->translate('label.users')?><span class='badge'><?= count($users) ?></span></span>
+            <span><?= $translator->translate('label.users')?><span class='badge'><?= $users ?></span></span>
         </div>
         <div class="card-body">
-            <a class="btn btn_manage" href="<?= $urlGenerator->generate('rbam.userIndex') ?>">
-                <?= $translator->translate('label.manage-users')?>
+            <?php if($currentUser->can(Role::userManager->getItemName())): ?>
+            <a class="btn btn_manage" href="<?= $urlGenerator->generate('rbam.user.index') ?>">
+                <?= $translator->translate('label.users.manage')?>
             </a>
+            <?php endif; ?>
         </div>
     </div>
 </div>

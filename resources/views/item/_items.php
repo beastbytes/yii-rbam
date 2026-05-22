@@ -1,8 +1,4 @@
 <?php
-/**
- * @copyright Copyright © 2025 BeastBytes - All rights reserved
- * @license BSD 3-Clause
- */
 
 declare(strict_types=1);
 
@@ -10,195 +6,203 @@ declare(strict_types=1);
  * @var array $actionButtons
  * @var AssetManager $assetManager
  * @var ?int $currentPage
- * @var ItemsStorageInterface $itemsStorage
  * @var Csrf $csrf
- * @var string $emptyText
- * @var string $header
  * @var Inflector $inflector
  * @var Item $item
- * @var Item[] $items
+ * @var RbamItem[] $items
+ * @var string $header
+ * @var ?string $noResultsText
+ * @var string $paginationUrl
  * @var RbamParameters $rbamParameters
  * @var WebView $this
  * @var TranslatorInterface $translator
- * @var string $toolbar
+ * @var NormalTag $toolbar
  * @var string $type
  * @var UrlGeneratorInterface $urlGenerator
  * @var ?UserInterface $user
  */
 
-use BeastBytes\Yii\Rbam\Assets\RemoveAsset;
-use BeastBytes\Yii\Rbam\ItemTypeService;
+use BeastBytes\Yii\Rbam\DTO\Item as RbamItem;
+use BeastBytes\Yii\Rbam\PaginatorUrlCreator;
 use BeastBytes\Yii\Rbam\RbamParameters;
-use BeastBytes\Yii\Rbam\UserInterface;
-use BeastBytes\Yii\Widgets\Dialog;
+use BeastBytes\Yii\Rbam\User\UserInterface;
 use Yiisoft\Assets\AssetManager;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Html\Html;
+use Yiisoft\Html\NoEncode;
+use Yiisoft\Html\Tag\Base\NormalTag;
+use Yiisoft\Json\Json;
 use Yiisoft\Rbac\Item;
-use Yiisoft\Rbac\ItemsStorageInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
-use Yiisoft\Yii\DataView\Column\ActionButton;
-use Yiisoft\Yii\DataView\Column\ActionColumn;
-use Yiisoft\Yii\DataView\Column\DataColumn;
-use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\GridView\Column\ActionButton;
+use Yiisoft\Yii\DataView\GridView\Column\ActionColumn;
+use Yiisoft\Yii\DataView\GridView\Column\Base\DataContext;
+use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
+use Yiisoft\Yii\DataView\GridView\GridView;
+use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 use Yiisoft\Yii\View\Renderer\Csrf;
 
-$assetManager->register(RemoveAsset::class);
-$this->addJsStrings(['pagination.init("' . $type . '")']);
-
-if ($item instanceof Item) {
-    $this->setParameter(
-        'baseUrl',
-        $urlGenerator->generate('rbam.itemPagination')
-    );
-} else {
-    $this->setParameter(
-        'baseUrl',
-        $urlGenerator->generate('rbam.permissionsPagination')
-    );
-}
-
-$dialog = Dialog::widget()
-    ->body($translator->translate('message.remove-' . $type))
-    ->footer(
-        Html::button(
-            $translator->translate('button.continue'),
-            [
-                'class' => 'btn btn_continue',
-                'id' => 'remove-continue',
-                'type' => 'submit',
-                Dialog::CLOSE_DIALOG_ATTRIBUTE => true,
-            ]
-        )
-            ->render()
-        . Html::button(
-            $translator->translate('button.cancel'),
-            [
-                'class' => 'btn btn_cancel',
-                'type' => 'reset',
-                Dialog::CLOSE_DIALOG_ATTRIBUTE => true,
-            ]
-        )
-            ->render()
-    )
-    ->header($translator->translate('header.remove-' . $type))
-;
-echo $dialog->render();
+$this->registerJs(sprintf('paginators.push(new Paginator("%s", ".grid-view nav a"));', $type));
 
 $containerAttributes = [
-    'class' => 'grid-view ' . $type . 's',
-    'id' => $type,
+    'class' => sprintf('grid-view %s', $type),
     'data-_csrf' => $csrf,
-    'data-action-buttons' => implode(',', $actionButtons),
-    'data-header' => $header,
+    'data-action_buttons' => implode(',', $actionButtons),
+    'data-no_results_text' => $noResultsText,
+    'data-pagination_url' => $paginationUrl,
     'data-toolbar' => $toolbar,
+    'id' => $type,
 ];
 
-if ($item instanceof Item) {
-    $containerAttributes['data-name'] = $item->getName();
+if (isset($user)) {
+    $containerAttributes['data-user'] = $user->getId();
+} else {
+    if ($item instanceof Item) {
+        $containerAttributes['data-name'] = $item->getName();
+    }
+    $containerAttributes['data-header'] = $header;
     $containerAttributes['data-type'] = $type;
-} elseif ($user instanceof UserInterface) {
-    $containerAttributes['data-userId'] = $user->getId();
 }
 
 echo GridView::widget()
+    ->containerAttributes($containerAttributes)
+    ->containerTag('div')
     ->dataReader((new OffsetPaginator(new IterableDataReader($items)))
         ->withCurrentPage($currentPage ?? 1)
         ->withPageSize($rbamParameters->getTabPageSize())
     )
-    ->containerAttributes($containerAttributes)
-    ->header($translator->translate($header))
-    ->headerAttributes(['class' => 'header'])
+    ->paginationWidget(OffsetPagination::widget())
+    ->urlCreator(new PaginatorUrlCreator($paginationUrl))
     ->tableAttributes(['class' => 'grid'])
-    ->layout("{header}\n<div class=\"toolbar\">{toolbar}</div>\n{summary}\n{items}\n{pager}")
-    ->toolbar($toolbar)
-    ->urlCreator(function (array $arguments, array $queryParameters): string {
-        $baseUrl = $this->getParameter('baseUrl');
-        $pathParams = [];
-
-        // Handle path parameters
-        foreach ($arguments as $name => $value) {
-            $pathParams[] = "$name-$value";
-        }
-
-        // Build final URL
-        $url = $baseUrl;
-        if ($pathParams) {
-            $url .= '/' . implode('/', $pathParams);
-        }
-        if ($queryParameters) {
-            $url .= '?' . http_build_query($queryParameters);
-        }
-
-        return $url;
-    })
-    ->emptyText($translator->translate($emptyText))
+    ->tbodyAttributes(['class' => 'grid-body'])
+    ->header(!empty($header) ? $translator->translate($header) : '')
+    ->headerClass('header')
+    ->toolbar(Html::div(NoEncode::string((string) $toolbar), ['class' => 'toolbar'])->render())
+    ->layout((!empty($header) ? "{header}\n" : '') . "{toolbar}\n{summary}\n{items}\n{pager}")
+    ->noResultsText($noResultsText ? $translator->translate($noResultsText, ['type' => $type]) : $noResultsText)
     ->columns(
         new DataColumn(
             header: $translator->translate('label.name'),
-            content: static fn(Item $item) => $item->getName()
+            content: static fn(RbamItem $item) => $translator->translate($item->getItem()->getName()),
         ),
         new DataColumn(
             header: $translator->translate('label.description'),
-            content: static fn(Item $item) => $item->getDescription()
+            content: static fn(RbamItem $item) => $translator->translate($item->getItem()->getDescription()),
+        ),
+        new DataColumn(
+            header: $translator->translate('label.rule'),
+            content: static fn(RbamItem $item) => is_string($item->getItem()->getRuleName())
+                ? substr($item->getItem()->getRuleName(), 30, -4)
+                : $translator->translate('message.no-rule')
+            ,
         ),
         new DataColumn(
             header: $translator->translate('label.granted-by'),
-            content: static function(Item $item) use ($itemsStorage)
-            {
-                $ancestors = $itemsStorage
-                    ->getParents($item->getName())
-                ;
+            content: static function (RbamItem $item) use ($translator) {
+                $grantedBy = [];
 
-                $parent = array_shift($ancestors);
+                foreach ($item->getParents() as $parent) {
+                    $grantedBy[] = $translator->translate($parent->getName());
+                }
 
-                return $parent === null ? '' : $parent->getName();
+                return '<div>' . implode('</div><div>', $grantedBy) . '</div>';
             },
+            encodeContent: false,
             visible: $type === Item::TYPE_PERMISSION
         ),
         new DataColumn(
             header: $translator->translate('label.created-at'),
-            content: static fn(Item $item) => (new DateTime())
-                ->setTimestamp($item->getCreatedAt())
+            content: static fn(RbamItem $item) => (new DateTime())
+                ->setTimestamp($item->getItem()->getCreatedAt())
                 ->format($rbamParameters->getDatetimeFormat())
         ),
         new DataColumn(
             header: $translator->translate('label.updated-at'),
-            content: static fn(Item $item) => (new DateTime())
-                ->setTimestamp($item->getUpdatedAt())
+            content: static fn(RbamItem $item) => (new DateTime())
+                ->setTimestamp($item->getItem()->getUpdatedAt())
                 ->format($rbamParameters->getDatetimeFormat())
         ),
         new ActionColumn(
             template: '{' . implode('}{', $actionButtons) . '}',
-            urlCreator: static function($action, $context) use ($inflector, $urlGenerator)
-            {
-                return $urlGenerator->generate('rbam.' . $action . 'Item', [
-                    'name' => $inflector->toSnakeCase($context->key),
-                    'type' => ItemTypeService::getItemType($context->data)
-                ]);
-            },
+            urlCreator: static fn($action, $context) => $urlGenerator
+                ->generate(
+                    'rbam.item.' . $action,
+                    [
+                        'name' => $context->key,
+                        'type' => $context->data->getItem()->getType(),
+                    ]
+                )
+            ,
             buttons: [
-                'remove' => new ActionButton(
+                'remove' => static fn(string $url, DataContext $context) => Html::button(
                     content: $translator->translate($rbamParameters->getButtons('remove')['content']),
-                    attributes: static function() use ($csrf, $dialog, $rbamParameters)
-                    {
-                        $attributes = $rbamParameters->getButtons('remove')['attributes'];
-                        $attributes[Dialog::OPEN_DIALOG_ATTRIBUTE] = $dialog->getId();
-                        $attributes['class'] .= ' remove';
-                        $attributes['data-csrf'] = $csrf;
-                        return $attributes;
-                    }
+                    attributes: array_merge(
+                        $rbamParameters->getButtons('remove')['attributes'],
+                        [
+                            'type' => 'button',
+                            '@click' => sprintf(
+                               "\$dispatch('modal', %s)",
+                                Json::encode([
+                                    'buttons' => [
+                                        'continue' => [
+                                            'href' => $url,
+                                            'data' => [
+                                                'item' => substr(
+                                                    urldecode($url),
+                                                    strpos(urldecode($url), '/', 7) + 1,
+                                                    strrpos(urldecode($url), '/')
+                                                        - strpos(urldecode($url), '/', 7) - 1
+                                                ),
+                                            ]
+                                        ],
+                                    ],
+                                    'closeDialog' => $translator->translate('label.close-dialog'),
+                                    'content' => $translator->translate(
+                                        sprintf('message.%s.remove', $type),
+                                        [
+                                            'item' => substr(
+                                                urldecode($url),
+                                                strpos(urldecode($url), '/', 7) + 1,
+                                                strrpos(urldecode($url), '/')
+                                                    - strpos(urldecode($url), '/', 7) - 1
+                                            ),
+                                        ]
+                                    ),
+                                    'title' => $translator->translate(
+                                        sprintf('header.%s.remove', $type),
+                                        [
+                                            'item' => substr(
+                                                urldecode($url),
+                                                strpos(urldecode($url), '/', 7) + 1,
+                                                strrpos(urldecode($url), '/')
+                                                    - strpos(urldecode($url), '/', 7) - 1
+                                            ),
+                                        ]
+                                    ),
+                                ])
+                            ),
+                        ]
+                    )
+                )
+                    ->render()
+                ,
+                'update' => new ActionButton(
+                    content: $translator->translate($rbamParameters->getButtons('update')['content']),
+                    attributes: $rbamParameters->getButtons('update')['attributes'],
                 ),
                 'view' => new ActionButton(
                     content: $translator->translate($rbamParameters->getButtons('view')['content']),
                     attributes: $rbamParameters->getButtons('view')['attributes'],
                 ),
             ],
-            bodyAttributes: ['class' => 'action'],
+            bodyAttributes: [
+                'class' => 'action',
+                'x-data' => true
+            ],
         )
     )
 ;

@@ -1,8 +1,4 @@
 <?php
-/**
- * @copyright Copyright © 2025 BeastBytes - All rights reserved
- * @license BSD 3-Clause
- */
 
 declare(strict_types=1);
 
@@ -10,7 +6,6 @@ declare(strict_types=1);
  * @var Role[] $assignedRoles
  * @var Assignment[] $assignments
  * @var AssetManager $assetManager
- * @var ItemsStorageInterface $itemsStorage
  * @var Permission[] $permissionsGranted
  * @var Csrf $csrf
  * @var Inflector $inflector
@@ -22,14 +17,12 @@ declare(strict_types=1);
  * @var UserInterface $user
  */
 
-use BeastBytes\Yii\Dataview\Assets\PaginationAsset;
-use BeastBytes\Yii\Rbam\Assets\RbamAsset;
 use BeastBytes\Yii\Rbam\RbamParameters;
-use BeastBytes\Yii\Rbam\UserInterface;
+use BeastBytes\Yii\Rbam\User\UserInterface;
 use Yiisoft\Assets\AssetManager;
 use Yiisoft\Html\Html;
 use Yiisoft\Rbac\Assignment;
-use Yiisoft\Rbac\ItemsStorageInterface;
+use Yiisoft\Rbac\Item;
 use Yiisoft\Rbac\Permission;
 use Yiisoft\Rbac\Role;
 use Yiisoft\Router\UrlGeneratorInterface;
@@ -38,9 +31,7 @@ use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\View\Renderer\Csrf;
 
-$assetManager->register(PaginationAsset::class);
-$assetManager->register(RbamAsset::class);
-$this->addJsFiles($assetManager->getJsFiles());
+$this->registerJs('const rbam = new Rbam("user-view");');
 
 $this->setTitle($user->getName());
 
@@ -51,28 +42,55 @@ $breadcrumbs = [
     ],
     [
         'label' => $translator->translate('label.users'),
-        'url' => $urlGenerator->generate('rbam.userIndex'),
+        'url' => $urlGenerator->generate('rbam.user.index'),
     ],
     Html::encode($this->getTitle())
 ];
 $this->setParameter('breadcrumbs', $breadcrumbs);
-?>
 
-<h2><?= Html::encode($this->getTitle()) ?></h2>
+echo Html::div()
+    ->attributes([
+        'data-_csrf' => $csrf,
+        'data-user' => $user->getId(),
+        'id' => 'user-view',
+    ])
+    ->open()
+;
 
-<div id="js-items" data-_csrf="<?= $csrf ?>" data-item="<?= $user->getId() ?>">
-    <?= $this->render(
-        '_assignments',
-        [
-            'assignments' => $assignments,
-            'assignedRoles' => $assignedRoles,
-            'itemsStorage' => $itemsStorage,
-            'permissionsGranted' => $permissionsGranted,
-            'rbamParameters' => $rbamParameters,
-            'translator' => $translator,
-            'unassignedRoles' => $unassignedRoles,
-            'urlGenerator' => $urlGenerator,
-            'user' => $user,
-        ]
-    ) ?>
-</div>
+echo Html::h2($this->getTitle());
+
+echo $this->render(
+    '_assignedRoles',
+    [
+        'assignedRoles' => $assignedRoles,
+        'assignments' => $assignments,
+        'user' => $user,
+    ]
+);
+
+echo $this->render(
+    '_unassignedRoles',
+    [
+        'unassignedRoles' => $unassignedRoles,
+        'user' => $user,
+    ]
+);
+
+echo $this->render(
+    '../item/_items',
+    [
+        'actionButtons' => ['view'],
+        'header' => 'label.permissions.granted',
+        'item' => null,
+        'items' => $permissionsGranted,
+        'noResultsText' => 'message.permission.none-granted',
+        'paginationUrl' => $urlGenerator->generate('rbam.user.permissions'),
+        'toolbar' => '',
+        'translator' => $translator,
+        'type' => Item::TYPE_PERMISSION,
+        'urlGenerator' => $urlGenerator,
+        'user' => $user
+    ]
+);
+
+echo Html::div()->close();

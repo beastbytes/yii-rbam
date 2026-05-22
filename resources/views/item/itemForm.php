@@ -1,8 +1,4 @@
 <?php
-/**
- * @copyright Copyright © 2025 BeastBytes - All rights reserved
- * @license BSD 3-Clause
- */
 
 declare(strict_types=1);
 
@@ -10,14 +6,14 @@ declare(strict_types=1);
  * @var Csrf $csrf
  * @var ItemForm $formModel
  * @var RbamParameters $rbamParameters
- * @var array $ruleNames
+ * @var array<string, string> $ruleClasses
  * @var TranslatorInterface $translator
  * @var UrlGeneratorInterface $urlGenerator
  * @var WebView $this
  * @var string $type
  */
 
-use BeastBytes\Yii\Rbam\Form\ItemForm;
+use BeastBytes\Yii\Rbam\Item\ItemForm;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
@@ -27,9 +23,9 @@ use Yiisoft\View\WebView;
 use Yiisoft\Yii\View\Renderer\Csrf;
 
 $this->setTitle(
-    ($formModel->getName() === ''
-        ? $translator->translate("label.create-$type")
-        : $translator->translate("label.update-$type")
+    ($formModel->isCreate()
+        ? $translator->translate("label.$type.create")
+        : $translator->translate("label.$type.update")
     )
 );
 
@@ -40,7 +36,7 @@ $breadcrumbs = [
     ],
     [
         'label' => $translator->translate('label.' . $type . 's'),
-        'url' => $urlGenerator->generate('rbam.itemIndex', ['type' => $type . 's']),
+        'url' => $urlGenerator->generate('rbam.item.index', ['type' => $type . 's']),
     ],
     $this->getTitle()
 ];
@@ -59,37 +55,36 @@ $tabIndex = 1;
 ?>
 <?= Field::errorSummary($formModel) ?>
 <?= Field::text($formModel, 'name')
-    ->autofocus($formModel->getName() === '')
-    ->disabled($formModel->getName() !== '')
+    ->autofocus(true)
+    ->required(true)
     ->containerClass('form-control-container')
+    ->inputContainerTag('div')
+    ->inputContainerClass('form-input-container')
     ->addInputClass('form-input')
+    ->pattern(ItemForm::NAME_REGEX)
     ->addLabelClass('form-label')
-    ->invalidClass('invalid')
-    ->validClass('valid')
+    ->afterInput(Html::span())
     ->tabindex($tabIndex++)
 ?>
 <?= Field::text($formModel, 'description')
-    ->autofocus($formModel->getName() !== '')
+    ->required(true)
     ->containerClass('form-control-container')
+    ->inputContainerTag('div')
+    ->inputContainerClass('form-input-container')
     ->addInputClass('form-input')
     ->addLabelClass('form-label')
-    ->invalidClass('invalid')
-    ->validClass('valid')
+    ->afterInput(Html::span())
     ->tabindex($tabIndex++)
 ?>
 <?= Field::select($formModel, 'ruleName', [
     'prompt()' => [$translator->translate('prompt.select-rule')],
-    'optionsData()' => [
-        array_combine($ruleNames, $ruleNames),
-    ],
+    'optionsData()' => [$ruleClasses],
 ])
     ->containerClass('form-control-container')
     ->addContainerClass(empty($ruleNames) ? 'disabled' : '')
     ->addInputClass('form-input')
     ->addLabelClass('form-label')
-    ->disabled(empty($ruleNames))
-    ->invalidClass('invalid')
-    ->validClass('valid')
+    ->disabled(empty($ruleClasses))
     ->tabindex($tabIndex++)
 ?>
 <div class="form-buttons">
@@ -102,7 +97,12 @@ $tabIndex = 1;
     ?>
     <?= Field::button()
         ->containerClass('form-button')
-        ->buttonAttributes(['onClick' => 'history.back()'])
+        ->buttonAttributes([
+            'onClick' => sprintf(
+                'window.location.href = "%s"',
+                $urlGenerator->generate('rbam.item.index', ['type' => $type . 's'])
+            )
+        ])
         ->buttonClass($rbamParameters->getButtons('cancel')['attributes']['class'])
         ->tabindex($tabIndex)
         ->content($translator->translate($rbamParameters->getButtons('cancel')['content']))
