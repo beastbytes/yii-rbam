@@ -5,6 +5,7 @@ declare(strict_types=1);
 /**
  * @var string $csrf
  * @var int $currentPage
+ * @var CurrentUser $currentUser
  * @var Inflector $inflector
  * @var ManagerInterface $rbacManager
  * @var RbamParameters $rbamParameters
@@ -23,6 +24,7 @@ use Yiisoft\Rbac\ManagerInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\User\CurrentUser;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\DataView\GridView\Column\ActionButton;
 use Yiisoft\Yii\DataView\GridView\Column\ActionColumn;
@@ -102,7 +104,8 @@ $this->setParameter(
                     attributes: $rbamParameters->getButtons('view')['attributes'],
                 ),
             ],
-            bodyAttributes: ['class' => 'action'],
+            visibleButtons: ['view' => $currentUser->can(RbamPermission::userView->getItemName())],
+            bodyAttributes: ['class' => 'action']
         )
     )
 ?>

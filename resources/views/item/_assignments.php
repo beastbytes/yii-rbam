@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @var Assignment[] $assignments
  * @var string $csrf
  * @var ?int $currentPage
+ * @var CurrentUser $currentUser
  * @var Inflector $inflector
  * @var Item $item
  * @var RbamParameters $rbamParameters
@@ -16,6 +17,7 @@ declare(strict_types=1);
 
 use BeastBytes\Yii\Rbam\DTO\Assignment;
 use BeastBytes\Yii\Rbam\PaginatorUrlCreator;
+use BeastBytes\Yii\Rbam\Rbac\Permission as RbamPermission;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
@@ -23,6 +25,7 @@ use Yiisoft\Rbac\Item;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\User\CurrentUser;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\DataView\Filter\Factory\LikeFilterFactory;
 use Yiisoft\Yii\DataView\GridView\Column\ActionButton;
@@ -86,6 +89,7 @@ echo GridView::widget()
                     attributes: $rbamParameters->getButtons('view')['attributes'],
                 ),
             ],
+            visibleButtons: ['view' => $currentUser->can(RbamPermission::userView->getItemName())],
             bodyAttributes: ['class' => 'action'],
         )
     )

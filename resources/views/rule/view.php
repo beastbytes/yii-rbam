@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 /**
  * @var AssetManager $assetManager
+ * @var CurrentUser $currentUser
  * @var Inflector $inflector
  * @var RbamParameters $rbamParameters
  * @var RuleInterface $rule
@@ -17,6 +18,7 @@ declare(strict_types=1);
 use BeastBytes\Yii\Rbam\Alpine\Tabs;
 use BeastBytes\Yii\Rbam\Assets\PrismAsset;
 use BeastBytes\Yii\Rbam\DTO\Item as RbamItem;
+use BeastBytes\Yii\Rbam\Rbac\Permission as RbamPermission;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use BeastBytes\Yii\Rbam\Rule\RuleInterface;
 use Yiisoft\Assets\AssetManager;
@@ -25,6 +27,7 @@ use Yiisoft\Rbac\Item;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\User\CurrentUser;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\DataView\DetailView\DataField;
 use Yiisoft\Yii\DataView\DetailView\DetailView;
@@ -75,12 +78,13 @@ RULE,
             valueEncode: false,
         ),
     )
-    ->prepend(
-        Html::a(
+    ->prepend($currentUser->can(RbamPermission::ruleUpdate->getItemName())
+        ? Html::a(
             content: $translator->translate('button.update', ['item' => $rule->getName()]),
             url: $urlGenerator->generate('rbam.rule.update', ['name' => $rule->getName()]),
             attributes: $rbamParameters->getButtons('update')['attributes']
         )
+        : ''
     )
     ->render()
 ;
@@ -91,6 +95,7 @@ echo Tabs::widget([
             '../item/_items',
             [
                 'actionButtons' => ['view'],
+                'currentUser' => $currentUser,
                 'noResultsText' => 'message.role.none-found',
                 'header' => '',
                 'item' => null,
@@ -107,6 +112,7 @@ echo Tabs::widget([
             '../item/_items',
             [
                 'actionButtons' => ['view'],
+                'currentUser' => $currentUser,
                 'noResultsText' => 'message.permission.none-found',
                 'header' => '',
                 'item' => null,

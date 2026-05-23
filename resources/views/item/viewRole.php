@@ -5,6 +5,7 @@ declare(strict_types=1);
 /**
  * @var AssetManager $assetManager
  * @var Assignment[] $assignments
+ * @var CurrentUser $currentUser
  * @var Role[] $children
  * @var int $currentPage
  * @var MermaidHierarchyDiagram $diagram
@@ -30,6 +31,7 @@ use Yiisoft\Rbac\Role;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\User\CurrentUser;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\DataView\DetailView\DataField;
 use Yiisoft\Yii\DataView\DetailView\DetailView;
@@ -148,6 +150,7 @@ echo Tabs::widget([
             '_items',
             [
                 'actionButtons' => ['view'],
+                'currentUser' => $currentUser,
                 'noResultsText' => 'message.role.none-found',
                 'header' => '',
                 'item' => $item,
@@ -181,6 +184,7 @@ echo Tabs::widget([
             '_items',
             [
                 'actionButtons' => ['view'],
+                'currentUser' => $currentUser,
                 'noResultsText' => 'message.permission.none-found',
                 'header' => '',
                 'item' => $item,

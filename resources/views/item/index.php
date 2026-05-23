@@ -5,6 +5,7 @@ declare(strict_types=1);
 /**
  * @var AssetManager $assetManager
  * @var int $currentPage
+ * @var CurrentUser $currentUser
  * @var Inflector $inflector
  * @var array $items
  * @var RbamParameters $rbamParameters
@@ -14,12 +15,14 @@ declare(strict_types=1);
  * @var UrlGeneratorInterface $urlGenerator
  */
 
+use BeastBytes\Yii\Rbam\Rbac\Permission as RbamPermission;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use Yiisoft\Assets\AssetManager;
 use Yiisoft\Html\Html;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\User\CurrentUser;
 use Yiisoft\View\WebView;
 
 $this->setTitle($translator->translate('label.' . $type . 's'));
@@ -39,16 +42,20 @@ echo $this->render(
     [
         'actionButtons' => ['view', 'update', 'remove'],
         'currentPage' => $currentPage,
+        'currentUser' => $currentUser,
         'noResultsText' => 'message.no-' . $type . 's-found',
         'header' => $this->getTitle(),
         'item' => null,
         'items' => $items,
         'paginationUrl' => $urlGenerator->generate('rbam.item.index', ['type' => $type . 's']),
-        'toolbar' => Html::div(Html::a(
-            content: $translator->translate($rbamParameters->getButtons('create' . ucfirst($type))['content']),
-            url: $urlGenerator->generate('rbam.item.create', ['type' => $type]),
-            attributes: $rbamParameters->getButtons('create' . ucfirst($type))['attributes']
-        )),
+        'toolbar' => $currentUser->can(RbamPermission::itemCreate->getItemName())
+            ? Html::div(Html::a(
+                content: $translator->translate($rbamParameters->getButtons('create' . ucfirst($type))['content']),
+                url: $urlGenerator->generate('rbam.item.create', ['type' => $type]),
+                attributes: $rbamParameters->getButtons('create' . ucfirst($type))['attributes']
+            ))
+            : ''
+        ,
         'translator' => $translator,
         'type' => $type,
         'urlGenerator' => $urlGenerator,

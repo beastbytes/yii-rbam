@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @var Assignment[] $assignments
  * @var Csrf $csrf
  * @var ?int $currentPage
+ * @var ?int $currentPage
  * @var Permission[] $permissionsGranted
  * @var Inflector $inflector
  * @var RbamParameters $rbamParameters
@@ -17,6 +18,7 @@ declare(strict_types=1);
  */
 
 use BeastBytes\Yii\Rbam\PaginatorUrlCreator;
+use BeastBytes\Yii\Rbam\Rbac\Permission as RbamPermission;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use BeastBytes\Yii\Rbam\User\UserInterface;
 use Yiisoft\Data\Paginator\OffsetPaginator;
@@ -29,6 +31,7 @@ use Yiisoft\Rbac\Role;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\User\CurrentUser;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\DataView\Filter\Factory\LikeFilterFactory;
 use Yiisoft\Yii\DataView\GridView\Column\ActionColumn;
@@ -114,6 +117,7 @@ echo GridView::widget()
                 'class' => 'action',
                 'x-data' => true
             ],
+            visible: $currentUser->can(RbamPermission::userUpdate->getItemName())
         ),
     )
 ;

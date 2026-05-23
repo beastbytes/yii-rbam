@@ -13,7 +13,7 @@ declare(strict_types=1);
  * @var int $users
  */
 
-use BeastBytes\Yii\Rbam\Rbac\Role;
+use BeastBytes\Yii\Rbam\Rbac\Permission as RbamPermission;
 use Yiisoft\Rbac\Item;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\TranslatorInterface;
@@ -36,7 +36,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
                 <span><?= $translator->translate(sprintf('label.%s', $types)) ?><span class='badge'><?= $$types ?></span></span>
             </div>
             <div class="card-body">
-                <?php if($currentUser->can(Role::itemManager->getItemName())): ?>
+                <?php if($currentUser->can(RbamPermission::itemView->getItemName())): ?>
                 <a class="btn btn_manage" href="<?= $urlGenerator->generate(
                     'rbam.item.index',
                     ['type' => $types]
@@ -52,7 +52,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
             <span><?= $translator->translate('label.rules')?><span class='badge'><?= $rules ?></span></span>
         </div>
         <div class="card-body">
-            <?php if($currentUser->can(Role::ruleManager->getItemName())): ?>
+            <?php if($currentUser->can(RbamPermission::ruleView->getItemName())): ?>
             <a class="btn btn_manage" href="<?= $urlGenerator->generate('rbam.rule.index') ?>">
                 <?= $translator->translate('label.rules.manage')?>
             </a>
@@ -64,7 +64,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
             <span><?= $translator->translate('label.users')?><span class='badge'><?= $users ?></span></span>
         </div>
         <div class="card-body">
-            <?php if($currentUser->can(Role::userManager->getItemName())): ?>
+            <?php if($currentUser->can(RbamPermission::userView->getItemName())): ?>
             <a class="btn btn_manage" href="<?= $urlGenerator->generate('rbam.user.index') ?>">
                 <?= $translator->translate('label.users.manage')?>
             </a>

@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @var Role[] $assignedRoles
  * @var Assignment[] $assignments
  * @var AssetManager $assetManager
+ * @var CurrentUser $currentUser
  * @var Permission[] $permissionsGranted
  * @var Csrf $csrf
  * @var Inflector $inflector
@@ -28,6 +29,7 @@ use Yiisoft\Rbac\Role;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\User\CurrentUser;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\View\Renderer\Csrf;
 
@@ -64,6 +66,7 @@ echo $this->render(
     [
         'assignedRoles' => $assignedRoles,
         'assignments' => $assignments,
+        'currentUser' => $currentUser,
         'user' => $user,
     ]
 );
@@ -71,6 +74,7 @@ echo $this->render(
 echo $this->render(
     '_unassignedRoles',
     [
+        'currentUser' => $currentUser,
         'unassignedRoles' => $unassignedRoles,
         'user' => $user,
     ]
@@ -80,6 +84,7 @@ echo $this->render(
     '../item/_items',
     [
         'actionButtons' => ['view'],
+        'currentUser' => $currentUser,
         'header' => 'label.permissions.granted',
         'item' => null,
         'items' => $permissionsGranted,

@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @var array $actionButtons
  * @var AssetManager $assetManager
  * @var ?int $currentPage
+ * @var CurrentUser $currentUser
  * @var Csrf $csrf
  * @var Inflector $inflector
  * @var Item $item
@@ -24,6 +25,7 @@ declare(strict_types=1);
 
 use BeastBytes\Yii\Rbam\DTO\Item as RbamItem;
 use BeastBytes\Yii\Rbam\PaginatorUrlCreator;
+use BeastBytes\Yii\Rbam\Rbac\Permission as RbamPermission;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use BeastBytes\Yii\Rbam\User\UserInterface;
 use Yiisoft\Assets\AssetManager;
@@ -37,6 +39,7 @@ use Yiisoft\Rbac\Item;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\User\CurrentUser;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\DataView\GridView\Column\ActionButton;
 use Yiisoft\Yii\DataView\GridView\Column\ActionColumn;
@@ -198,6 +201,11 @@ echo GridView::widget()
                     content: $translator->translate($rbamParameters->getButtons('view')['content']),
                     attributes: $rbamParameters->getButtons('view')['attributes'],
                 ),
+            ],
+            visibleButtons: [
+                'remove' => $currentUser->can(RbamPermission::itemRemove->getItemName()),
+                'update' => $currentUser->can(RbamPermission::itemUpdate->getItemName()),
+                'view' => $currentUser->can(RbamPermission::itemUpdate->getItemName()),
             ],
             bodyAttributes: [
                 'class' => 'action',

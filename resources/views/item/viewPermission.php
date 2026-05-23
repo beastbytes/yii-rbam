@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @var AssetManager $assetManager
  * @var RbamItem[] $children
  * @var int $currentPage
+ * @var CurrentUser $currentUser
  * @var MermaidHierarchyDiagram $diagram
  * @var RbamItem $item
  * @var PermittedUser[] $permittedUsers
@@ -26,6 +27,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Rbac\Item;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\User\CurrentUser;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\DataView\DetailView\DataField;
 use Yiisoft\Yii\DataView\DetailView\DetailView;
@@ -150,6 +152,7 @@ echo Tabs::widget([
             '_items',
             [
                 'actionButtons' => ['view'],
+                'currentUser' => $currentUser,
                 'noResultsText' => 'message.permission.none-found',
                 'header' => '',
                 'item' => $item,

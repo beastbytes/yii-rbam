@@ -5,6 +5,7 @@ declare(strict_types=1);
 /**
  * @var string $csrf
  * @var int $currentPage
+ * @var CurrentUser $currentUser
  * @var Inflector $inflector
  * @var RbamParameters $rbamParameters
  * @var RuleInterface[] $rules
@@ -14,6 +15,7 @@ declare(strict_types=1);
  */
 
 use BeastBytes\Yii\Rbam\PaginatorUrlCreator;
+use BeastBytes\Yii\Rbam\Rbac\Permission as RbamPermission;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use BeastBytes\Yii\Rbam\Rule\RuleInterface;
 use Yiisoft\Data\Paginator\OffsetPaginator;
@@ -23,6 +25,7 @@ use Yiisoft\Json\Json;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\User\CurrentUser;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\DataView\Filter\Factory\LikeFilterFactory;
 use Yiisoft\Yii\DataView\GridView\Column\ActionButton;
@@ -66,13 +69,15 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
     ->tableAttributes(['class' => 'grid'])
     ->tbodyAttributes(['class' => 'grid-body'])
     ->layout("{header}\n{toolbar}\n{summary}\n{items}\n{pager}")
-    ->toolbar(Html::div(Html::a(
+    ->toolbar($currentUser->can(RbamPermission::ruleCreate->getItemName())
+        ? Html::div(Html::a(
             content: $translator->translate('button.rule.create'),
             url: $urlGenerator->generate('rbam.rule.create'),
             attributes: $rbamParameters->getButtons('createRule')['attributes']
         ))
-        ->class('toolbar')
-        ->render()
+            ->class('toolbar')
+            ->render()
+        : ''
     )
     ->noResultsText($translator->translate('message.rule.none-found'))
     ->columns(
@@ -88,7 +93,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
             content: static fn(RuleInterface $rule) => $rule->getDescription(),
         ),
         new ActionColumn(
-            template: '{view}{update}{remove}',
+            template: '{view}{update}{delete}',
             urlCreator: static fn(string $action, DataContext $context) => $urlGenerator->generate(
                 sprintf('rbam.rule.%s', $action),
                 [
@@ -96,7 +101,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
                 ]
             ),
             buttons: [
-                'remove' => static fn(string $url, DataContext $context) => Html::button(
+                'delete' => static fn(string $url, DataContext $context) => Html::button(
                     content: $translator->translate($rbamParameters->getButtons('remove')['content']),
                     attributes: array_merge(
                         $rbamParameters->getButtons('remove')['attributes'],
@@ -156,10 +161,15 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
                     attributes: $rbamParameters->getButtons('view')['attributes'],
                 ),
             ],
+            visibleButtons: [
+                'delete' => $currentUser->can(RbamPermission::ruleDelete->getItemName()),
+                'update' => $currentUser->can(RbamPermission::ruleUpdate->getItemName()),
+                'view' => $currentUser->can(RbamPermission::ruleView->getItemName()),
+            ],
             bodyAttributes: [
                 'class' => 'action',
                 'x-data' => true
-            ],
+            ]
         )
     )
 ?>

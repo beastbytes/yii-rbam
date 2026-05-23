@@ -7,6 +7,7 @@ declare(strict_types=1);
  * @var string[] $assignments
  * @var Csrf $csrf
  * @var ?int $currentPage
+ * @var CurrentUser $currentUser
  * @var RbamParameters $rbamParameters
  * @var WebView $this
  * @var TranslatorInterface $translator
@@ -16,6 +17,7 @@ declare(strict_types=1);
 
 use BeastBytes\Yii\Rbam\DTO\Item;
 use BeastBytes\Yii\Rbam\PaginatorUrlCreator;
+use BeastBytes\Yii\Rbam\Rbac\Permission as RbamPermission;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use BeastBytes\Yii\Rbam\User\UserInterface;
 use Yiisoft\Data\Paginator\OffsetPaginator;
@@ -26,6 +28,7 @@ use Yiisoft\Rbac\Assignment;
 use Yiisoft\Rbac\Role;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\User\CurrentUser;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\DataView\Filter\Factory\LikeFilterFactory;
 use Yiisoft\Yii\DataView\GridView\Column\ActionColumn;
@@ -55,7 +58,7 @@ echo GridView::widget()
     ->tableAttributes(['class' => 'grid'])
     ->tbodyAttributes(['class' => 'grid-body'])
     ->layout("{header}\n{toolbar}\n{summary}\n{items}\n{pager}")
-    ->toolbar(!empty($assignedRoles)
+    ->toolbar($currentUser->can(RbamPermission::userUpdate->getItemName()) && !empty($assignedRoles)
         ? Html::div(
             content: Html::button(
                 content: $translator->translate($rbamParameters->getButtons('revokeAll')['content']),
@@ -107,7 +110,7 @@ echo GridView::widget()
             content: static fn($data) => array_reduce(
                 $assignments,
                 fn(bool $carry, Assignment $assignment)
-                => $carry || $assignment->getItemName() === $data->getItem()->getName()
+                    => $carry || $assignment->getItemName() === $data->getItem()->getName()
                 ,
                 false
             )
@@ -152,7 +155,8 @@ echo GridView::widget()
             bodyAttributes: [
                 'class' => 'action',
                 'x-data' => true
-            ]
+            ],
+            visible: $currentUser->can(RbamPermission::userUpdate->getItemName())
         ),
     )
 ;

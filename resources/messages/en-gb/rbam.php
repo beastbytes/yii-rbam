@@ -27,6 +27,8 @@ return [
     'flash.item.created' => '{name} {type} Created',
     'flash.item.deleted' => '{name} {type} Deleted',
     'flash.item.updated' => '{name} {type} Updated',
+    'flash.rbam.already-initialised' => 'RBAM is already initialised',
+    'flash.rbam.initialised' => 'RBAM initialised',
     'flash.rule.created' => '{name} Rule Created',
     'flash.rule.deleted' => '{name} Rule Deleted',
     'flash.rule.updated' => '{name} Rule Updated',
