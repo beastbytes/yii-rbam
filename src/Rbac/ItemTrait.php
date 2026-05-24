@@ -10,12 +10,17 @@ use ReflectionClass;
 
 trait ItemTrait
 {
+    public function getDescription(): string
+    {
+        return $this->getItemName() . $this->getSeparator() . 'description';
+    }
+
     public function getItemName(): string
     {
         return $this->prefixAttribute()?->getPrefix() . $this->value;
     }
 
-    public function getSeparator(): ?string
+    private function getSeparator(): ?string
     {
         return $this->prefixAttribute()?->getSeparator();
     }
