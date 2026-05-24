@@ -13,6 +13,8 @@
 
     --disabled-background: oklch(0.95 0 0);
 
+    --even-row-background: oklch(0.95 0 0);
+
     --overlay: oklch(0.321 0 0 / 0.5);
     --inset: inset 2px 2px 6px oklch(0.738 0 0);
     --shadow: 5px 5px 15px oklch(0.738 0 0);
@@ -24,7 +26,7 @@
     --yii-green-light: oklch(0.99 0.19 131.803);
     --yii-orange: oklch(0.7285 0.1622 57.4256);
     --yii-red: oklch(0.638 0.212 32.357);
-    --yii-red-light: oklch(0.95 0.212 32.357);
+    --yii-red-light: oklch(0.738 0.77 32.357);
 
     font-family: "trebuchet ms", verdana, arial, sans-serif;
 
@@ -97,6 +99,7 @@
         user-select: none;
 
         &.btn_cancel,
+        &.btn_clear,
         &.btn_remove,
         &.btn_remove-all,
         &.btn_revoke,
@@ -185,6 +188,15 @@
                 text-align: center;
             }
         }
+    }
+
+    .danger {
+        background-color: var(--yii-red);
+        color: aliceblue;
+        font-size: 1.5rem;
+        font-weight: bolder;
+        padding: 0.75rem 1.5rem;
+        margin: 1.5rem auto;
     }
 
     .detail-view {
@@ -407,8 +419,40 @@
             color: oklch(1 0 0);
         }
 
-        tbody tr:nth-child(even) {
-            background-color: oklch(0.95 0 0);
+        tbody {
+            tr {
+                &:nth-child(even) {
+                    background-color: var(--even-row-background);
+                }
+
+                td:first-child {
+                    padding-right: 2rem;
+                    position: relative;
+
+                    &::after {
+                        align-items: center;
+                        border-radius: 100%;
+                        color: aliceblue;
+                        display: inline-flex;
+                        font-size: 1rem;
+                        height: 1rem;
+                        justify-content: center;
+                        position: absolute;
+                        right: 0.5rem;
+                        top: 0.5rem;
+                        width: 1rem;
+                    }
+
+                    &.default::after {
+                        background-color: var(--yii-green);
+                        content: '\02200'; /* for all */
+                    }
+                    &.guest::after {
+                        background-color: var(--yii-blue);
+                        content: '\02205'; /* empty */
+                    }
+                }
+            }
         }
     }
 
