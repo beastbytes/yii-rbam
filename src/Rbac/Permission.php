@@ -11,6 +11,7 @@ enum Permission: string implements ItemInterface
 {
     use ItemTrait;
 
+    case clear = 'clear';
     case index = 'index';
     case itemCreate = 'item.create';
     case itemRemove = 'item.remove';
