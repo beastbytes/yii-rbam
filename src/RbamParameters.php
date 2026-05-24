@@ -28,6 +28,11 @@ final class RbamParameters
         return $this->parameters['defaultRoles'];
     }
 
+    public function getGuestRole(): array
+    {
+        return $this->parameters[`yiisoft/rbac`]['guestRole'];
+    }
+
     public function getMermaidDiagramStyles(): array
     {
         return $this->parameters['mermaidDiagramStyles'];

@@ -21,7 +21,12 @@ return [
                 ->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::index))
                 ->action([RbamController::class, 'index'])
             ,
-            Route::methods([Method::GET, Method::POST], '/rbam/initialise')
+            Route::post('/clear')
+                ->name('clear')
+                ->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::clear))
+                ->action([RbamController::class, 'clear'])
+            ,
+            Route::methods([Method::GET, Method::POST], '/initialise')
                 ->name('initialise')
                 ->action([RbamController::class, 'initialise'])
             ,
@@ -106,9 +111,9 @@ return [
                         ->name('items')
                         ->action([RuleController::class, 'items'])
                     ,
-                    Route::post('/{name: \w.*}/remove')
-                        ->name('remove')
-                        ->action([RuleController::class, 'remove'])
+                    Route::post('/{name: \w.*}/delete')
+                        ->name('delete')
+                        ->action([RuleController::class, 'delete'])
                     ,
                     Route::methods([Method::GET, Method::POST],'/{name: \w.*}/update')
                         ->name('update')
