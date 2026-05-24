@@ -7,6 +7,8 @@ use \Yiisoft\Rbac\Role;
 final class Item
 {
     private bool $isChild = false;
+    private bool $isDefaultRole = false;
+    private bool $isGuestRole = false;
     private array $parents = [];
 
     /**
@@ -31,6 +33,16 @@ final class Item
         return $this->isChild;
     }
 
+    public function isDefaultRole(): bool
+    {
+        return $this->isDefaultRole;
+    }
+
+    public function isGuestRole(): bool
+    {
+        return $this->isGuestRole;
+    }
+
     /**
      * Indicates whether the item is a direct child in the current context
      *
@@ -42,6 +54,20 @@ final class Item
     {
         $new = clone $this;
         $new->isChild = $isChild;
+        return $new;
+    }
+
+    public function withIsDefaultRole(bool $isDefaultRole): self
+    {
+        $new = clone $this;
+        $new->isChild = $isDefaultRole;
+        return $new;
+    }
+
+    public function withIsdGuestRole(bool $isGuestRole): self
+    {
+        $new = clone $this;
+        $new->isGuestRole = $isGuestRole;
         return $new;
     }
 

@@ -110,7 +110,24 @@ final class ItemController
                 $this
             );
         } else {
-            array_walk($items, fn(Item &$item) => $item = new RbamItem($item));
+            $defaultRoles = $this
+                ->manager
+                ->getDefaultRoleNames()
+            ;
+
+            $guestRole = $this
+                ->manager
+                ->getGuestRoleName()
+            ;
+
+            array_walk(
+                $items,
+                fn(Item &$item, $key, $roles) => $item = (new RbamItem($item))
+                    ->withIsDefaultRole(in_array($item->getName(), $roles['defaultRoles']))
+                    ->withIsdGuestRole($item->getName() === $roles['guestRole'])
+                ,
+                compact('defaultRoles', 'guestRole')
+            );
         }
 
         if ($request->getMethod() === Method::POST) {
