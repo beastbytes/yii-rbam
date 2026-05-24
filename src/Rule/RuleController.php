@@ -144,7 +144,7 @@ final class RuleController
      * @return ResponseInterface
      */
     #[PermissionAttribute(RbamPermission::ruleDelete)]
-    public function remove(ServerRequestInterface $request): ResponseInterface
+    public function delete(ServerRequestInterface $request): ResponseInterface
     {
         $parsedBody = $request->getParsedBody();
 
