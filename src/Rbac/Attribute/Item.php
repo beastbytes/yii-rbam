@@ -8,32 +8,34 @@ use BeastBytes\Yii\Rbam\Rbac\ItemInterface;
 
 abstract class Item
 {
+    /**
+     * @param ItemInterface $name
+     * @param string|null $description
+     * @param ItemInterface|list<ItemInterface> $parent
+     * @param string|null $ruleName
+     */
     public function __construct(
-        private readonly string|ItemInterface $name,
+        private readonly ItemInterface $name,
         private readonly ?string $description = null,
-        private readonly null|string|ItemInterface $parent = null,
+        private readonly array|ItemInterface $parent = [],
         private readonly ?string $ruleName = null,
     )
     {
     }
 
-    public function getDescription(): ?string
+public function getDescription(): ?string
     {
-        return $this->description ?? sprintf(
-            '%s%sdescription',
-            $this->getName(),
-            ($this->name instanceof ItemInterface ? $this->name->getSeparator() : ' ')
-        );
+        return $this->description ?? $this->name->getDescription();
     }
 
     public function getName(): string
     {
-        return $this->name instanceof ItemInterface ? $this->name->getItemName() : $this->name;
+        return $this->name->getItemName();
     }
 
-    public function getParent(): ?string
+    public function getParents(): array
     {
-        return $this->parent instanceof ItemInterface ? $this->parent->getItemName() : $this->parent;
+       return $this->parent instanceof ItemInterface ? [$this->parent] : $this->parent;
     }
 
     public function getRuleName(): ?string
