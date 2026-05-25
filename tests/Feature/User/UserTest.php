@@ -21,20 +21,20 @@ test('Index', function () {
     $page->assertSee('Robert Walpole');
 
     $page->assertDontSeeIn(userName(TestCase::CURRENT_USER), $this->getUserName(TestCase::CURRENT_USER));
-    $page->assertDontSeeIn(userRoleCount(TestCase::CURRENT_USER), '4');
-    $page->assertDontSeeIn(userPermissionCount(TestCase::CURRENT_USER), '11');
+    $page->assertDontSeeIn(userRoleCount(TestCase::CURRENT_USER), (string) count(Role::cases()));
+    $page->assertDontSeeIn(userPermissionCount(TestCase::CURRENT_USER), (string) count(Permission::cases()));
 
     $page->click(paginatorPage(2));
     $page->assertSeeIn(userName(TestCase::CURRENT_USER), $this->getUserName(TestCase::CURRENT_USER));
-    $page->assertSeeIn(userRoleCount(TestCase::CURRENT_USER), '4');
-    $page->assertSeeIn(userPermissionCount(TestCase::CURRENT_USER), '11');
+    $page->assertSeeIn(userRoleCount(TestCase::CURRENT_USER), (string) count(Role::cases()));
+    $page->assertSeeIn(userPermissionCount(TestCase::CURRENT_USER), (string) count(Permission::cases()));
 
     $page->click(paginatorPage(3));
     $page->assertSee('Harold Wilson');
 
     $page->assertDontSeeIn(userName(TestCase::CURRENT_USER), $this->getUserName(TestCase::CURRENT_USER));
-    $page->assertDontSeeIn(userRoleCount(TestCase::CURRENT_USER), '4');
-    $page->assertDontSeeIn(userPermissionCount(TestCase::CURRENT_USER), '11');
+    $page->assertDontSeeIn(userRoleCount(TestCase::CURRENT_USER), (string) count(Role::cases()));
+    $page->assertDontSeeIn(userPermissionCount(TestCase::CURRENT_USER), (string) count(Permission::cases()));
 });
 
 test('View User', function () {
