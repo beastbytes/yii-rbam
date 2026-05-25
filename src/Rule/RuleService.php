@@ -44,13 +44,15 @@ class RuleService implements RuleServiceInterface
 
     public function getRules(): array
     {
-        $rules = array_keys($this->getRuleClasses());
-
+        $rules = array_flip($this->getRuleClasses());
         array_walk($rules, fn(string &$rule) => $rule = new $rule());
-
         return $rules;
     }
 
+    /**
+     * Returns rules as a map of class => name
+     * @return array<string, string>
+     */
     public function getRuleClasses(): array
     {
         $rules = [];
@@ -59,6 +61,7 @@ class RuleService implements RuleServiceInterface
         foreach (array_slice(scandir($this->rulesDir), 2) as $ruleFile) {
             $rules[self::RULE_NAMESPACE . '\\' . substr($ruleFile, 0, -4)]
                 = substr($ruleFile, 0, -8)
+
             ;
         }
 
