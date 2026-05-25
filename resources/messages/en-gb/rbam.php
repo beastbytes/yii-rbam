@@ -52,6 +52,9 @@ return [
     'hint.code' => 'Enter the following code: {authCode}',
     'hint.user-id' => 'User ID to be assigned the RBAM Administration Role',
 
+    'guest.role' => 'Guest',
+    'guest.role.description' => 'Guest Role',
+
     'label.assigned-at' => 'Assigned At',
     'label.assigned-by' => 'Assigned By',
     'label.assignments' => 'Assignments',
