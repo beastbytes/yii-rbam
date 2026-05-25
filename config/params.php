@@ -2,6 +2,11 @@
 
 declare(strict_types=1);
 
+use BeastBytes\Yii\Rbam\ViewInjection\CommonViewInjection;
+use BeastBytes\Yii\Rbam\ViewInjection\LayoutViewInjection;
+use Yiisoft\Definitions\Reference;
+use Yiisoft\Yii\View\Renderer\CsrfViewInjection;
+
 return [
     'beastbytes/yii-rbam' => [
         'buttons' => [ // allows use of icon fonts and/or CSS frameworks to style buttons
@@ -16,6 +21,10 @@ return [
             'cancel' => [
                 'attributes' => ['class' => 'btn btn_cancel'],
                 'content' => 'button.cancel',
+            ],
+            'clear' => [
+                'attributes' => ['class' => 'btn btn_clear'],
+                'content' => 'button.clear',
             ],
             'createPermission' => [
                 'attributes' => ['class' => 'btn btn_create'],
@@ -87,7 +96,6 @@ return [
             ],
         ],
         'datetimeFormat' => 'Y-m-d H:i:s',
-        'defaultRoles' => [],
         'mermaidDiagramStyles' => [
             'ancestor_role' => [
                 '.label-group .nodeLabel' => [
@@ -122,5 +130,21 @@ return [
         ],
         'pageSize' => 20,
         'tabPageSize' => 10,
+    ],
+    'yiisoft/rbac' => [
+        'defaultRoles' => [], // <list array{name: string, description: string}>
+        'guestRole' => [ // array{name: string, description: string}
+            'name' => 'guest.role',
+            'description' => 'guest.role.description',
+        ]
+    ],
+    'yiisoft/yii-view-renderer' => [
+        'viewPath' => '@views',
+        'layout' => '@layout/main',
+        'injections' => [
+            Reference::to(CommonViewInjection::class),
+            Reference::to(CsrfViewInjection::class),
+            Reference::to(LayoutViewInjection::class),
+        ],
     ],
 ];
