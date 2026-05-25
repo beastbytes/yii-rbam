@@ -125,6 +125,7 @@ final class RbamController
         FlashInterface $flash,
         FormHydrator $formHydrator,
         ManagerInterface $manager,
+        RbamParameters $parameters,
         Redirect $redirect,
         ServerRequest $request
     ): ResponseInterface
@@ -165,10 +166,10 @@ final class RbamController
             }
 
             if (!empty($manager->getDefaultRoleNames())) {
-                foreach ($manager->getDefaultRoleNames() as $roleName) {
+                foreach ($manager->getDefaultRoleNames() as $i => $roleName) {
                     $manager->addRole(
                         (new Role($roleName))
-                            ->withDescription('default.role.description')
+                            ->withDescription($parameters->getDefaultRoles()[$i]['description'])
                     );
                 }
             }
@@ -176,7 +177,7 @@ final class RbamController
             if (is_string($manager->getGuestRoleName())) {
                 $manager->addRole(
                     (new Role($manager->getGuestRoleName()))
-                        ->withDescription('guest.role.description')
+                        ->withDescription($parameters->getGuestRole()['description'])
                 );
             }
 
