@@ -426,7 +426,6 @@
                 }
 
                 td:first-child {
-                    padding-right: 2rem;
                     position: relative;
 
                     &::after {
@@ -437,9 +436,7 @@
                         font-size: 1rem;
                         height: 1rem;
                         justify-content: center;
-                        position: absolute;
-                        right: 0.5rem;
-                        top: 0.5rem;
+                        margin-left: 0.5rem;
                         width: 1rem;
                     }
 
