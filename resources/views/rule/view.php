@@ -59,10 +59,12 @@ echo DetailView::widget()
         new DataField(
             label: $translator->translate('label.name'),
             value: static fn(GetValueContext $context) => $context->data->getName(),
+            fieldAttributes: ['class' => 'name'],
         ),
         new DataField(
             label: $translator->translate('label.description'),
             value: static fn(GetValueContext $context) => $context->data->getDescription(),
+            fieldAttributes: ['class' => 'description'],
         ),
         new DataField(
             label: $translator->translate('label.code'),
@@ -76,6 +78,7 @@ RULE,
                 $context->data->getCode()
             ),
             valueEncode: false,
+            fieldAttributes: ['class' => 'code'],
         ),
     )
     ->prepend($currentUser->can(RbamPermission::ruleUpdate->getItemName())

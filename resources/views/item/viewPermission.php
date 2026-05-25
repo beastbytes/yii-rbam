@@ -9,18 +9,18 @@ declare(strict_types=1);
  * @var CurrentUser $currentUser
  * @var MermaidHierarchyDiagram $diagram
  * @var RbamItem $item
- * @var PermittedUser[] $permittedUsers
  * @var RbamParameters $rbamParameters
  * @var WebView $this
  * @var TranslatorInterface $translator
  * @var UrlGeneratorInterface $urlGenerator
+ * @var RbamUser[] $users
  */
 
 use BeastBytes\Mermaid\Mermaid;
 use BeastBytes\Yii\Rbam\Alpine\Tabs;
 use BeastBytes\Yii\Rbam\Diagram\MermaidHierarchyDiagram;
 use BeastBytes\Yii\Rbam\DTO\Item as RbamItem;
-use BeastBytes\Yii\Rbam\DTO\PermittedUser;
+use BeastBytes\Yii\Rbam\DTO\User as RbamUser;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use Yiisoft\Assets\AssetManager;
 use Yiisoft\Html\Html;
@@ -76,16 +76,19 @@ echo DetailView::widget()
         new DataField(
             label: $translator->translate('label.name'),
             value: static fn(GetValueContext $context) => $translator->translate($context->data->getItem()->getName()),
+            fieldAttributes: ['class' => 'name'],
         ),
         new DataField(
             label: $translator->translate('label.type'),
             value: $translator->translate('label.permission'),
+            fieldAttributes: ['class' => 'type'],
         ),
         new DataField(
             label: $translator->translate('label.description'),
             value: static fn(GetValueContext $context)
                 => $translator->translate($context->data->getItem()->getDescription())
             ,
+            fieldAttributes: ['class' => 'description'],
         ),
         new DataField(
             label: $translator->translate('label.granted-by'),
@@ -99,6 +102,7 @@ echo DetailView::widget()
                 return '<div>' . implode('</div><div>', $grantedBy) . '</div>';
             },
             valueEncode: false,
+            fieldAttributes: ['class' => 'granted-by'],
         ),
         new DataField(
             label: $translator->translate('label.rule'),
@@ -109,6 +113,8 @@ echo DetailView::widget()
             valueAttributes: static fn(ValueContext $context) => $context->data->getItem()->getRuleName() === null
                 ? ['class' => 'no_rule']
                 : []
+            ,
+            fieldAttributes: ['class' => 'rule'],
         ),
         new DataField(
             label: $translator->translate('label.created-at'),
@@ -116,6 +122,7 @@ echo DetailView::widget()
                 ->setTimestamp($context->data->getItem()->getCreatedAt())
                 ->format($rbamParameters->getDatetimeFormat())
             ,
+            fieldAttributes: ['class' => 'created-at datetime'],
         ),
         new DataField(
             label: $translator->translate('label.updated-at'),
@@ -123,6 +130,7 @@ echo DetailView::widget()
                 ->setTimestamp($context->data->getItem()->getUpdatedAt())
                 ->format($rbamParameters->getDatetimeFormat())
             ,
+            fieldAttributes: ['class' => 'updated-at datetime'],
         ),
     )
     ->prepend(
@@ -188,7 +196,7 @@ echo Tabs::widget([
             '_permittedUsers',
             [
                 'permission' => $item->getItem(),
-                'permittedUsers' => $permittedUsers,
+                'users' => $users,
             ]
         ),
     ]

@@ -6,14 +6,14 @@ declare(strict_types=1);
  * @var Csrf $csrf
  * @var int $currentPage
  * @var Permission $permission
- * @var PermittedUser[] $permittedUsers
  * @var RbamParameters $rbamParameters
  * @var WebView $this
  * @var TranslatorInterface $translator
  * @var UrlGeneratorInterface $urlGenerator
+ * @var RbamUser[] $users
  */
 
-use BeastBytes\Yii\Rbam\DTO\PermittedUser;
+use BeastBytes\Yii\Rbam\DTO\User as RbamUser;
 use BeastBytes\Yii\Rbam\PaginatorUrlCreator;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use Yiisoft\Data\Paginator\OffsetPaginator;
@@ -39,7 +39,7 @@ echo GridView::widget()
         'id' => 'permitted-users',
     ])
     ->containerTag('div')
-    ->dataReader((new OffsetPaginator(new IterableDataReader($permittedUsers)))
+    ->dataReader((new OffsetPaginator(new IterableDataReader($users)))
         ->withCurrentPage($currentPage ?? 1)
         ->withPageSize($rbamParameters->getTabPageSize())
     )
@@ -58,23 +58,26 @@ echo GridView::widget()
     ->columns(
         new DataColumn(
             header: $translator->translate('label.user'),
-            content: static fn(PermittedUser $permittedUser) => $permittedUser->getUser()->getName(),
+            content: static fn(RbamUser $user) => $user->getUser()->getName(),
             filter: true,
             filterFactory: LikeFilterFactory::class,
             filterEmpty: true,
+            bodyClass: 'user',
         ),
         new DataColumn(
             header: $translator->translate('label.granted-by'),
-            content: static fn(PermittedUser $permittedUser)
-                => $translator->translate($permittedUser->getRole()->getName())
+            content: static fn(RbamUser $rbamUser)
+                => $translator->translate($rbamUser->getRole()->getName())
             ,
+            bodyClass: 'granted-by',
         ),
         new DataColumn(
             header: $translator->translate('label.assigned-at'),
-            content: static fn(PermittedUser $permittedUser) => (new DateTime())
-                ->setTimestamp($permittedUser->getAssignment()->getCreatedAt())
+            content: static fn(RbamUser $rbamUser) => (new DateTime())
+                ->setTimestamp($rbamUser->getAssignment()->getCreatedAt())
                 ->format($rbamParameters->getDatetimeFormat())
             ,
+            bodyClass: 'assigned-at datetime',
         ),
         new ActionColumn(
             template: '{view}',

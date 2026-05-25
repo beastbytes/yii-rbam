@@ -9,7 +9,7 @@ use BeastBytes\Yii\Http\Response\Redirect;
 use BeastBytes\Yii\Rbam\Diagram\MermaidHierarchyDiagram;
 use BeastBytes\Yii\Rbam\DTO\Assignment as RbamAssignment;
 use BeastBytes\Yii\Rbam\DTO\Item as RbamItem;
-use BeastBytes\Yii\Rbam\DTO\PermittedUser;
+use BeastBytes\Yii\Rbam\DTO\User as  RbamUser;
 use BeastBytes\Yii\Rbam\Rbac\Attribute\Permission as PermissionAttribute;
 use BeastBytes\Yii\Rbam\Rbac\Attribute\Role as RoleAttribute;
 use BeastBytes\Yii\Rbam\Rbac\Permission as RbamPermission;
@@ -123,8 +123,8 @@ final class ItemController
             array_walk(
                 $items,
                 fn(Item &$item, $key, $roles) => $item = (new RbamItem($item))
-                    ->withIsDefaultRole(in_array($item->getName(), $roles['defaultRoles']))
-                    ->withIsdGuestRole($item->getName() === $roles['guestRole'])
+                    ->withIsDefaultRole(in_array($key, $roles['defaultRoles']))
+                    ->withIsdGuestRole($key === $roles['guestRole'])
                 ,
                 compact('defaultRoles', 'guestRole')
             );
@@ -419,7 +419,7 @@ final class ItemController
 
     private function viewPermission(Permission $item): ResponseInterface
     {
-        $permittedUsers = $this->getPermittedUsers($item);
+        $users = $this->getPermittedUsers($item);
 
         $children = $this
             ->itemsStorage
@@ -442,7 +442,7 @@ final class ItemController
                         ->withItem($item)
                     ,
                     'item' => (new RbamItem($item))->withParents($this->getGrantedBy($item)),
-                    'permittedUsers' => $permittedUsers,
+                    'users' => $users,
                 ]
             )
         ;
@@ -742,7 +742,7 @@ final class ItemController
                 [
                     'currentPage' => (int) ArrayHelper::getValue($request->getQueryParams(), 'page', 1),
                     'permission' => $permission,
-                    'permittedUsers' => $this->getPermittedUsers($permission),
+                    'users' => $this->getPermittedUsers($permission),
                 ]
             )
         ;
@@ -890,7 +890,10 @@ final class ItemController
                     ->get($ancestor->getName(), $user->getId())
                 ;
                 if ($assignment !== null) {
-                    $permittedUsers[] = new PermittedUser($user, $ancestor, $assignment);
+                    $permittedUsers[] = (new RbamUser($user))
+                        ->withAssignment($assignment)
+                        ->withRole($ancestor)
+                    ;
                 }
             }
         }

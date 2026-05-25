@@ -90,22 +90,26 @@ echo GridView::widget()
     ->columns(
         new DataColumn(
             header: $translator->translate('label.name'),
-            content: static fn(RbamItem $item) => $translator->translate($item->getItem()->getName()),
+            content: static fn(RbamItem $item): string => $translator->translate($item->getItem()->getName()),
+            bodyClass: static fn(RbamItem $item): string
+                => 'name' . ($item->isDefaultRole() ? ' default' : ($item->isGuestRole() ? ' guest' : ''))
         ),
         new DataColumn(
             header: $translator->translate('label.description'),
             content: static fn(RbamItem $item) => $translator->translate($item->getItem()->getDescription()),
+            bodyClass: 'description'
         ),
         new DataColumn(
             header: $translator->translate('label.rule'),
-            content: static fn(RbamItem $item) => is_string($item->getItem()->getRuleName())
+            content: static fn(RbamItem $item): string => is_string($item->getItem()->getRuleName())
                 ? substr($item->getItem()->getRuleName(), 30, -4)
                 : $translator->translate('message.no-rule')
             ,
+            bodyClass: 'rule'
         ),
         new DataColumn(
             header: $translator->translate('label.granted-by'),
-            content: static function (RbamItem $item) use ($translator) {
+            content: static function (RbamItem $item) use ($translator): string {
                 $grantedBy = [];
 
                 foreach ($item->getParents() as $parent) {
@@ -115,23 +119,28 @@ echo GridView::widget()
                 return '<div>' . implode('</div><div>', $grantedBy) . '</div>';
             },
             encodeContent: false,
-            visible: $type === Item::TYPE_PERMISSION
+            visible: $type === Item::TYPE_PERMISSION,
+            bodyClass: 'granted-by'
         ),
         new DataColumn(
             header: $translator->translate('label.created-at'),
-            content: static fn(RbamItem $item) => (new DateTime())
+            content: static fn(RbamItem $item): string => (new DateTime())
                 ->setTimestamp($item->getItem()->getCreatedAt())
                 ->format($rbamParameters->getDatetimeFormat())
+            ,
+            bodyClass: 'created-at datetime'
         ),
         new DataColumn(
             header: $translator->translate('label.updated-at'),
-            content: static fn(RbamItem $item) => (new DateTime())
+            content: static fn(RbamItem $item): string => (new DateTime())
                 ->setTimestamp($item->getItem()->getUpdatedAt())
                 ->format($rbamParameters->getDatetimeFormat())
+            ,
+            bodyClass: 'updated-at datetime'
         ),
         new ActionColumn(
             template: '{' . implode('}{', $actionButtons) . '}',
-            urlCreator: static fn($action, $context) => $urlGenerator
+            urlCreator: static fn($action, $context): string => $urlGenerator
                 ->generate(
                     'rbam.item.' . $action,
                     [
@@ -141,7 +150,7 @@ echo GridView::widget()
                 )
             ,
             buttons: [
-                'remove' => static fn(string $url, DataContext $context) => Html::button(
+                'remove' => static fn(string $url, DataContext $context): string => Html::button(
                     content: $translator->translate($rbamParameters->getButtons('remove')['content']),
                     attributes: array_merge(
                         $rbamParameters->getButtons('remove')['attributes'],
@@ -154,12 +163,7 @@ echo GridView::widget()
                                         'continue' => [
                                             'href' => $url,
                                             'data' => [
-                                                'item' => substr(
-                                                    urldecode($url),
-                                                    strpos(urldecode($url), '/', 7) + 1,
-                                                    strrpos(urldecode($url), '/')
-                                                        - strpos(urldecode($url), '/', 7) - 1
-                                                ),
+                                                'item' => $context->key,
                                             ]
                                         ],
                                     ],
@@ -167,23 +171,13 @@ echo GridView::widget()
                                     'content' => $translator->translate(
                                         sprintf('message.%s.remove', $type),
                                         [
-                                            'item' => substr(
-                                                urldecode($url),
-                                                strpos(urldecode($url), '/', 7) + 1,
-                                                strrpos(urldecode($url), '/')
-                                                    - strpos(urldecode($url), '/', 7) - 1
-                                            ),
+                                            'item' => $context->key,
                                         ]
                                     ),
                                     'title' => $translator->translate(
                                         sprintf('header.%s.remove', $type),
                                         [
-                                            'item' => substr(
-                                                urldecode($url),
-                                                strpos(urldecode($url), '/', 7) + 1,
-                                                strrpos(urldecode($url), '/')
-                                                    - strpos(urldecode($url), '/', 7) - 1
-                                            ),
+                                            'item' => $context->key,
                                         ]
                                     ),
                                 ])

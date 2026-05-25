@@ -124,10 +124,12 @@ echo GridView::widget()
             filter: true,
             filterFactory: LikeFilterFactory::class,
             filterEmpty: true,
+            bodyClass: 'name',
         ),
         new DataColumn(
             header: $translator->translate('label.description'),
             content: static fn(RbamItem $item) => $translator->translate($item->getItem()->getDescription()),
+            bodyClass: 'description',
         ),
         new ActionColumn(
             template: '{remove}',
@@ -153,10 +155,7 @@ echo GridView::widget()
                                         'continue' => [
                                             'href' => $url,
                                             'data' => [
-                                                'child' => substr(
-                                                    urldecode($url),
-                                                    strrpos(urldecode($url), '/') + 1
-                                                ),
+                                                'child' => $context->key,
                                                 'childType' => $childType,
                                                 'parent' => $parent->getName(),
                                                 'type' => $type,
@@ -167,20 +166,14 @@ echo GridView::widget()
                                     'content' => $translator->translate(
                                         sprintf('message.%s.remove-child', $childType),
                                         [
-                                            'child' => substr(
-                                                urldecode($url),
-                                                strrpos(urldecode($url), '/') + 1
-                                            ),
+                                            'child' => $context->key,
                                             'parent' => $parent->getName(),
                                         ]
                                     ),
                                     'title' => $translator->translate(
                                         sprintf('header.%s.remove-child', $childType),
                                         [
-                                            'child' => substr(
-                                                urldecode($url),
-                                                strrpos(urldecode($url), '/') + 1
-                                            ),
+                                            'child' => $context->key,
                                         ]
                                     ),
                                 ])

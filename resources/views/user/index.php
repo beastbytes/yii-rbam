@@ -11,13 +11,14 @@ declare(strict_types=1);
  * @var RbamParameters $rbamParameters
  * @var TranslatorInterface $translator
  * @var UrlGeneratorInterface $urlGenerator
- * @var UserInterface[] $users
+ * @var RbamUser[] $users
  * @var WebView $this
  */
 
+use BeastBytes\Yii\Rbam\DTO\User as RbamUser;
 use BeastBytes\Yii\Rbam\PaginatorUrlCreator;
+use BeastBytes\Yii\Rbam\Rbac\Permission as RbamPermission;
 use BeastBytes\Yii\Rbam\RbamParameters;
-use BeastBytes\Yii\Rbam\User\UserInterface;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Rbac\ManagerInterface;
@@ -72,32 +73,27 @@ $this->setParameter(
     ->noResultsText($translator->translate('message.user.none-found'))
     ->columns(
         new DataColumn(
-
             header: $translator->translate('label.name'),
-            content: static fn(UserInterface $user) => $user->getName(),
+            content: static fn(RbamUser $user): string => $user->getUser()->getName(),
+            bodyClass: 'name',
         ),
         new DataColumn(
             header: $translator->translate('label.roles'),
-            content: static function(UserInterface $user) use ($rbacManager) {
-                return count($rbacManager->getRolesByUserId($user->getId()));
-            },
-            bodyClass: 'number',
+            content: static fn(RbamUser $user): int => $user->getRoleCount(),
+            bodyClass: 'number roles',
         ),
         new DataColumn(
             header: $translator->translate('label.permissions'),
-            content: static function(UserInterface $user) use ($rbacManager) {
-                return count($rbacManager->getPermissionsByUserId($user->getId()));
-            },
-            bodyClass: 'number',
+            content: static fn(RbamUser $user): int => $user->getPermissionCount(),
+            bodyClass: 'number permissions',
         ),
         new ActionColumn(
             template: '{view}',
-            urlCreator: static function($action, $context) use ($urlGenerator)
-            {
-                return $urlGenerator->generate('rbam.user.view', [
-                    'id' => $context->data->getId()
-                ]);
-            },
+            urlCreator: static fn($action, $context) => $urlGenerator->generate(
+                'rbam.user.view', [
+                    'id' => $context->data->getUser()->getId()
+                ]
+            ),
             buttons: [
                 'view' => new ActionButton(
                     content: $translator->translate($rbamParameters->getButtons('view')['content']),

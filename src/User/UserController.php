@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BeastBytes\Yii\Rbam\User;
 
 use BeastBytes\Yii\Rbam\DTO\Item;
+use BeastBytes\Yii\Rbam\DTO\User as RbamUser;
 use BeastBytes\Yii\Rbam\Rbac\Attribute\Permission as PermissionAttribute;
 use BeastBytes\Yii\Rbam\Rbac\Attribute\Role as RoleAttribute;
 use BeastBytes\Yii\Rbam\Rbac\Permission as RbamPermission;
@@ -55,6 +56,11 @@ final class UserController
             ->userRepository
             ->findAll()
         ;
+        array_walk($users, fn(UserInterface &$user)
+            => $user = (new RbamUser($user))
+                ->withPermissionCount(count($this->manager->getPermissionsByUserId($user->getId())))
+                ->withRoleCount(count($this->manager->getRolesByUserId($user->getId())))
+        );
 
         if ($request->getMethod() === Method::POST) {
             return $this
@@ -75,6 +81,7 @@ final class UserController
                 'index',
                 [
                     'currentPage' => (int) ArrayHelper::getValue($queryParams, 'page', 1),
+                    'rbacManager' => $this->manager,
                     'users' => $users
                 ]
             )

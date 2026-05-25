@@ -43,7 +43,7 @@ echo $this->render(
         'actionButtons' => ['view', 'update', 'remove'],
         'currentPage' => $currentPage,
         'currentUser' => $currentUser,
-        'noResultsText' => 'message.no-' . $type . 's-found',
+        'noResultsText' => sprintf('message.%s.none-found', $type),
         'header' => $this->getTitle(),
         'item' => null,
         'items' => $items,

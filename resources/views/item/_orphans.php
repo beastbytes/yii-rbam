@@ -65,7 +65,7 @@ echo GridView::widget()
     ->tableAttributes(['class' => 'grid'])
     ->tbodyAttributes(['class' => 'grid-body'])
     ->layout("{header}\n{summary}\n{items}\n{pager}")
-    ->noResultsText($translator->translate(sprintf('message.no-%ss-found', $childType)))
+    ->noResultsText($translator->translate(sprintf('message.%s.none-found', $childType)))
     ->columns(
         new DataColumn(
             header: $translator->translate('label.name'),
@@ -73,10 +73,12 @@ echo GridView::widget()
             filter: true,
             filterFactory: LikeFilterFactory::class,
             filterEmpty: true,
+            bodyClass: 'name',
         ),
         new DataColumn(
             header: $translator->translate('label.description'),
             content: static fn(Item $item) => $translator->translate($item->getDescription()),
+            bodyClass: 'description',
         ),
         new ActionColumn(
             template: '{add}',
@@ -109,10 +111,7 @@ echo GridView::widget()
                                         'continue' => [
                                             'href' => $url,
                                             'data' => [
-                                                'child' => substr(
-                                                    urldecode($url),
-                                                    strrpos(urldecode($url), '/') + 1
-                                                ),
+                                                'child' => $context->key,
                                                 'childType' => $childType,
                                                 'parent' => $parent->getName(),
                                                 'type' => $type,
@@ -123,20 +122,14 @@ echo GridView::widget()
                                     'content' => $translator->translate(
                                         sprintf('message.%s.add-child', $childType),
                                         [
-                                            'item' => substr(
-                                                urldecode($url),
-                                                strrpos(urldecode($url), '/') + 1
-                                            ),
+                                            'item' => $context->key,
                                             'parent' => $parent->getName(),
                                         ]
                                     ),
                                     'title' => $translator->translate(
                                         sprintf('header.%s.add-child', $childType),
                                         [
-                                            'item' => substr(
-                                                urldecode($url),
-                                                strrpos(urldecode($url), '/') + 1
-                                            ),
+                                            'item' => $context->key,
                                         ]
                                     ),
                                 ])

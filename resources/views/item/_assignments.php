@@ -63,17 +63,19 @@ echo GridView::widget()
             filter: true,
             filterFactory: LikeFilterFactory::class,
             filterEmpty: true,
+            bodyClass: 'user',
         ),
         new DataColumn(
             header: $translator->translate('label.assigned-by'),
             content: static fn(Assignment $assignment) => $assignment->getRole()->getName(),
+            bodyClass: 'assigned-by',
         ),
         new DataColumn(
             header: $translator->translate('label.assigned-at'),
             content: static fn(Assignment $assignment) => (new DateTime())
                 ->setTimestamp($assignment->getRole()->getCreatedAt())
-                ->format($rbamParameters->getDatetimeFormat())
-            ,
+                ->format($rbamParameters->getDatetimeFormat()),
+            bodyClass: 'assigned-at datetime',
         ),
         new ActionColumn(
             template: '{view}',
