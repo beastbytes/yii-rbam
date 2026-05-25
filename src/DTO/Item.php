@@ -60,7 +60,7 @@ final class Item
     public function withIsDefaultRole(bool $isDefaultRole): self
     {
         $new = clone $this;
-        $new->isChild = $isDefaultRole;
+        $new->isDefaultRole = $isDefaultRole;
         return $new;
     }
 
