@@ -87,10 +87,12 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
             filter: true,
             filterFactory: LikeFilterFactory::class,
             filterEmpty: true,
+            bodyClass: 'name',
         ),
         new DataColumn(
-            header: 'Description',
+            header: $translator->translate('label.description'),
             content: static fn(RuleInterface $rule) => $rule->getDescription(),
+            bodyClass: 'description',
         ),
         new ActionColumn(
             template: '{view}{update}{delete}',
@@ -114,12 +116,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
                                         'continue' => [
                                             'href' => $url,
                                             'data' => [
-                                                'rule' => substr(
-                                                    $url,
-                                                    strpos($url, '/', 7) + 1,
-                                                    strrpos($url, '/')
-                                                        - strpos($url, '/', 7) - 1
-                                                ),
+                                                'rule' => $context->key,
                                             ]
                                         ],
                                     ],
@@ -127,23 +124,13 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
                                     'content' => $translator->translate(
                                         'message.rule.remove',
                                         [
-                                            'rule' => substr(
-                                                $url,
-                                                strpos($url, '/', 7) + 1,
-                                                strrpos($url, '/')
-                                                    - strpos($url, '/', 7) - 1
-                                            ),
+                                            'rule' => $context->key,
                                         ]
                                     ),
                                     'title' => $translator->translate(
                                         'header.rule.remove',
                                         [
-                                            'rule' => substr(
-                                                $url,
-                                                strpos($url, '/', 7) + 1,
-                                                strrpos($url, '/')
-                                                    - strpos($url, '/', 7) - 1
-                                            ),
+                                            'rule' => $context->key,
                                         ]
                                     ),
                                 ])
