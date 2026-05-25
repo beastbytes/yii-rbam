@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace BeastBytes\Yii\Rbam;
 
-use Closure;
-use Stringable;
-
-final class RbamParameters
+final readonly class RbamParameters
 {
-    public function __construct(private readonly array $parameters)
+    public function __construct(private array $parameters)
     {
     }
 
@@ -30,7 +27,7 @@ final class RbamParameters
 
     public function getGuestRole(): array
     {
-        return $this->parameters[`yiisoft/rbac`]['guestRole'];
+        return $this->parameters['guestRole'];
     }
 
     public function getMermaidDiagramStyles(): array
