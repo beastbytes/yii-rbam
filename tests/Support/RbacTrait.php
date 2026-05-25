@@ -2,6 +2,8 @@
 
 namespace Tests\Support;
 
+use BeastBytes\Yii\Rbam\Rbac\Permission as RbamPermission;
+use BeastBytes\Yii\Rbam\Rbac\Role as RbamRole;
 use Yiisoft\Rbac\AssignmentsStorageInterface;
 use Yiisoft\Rbac\ItemsStorageInterface;
 use Yiisoft\Rbac\Manager;
@@ -17,70 +19,6 @@ trait RbacTrait
     private static ?ItemsStorageInterface $itemsStorage = null;
 
     private static array $rbam = [
-        'roles' => [
-            [
-                'name' => 'rbam.admin',
-                'description' => 'rbam.admin.description',
-            ],
-            [
-                'name' => 'rbam.item.manager',
-                'description' => 'rbam.item.manager.description',
-            ],
-            [
-                'name' => 'rbam.rule.manager',
-                'description' => 'rbam.rule.manager.description',
-            ],
-            [
-                'name' => 'rbam.user.manager',
-                'description' => 'rbam.user.manager.description',
-            ],
-        ],
-        'permissions' => [
-            [
-                'name' => 'rbam.item.create',
-                'description' => 'rbam.item.create.description',
-            ],
-            [
-                'name' => 'rbam.item.remove',
-                'description' => 'rbam.item.remove.description',
-            ],
-            [
-                'name' => 'rbam.item.update',
-                'description' => 'rbam.item.update.description',
-            ],
-            [
-                'name' => 'rbam.item.view',
-                'description' => 'rbam.item.view.description',
-            ],
-            [
-                'name' => 'rbam.index',
-                'description' => 'rbam.index.description',
-            ],
-            [
-                'name' => 'rbam.rule.create',
-                'description' => 'rbam.rule.create.description',
-            ],
-            [
-                'name' => 'rbam.rule.delete',
-                'description' => 'rbam.rule.delete.description',
-            ],
-            [
-                'name' => 'rbam.rule.update',
-                'description' => 'rbam.rule.update.description',
-            ],
-            [
-                'name' => 'rbam.rule.view',
-                'description' => 'rbam.rule.view.description',
-            ],
-            [
-                'name' => 'rbam.user.update',
-                'description' => 'rbam.user.update.description',
-            ],
-            [
-                'name' => 'rbam.user.view',
-                'description' => 'rbam.user.view.description',
-            ],
-        ],
         'assignments' => [
             'rbam.admin' => [
                 self::CURRENT_USER,
@@ -88,6 +26,7 @@ trait RbacTrait
         ],
         'children' => [
             'rbam.admin' => [
+                'rbam.clear',
                 'rbam.index',
                 'rbam.item.manager',
                 'rbam.rule.manager',
@@ -146,15 +85,15 @@ trait RbacTrait
     {
         $rbacManager = self::getRbacManager();
 
-        foreach (self::$rbam['permissions'] as $permission) {
-            $rbacManager->addPermission((new Permission($permission['name']))
-                ->withDescription($permission['description'])
+        foreach (RbamPermission::cases() as $item) {
+            $rbacManager->addPermission((new Permission($item->getItemName()))
+                ->withDescription($item->getDescription())
             );
         }
 
-        foreach (self::$rbam['roles'] as $role) {
-            $rbacManager->addRole((new Role($role['name']))
-                ->withDescription($role['description'])
+        foreach (RbamRole::cases() as $item) {
+            $rbacManager->addRole((new Role($item->getItemName()))
+                ->withDescription($item->getDescription())
             );
         }
 
