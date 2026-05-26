@@ -18,7 +18,7 @@ test('Add Permission', function () {
     $page->press('Submit');
 
     $page = visit(sprintf('http://localhost:8000/rbam/role/%s', rawurlencode('A New Role')));
-    $page->press('.tabs button.header:nth-child(4)'); // Permissions
+    $page->press('.tabs button.header:nth-child(3)'); // Permissions
     $page->assertDontSeeIn('#permission .grid tbody', 'A New Permission');
     $page->assertSeeLink('Manage Permissions');
     $page->click('Manage Permissions'); // Manage button
@@ -33,7 +33,7 @@ test('Add Permission', function () {
     $page->assertDontSeeIn('#orphans', 'A New Permission');
 
     $page = visit(sprintf('http://localhost:8000/rbam/role/%s', rawurlencode('A New Role')));
-    $page->press('.tabs button.header:nth-child(4)'); // Permissions
+    $page->press('.tabs button.header:nth-child(3)'); // Permissions
     $page->assertSeeIn('#permission .grid tbody > tr:nth-child(1) > td:nth-child(1)', 'A New Permission');
 });
 
@@ -44,7 +44,7 @@ test('Add Child Role', function () {
     $page->press('Submit');
 
     $page = visit(sprintf('http://localhost:8000/rbam/role/%s', rawurlencode('Another New Role')));
-    $page->press('.tabs button.header:nth-child(3)'); // Child Roles
+    $page->press('.tabs button.header:nth-child(2)'); // Child Roles
     $page->assertDontSeeIn('#role .grid tbody', 'A New Role');
     $page->assertSeeLink('Manage Child Roles');
     $page->click('Manage Child Roles'); // Manage button
@@ -59,7 +59,7 @@ test('Add Child Role', function () {
     $page->assertDontSeeIn('#orphans', 'A New Role');
 
     $page = visit(sprintf('http://localhost:8000/rbam/role/%s', rawurlencode('Another New Role')));
-    $page->press('.tabs button.header:nth-child(3)'); // Child Roles
+    $page->press('.tabs button.header:nth-child(2)'); // Child Roles
     $page->assertSeeIn('#role .grid > tbody > tr:nth-child(1) > td:nth-child(1)', 'A New Role');
 })
     ->depends('Add Permission')
@@ -67,7 +67,7 @@ test('Add Child Role', function () {
 
 test('Remove Child Role', function () {
     $page = visit(sprintf('http://localhost:8000/rbam/role/%s', rawurlencode('Another New Role')));
-    $page->press('.tabs button.header:nth-child(3)'); // Child Roles
+    $page->press('.tabs button.header:nth-child(2)'); // Child Roles
     $page->assertSeeLink('Manage Child Roles');
     $page->click('Manage Child Roles'); // Manage button
 
@@ -81,7 +81,7 @@ test('Remove Child Role', function () {
     $page->assertSeeIn('#orphans > .grid > tbody > tr:nth-child(1) > td:nth-child(1)', 'A New Role');
 
     $page = visit(sprintf('http://localhost:8000/rbam/role/%s', rawurlencode('Another New Role')));
-    $page->press('.tabs button.header:nth-child(3)'); // Child Roles
+    $page->press('.tabs button.header:nth-child(2)'); // Child Roles
     $page->assertDontSeeIn('#role .grid tbody', 'A New Role');
 
     $page = visit('http://localhost:8000/rbam/roles');
@@ -92,7 +92,7 @@ test('Remove Child Role', function () {
 
 test('Remove Permission', function () {
     $page = visit(sprintf('http://localhost:8000/rbam/role/%s', rawurlencode('A New Role')));
-    $page->press('.tabs button.header:nth-child(4)'); // Permissions
+    $page->press('.tabs button.header:nth-child(3)'); // Permissions
     $page->assertSeeLink('Manage Permissions');
     $page->click('Manage Permissions'); // Manage button
 
