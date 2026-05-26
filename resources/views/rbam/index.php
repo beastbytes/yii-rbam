@@ -83,42 +83,44 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
 </div>
 
 <?php
-$this->setBlock(
-    'block-menu',
-    '<div x-data x-menu class="header-menu">
-        <button x-menu:button>
-            <span class="sr-only">' . $translator->translate('label.menu') . '</span>
-
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100% 100%">
-                <path xmlns="http://www.w3.org/2000/svg" d="M5 5H18 5" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                <path xmlns="http://www.w3.org/2000/svg" d="M5 11L18 11" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                <path xmlns="http://www.w3.org/2000/svg" d="M5 17L18 17" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-        </button>
-        <ul
-            x-menu:items
-            x-transition.origin.top.left
-            x-cloak
-        >'
-        . Html::li(
-            content: $translator->translate('label.menu.clear'),
-            attributes: [
-                'x-menu:item' => true,
-                '@click' => sprintf(
-                    "\$dispatch('modal', %s)",
-                    Json::encode([
-                        'buttons' => [
-                            'continue' => [
-                                'href' => $urlGenerator->generate('rbam.clear'),
-                            ]
-                        ],
-                        'closeDialog' => $translator->translate('label.close-dialog'),
-                        'content' => $translator->translate('message.rbac.clear'),
-                        'title' => $translator->translate('header.rbac.clear'),
-                    ])
-                ),
-            ]
-        )
-        . '</ul>
-    </div>'
-);
+if ($currentUser->can(RbamPermission::clear->getItemName())):
+    $this->setBlock(
+        'block-menu',
+        '<div x-data x-menu class="header-menu">
+            <button x-menu:button>
+                <span class="sr-only">' . $translator->translate('label.menu') . '</span>
+    
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100% 100%">
+                    <path xmlns="http://www.w3.org/2000/svg" d="M5 5H18 5" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path xmlns="http://www.w3.org/2000/svg" d="M5 11L18 11" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path xmlns="http://www.w3.org/2000/svg" d="M5 17L18 17" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <ul
+                x-menu:items
+                x-transition.origin.top.left
+                x-cloak
+            >'
+            . Html::li(
+                content: $translator->translate('label.menu.clear'),
+                attributes: [
+                    'x-menu:item' => true,
+                    '@click' => sprintf(
+                        "\$dispatch('modal', %s)",
+                        Json::encode([
+                            'buttons' => [
+                                'continue' => [
+                                    'href' => $urlGenerator->generate('rbam.clear'),
+                                ]
+                            ],
+                            'closeDialog' => $translator->translate('label.close-dialog'),
+                            'content' => $translator->translate('message.rbac.clear'),
+                            'title' => $translator->translate('header.rbac.clear'),
+                        ])
+                    ),
+                ]
+            )
+            . '</ul>
+        </div>'
+    );
+endif;
