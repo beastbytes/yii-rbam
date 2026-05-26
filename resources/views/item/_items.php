@@ -82,38 +82,50 @@ echo GridView::widget()
     ->urlCreator(new PaginatorUrlCreator($paginationUrl))
     ->tableAttributes(['class' => 'grid'])
     ->tbodyAttributes(['class' => 'grid-body'])
-    ->header(!empty($header) ? $translator->translate($header) : '')
+    ->header(!empty($header) ? $translator->translate(id: $header, category: 'rbam') : '')
     ->headerClass('header')
     ->toolbar(Html::div(NoEncode::string((string) $toolbar), ['class' => 'toolbar'])->render())
     ->layout((!empty($header) ? "{header}\n" : '') . "{toolbar}\n{summary}\n{items}\n{pager}")
-    ->noResultsText($noResultsText ? $translator->translate($noResultsText, ['type' => $type]) : $noResultsText)
+    ->noResultsText($noResultsText
+        ? $translator->translate($noResultsText, ['type' => $type], 'rbam')
+        : $noResultsText
+    )
     ->columns(
         new DataColumn(
-            header: $translator->translate('label.name'),
-            content: static fn(RbamItem $item): string => $translator->translate($item->getItem()->getName()),
-            bodyClass: static fn(RbamItem $item): string
+            header: $translator->translate(id: 'label.name'),
+            content: static fn (RbamItem $item): string => $translator->translate(
+                id: $item->getItem()->getName(),
+                category: 'rbac'
+            ),
+            bodyClass: static fn (RbamItem $item): string
                 => 'name' . ($item->isDefaultRole() ? ' default' : ($item->isGuestRole() ? ' guest' : ''))
         ),
         new DataColumn(
-            header: $translator->translate('label.description'),
-            content: static fn(RbamItem $item) => $translator->translate($item->getItem()->getDescription()),
+            header: $translator->translate(id: 'label.description'),
+            content: static fn (RbamItem $item) => $translator->translate(
+                id: $item->getItem()->getDescription(),
+                category: 'rbac'
+            ),
             bodyClass: 'description'
         ),
         new DataColumn(
-            header: $translator->translate('label.rule'),
-            content: static fn(RbamItem $item): string => is_string($item->getItem()->getRuleName())
+            header: $translator->translate(id: 'label.rule', category: 'rbam'),
+            content: static fn (RbamItem $item): string => is_string($item->getItem()->getRuleName())
                 ? substr($item->getItem()->getRuleName(), 30, -4)
-                : $translator->translate('message.no-rule')
+                : $translator->translate(id: 'message.no-rule', category: 'rbam')
             ,
             bodyClass: 'rule'
         ),
         new DataColumn(
-            header: $translator->translate('label.granted-by'),
+            header: $translator->translate(id: 'label.granted-by', category: 'rbam'),
             content: static function (RbamItem $item) use ($translator): string {
                 $grantedBy = [];
 
                 foreach ($item->getParents() as $parent) {
-                    $grantedBy[] = $translator->translate($parent->getName());
+                    $grantedBy[] = $translator->translate(
+                        id: $parent->getName(),
+                        category: 'rbac'
+                    );
                 }
 
                 return '<div>' . implode('</div><div>', $grantedBy) . '</div>';
@@ -123,16 +135,16 @@ echo GridView::widget()
             bodyClass: 'granted-by'
         ),
         new DataColumn(
-            header: $translator->translate('label.created-at'),
-            content: static fn(RbamItem $item): string => (new DateTime())
+            header: $translator->translate(id: 'label.created-at', category: 'rbam'),
+            content: static fn (RbamItem $item): string => (new DateTime())
                 ->setTimestamp($item->getItem()->getCreatedAt())
                 ->format($rbamParameters->getDatetimeFormat())
             ,
             bodyClass: 'created-at datetime'
         ),
         new DataColumn(
-            header: $translator->translate('label.updated-at'),
-            content: static fn(RbamItem $item): string => (new DateTime())
+            header: $translator->translate(id: 'label.updated-at'),
+            content: static fn (RbamItem $item): string => (new DateTime())
                 ->setTimestamp($item->getItem()->getUpdatedAt())
                 ->format($rbamParameters->getDatetimeFormat())
             ,
@@ -140,7 +152,7 @@ echo GridView::widget()
         ),
         new ActionColumn(
             template: '{' . implode('}{', $actionButtons) . '}',
-            urlCreator: static fn($action, $context): string => $urlGenerator
+            urlCreator: static fn ($action, $context): string => $urlGenerator
                 ->generate(
                     'rbam.item.' . $action,
                     [
@@ -150,8 +162,11 @@ echo GridView::widget()
                 )
             ,
             buttons: [
-                'remove' => static fn(string $url, DataContext $context): string => Html::button(
-                    content: $translator->translate($rbamParameters->getButtons('remove')['content']),
+                'remove' => static fn (string $url, DataContext $context): string => Html::button(
+                    content: $translator->translate(
+                        id: $rbamParameters->getButtons('remove')['content'],
+                        category: 'rbam'
+                    ),
                     attributes: array_merge(
                         $rbamParameters->getButtons('remove')['attributes'],
                         [
@@ -167,18 +182,20 @@ echo GridView::widget()
                                             ]
                                         ],
                                     ],
-                                    'closeDialog' => $translator->translate('label.close-dialog'),
+                                    'closeDialog' => $translator->translate(id: 'label.close-dialog'),
                                     'content' => $translator->translate(
                                         sprintf('message.%s.remove', $type),
                                         [
                                             'item' => $context->key,
-                                        ]
+                                        ],
+                                        'rbam'
                                     ),
                                     'title' => $translator->translate(
                                         sprintf('header.%s.remove', $type),
                                         [
                                             'item' => $context->key,
-                                        ]
+                                        ],
+                                        'rbam'
                                     ),
                                 ])
                             ),
@@ -188,11 +205,17 @@ echo GridView::widget()
                     ->render()
                 ,
                 'update' => new ActionButton(
-                    content: $translator->translate($rbamParameters->getButtons('update')['content']),
+                    content: $translator->translate(
+                        id: $rbamParameters->getButtons('update')['content'],
+                        category: 'rbam'
+                    ),
                     attributes: $rbamParameters->getButtons('update')['attributes'],
                 ),
                 'view' => new ActionButton(
-                    content: $translator->translate($rbamParameters->getButtons('view')['content']),
+                    content: $translator->translate(
+                        id: $rbamParameters->getButtons('view')['content'],
+                        category: 'rbam'
+                    ),
                     attributes: $rbamParameters->getButtons('view')['attributes'],
                 ),
             ],

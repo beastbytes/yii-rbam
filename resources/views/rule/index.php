@@ -38,11 +38,11 @@ use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 $this->registerJs('paginators.push(new Paginator("rules", ".grid-view nav a"));');
 $this->registerJs('rbam = new Rbam("rules")');
 
-$this->setTitle($translator->translate('label.rules'));
+$this->setTitle($translator->translate(id: 'label.rules', category: 'rbam'));
 
 $breadcrumbs = [
     [
-        'label' => $translator->translate('label.rbam'),
+        'label' => $translator->translate(id: 'label.rbam', category: 'rbam'),
         'url' => $urlGenerator->generate('rbam.rbam')
     ],
     $this->getTitle()
@@ -64,14 +64,14 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
     )
     ->paginationWidget(OffsetPagination::widget())
     ->urlCreator(new PaginatorUrlCreator($urlGenerator->generate('rbam.rule.index')))
-    ->header($translator->translate('label.rules'))
+    ->header($translator->translate(id: 'label.rules', category: 'rbam'))
     ->headerAttributes(['class' => 'header'])
     ->tableAttributes(['class' => 'grid'])
     ->tbodyAttributes(['class' => 'grid-body'])
     ->layout("{header}\n{toolbar}\n{summary}\n{items}\n{pager}")
     ->toolbar($currentUser->can(RbamPermission::ruleCreate->getItemName())
         ? Html::div(Html::a(
-            content: $translator->translate('button.rule.create'),
+            content: $translator->translate(id: 'button.rule.create', category: 'rbam'),
             url: $urlGenerator->generate('rbam.rule.create'),
             attributes: $rbamParameters->getButtons('createRule')['attributes']
         ))
@@ -79,32 +79,35 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
             ->render()
         : ''
     )
-    ->noResultsText($translator->translate('message.rule.none-found'))
+    ->noResultsText($translator->translate(id: 'message.rule.none-found', category: 'rbam'))
     ->columns(
         new DataColumn(
-            header: $translator->translate('label.name'),
-            content: static fn(RuleInterface $rule) => $rule->getName(),
+            header: $translator->translate(id: 'label.name', category: 'rbam'),
+            content: static fn (RuleInterface $rule) => $rule->getName(),
             filter: true,
             filterFactory: LikeFilterFactory::class,
             filterEmpty: true,
             bodyClass: 'name',
         ),
         new DataColumn(
-            header: $translator->translate('label.description'),
-            content: static fn(RuleInterface $rule) => $rule->getDescription(),
+            header: $translator->translate(id: 'label.description', category: 'rbam'),
+            content: static fn (RuleInterface $rule) => $rule->getDescription(),
             bodyClass: 'description',
         ),
         new ActionColumn(
             template: '{view}{update}{delete}',
-            urlCreator: static fn(string $action, DataContext $context) => $urlGenerator->generate(
+            urlCreator: static fn (string $action, DataContext $context) => $urlGenerator->generate(
                 sprintf('rbam.rule.%s', $action),
                 [
                     'name' => $context->data->getName(),
                 ]
             ),
             buttons: [
-                'delete' => static fn(string $url, DataContext $context) => Html::button(
-                    content: $translator->translate($rbamParameters->getButtons('remove')['content']),
+                'delete' => static fn (string $url, DataContext $context) => Html::button(
+                    content: $translator->translate(
+                        id: $rbamParameters->getButtons('remove')['content'],
+                        category: 'rbam'
+                    ),
                     attributes: array_merge(
                         $rbamParameters->getButtons('remove')['attributes'],
                         [
@@ -120,18 +123,20 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
                                             ]
                                         ],
                                     ],
-                                    'closeDialog' => $translator->translate('label.close-dialog'),
+                                    'closeDialog' => $translator->translate(id: 'label.close-dialog'),
                                     'content' => $translator->translate(
                                         'message.rule.remove',
                                         [
                                             'rule' => $context->key,
-                                        ]
+                                        ],
+                                        'rbam'
                                     ),
                                     'title' => $translator->translate(
                                         'header.rule.remove',
                                         [
                                             'rule' => $context->key,
-                                        ]
+                                        ],
+                                        'rbam'
                                     ),
                                 ])
                             ),
@@ -140,11 +145,17 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
                     ->render()
                 ,
                 'update' => new ActionButton(
-                    content: $translator->translate($rbamParameters->getButtons('update')['content']),
+                    content: $translator->translate(
+                        id: $rbamParameters->getButtons('update')['content'],
+                        category: 'rbam'
+                    ),
                     attributes: $rbamParameters->getButtons('update')['attributes'],
                 ),
                 'view' => new ActionButton(
-                    content: $translator->translate($rbamParameters->getButtons('view')['content']),
+                    content: $translator->translate(
+                        id: $rbamParameters->getButtons('view')['content'],
+                        category: 'rbam'
+                    ),
                     attributes: $rbamParameters->getButtons('view')['attributes'],
                 ),
             ],

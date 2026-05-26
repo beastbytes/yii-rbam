@@ -22,14 +22,14 @@ use Yiisoft\Yii\View\Renderer\Csrf;
 
 $this->setTitle(
     ($formModel->isCreate()
-        ? $translator->translate('label.rule.create')
-        : $translator->translate('label.rule.update')
+        ? $translator->translate(id: 'label.rule.create', category: 'rbam')
+        : $translator->translate(id: 'label.rule.update', category: 'rbam')
     )
 );
 
 $breadcrumbs = [
     [
-        'label' => $translator->translate('label.rules'),
+        'label' => $translator->translate(id: 'label.rules', category: 'rbam'),
         'url' => $urlGenerator->generate('rbam.rule.index')
     ],
     $this->getTitle()
@@ -82,14 +82,23 @@ $tabIndex = 1;
             ->buttonClass($rbamParameters->getButtons('submit')['attributes']['class'])
             ->buttonId('submit-button')
             ->tabindex($tabIndex++)
-            ->content($translator->translate($rbamParameters->getButtons('submit')['content']))
+            ->content($translator->translate(
+                id: $rbamParameters->getButtons('submit')['content'],
+                category: 'rbam'
+            ))
         ?>
         <?= Field::button()
             ->containerClass('form-button')
-            ->buttonAttributes(['onClick' => sprintf('window.location.href = "%s"', $urlGenerator->generate('rbam.rule.index'))])
+            ->buttonAttributes(['onClick' => sprintf(
+                'window.location.href = "%s"',
+                $urlGenerator->generate('rbam.rule.index')
+            )])
             ->buttonClass($rbamParameters->getButtons('cancel')['attributes']['class'])
             ->tabindex($tabIndex)
-            ->content($translator->translate($rbamParameters->getButtons('cancel')['content']))
+            ->content($translator->translate(
+                id: $rbamParameters->getButtons('cancel')['content'],
+                category: 'rbam'
+            ))
         ?>
     </div>
 <?= Html::form()

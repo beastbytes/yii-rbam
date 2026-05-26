@@ -55,31 +55,31 @@ echo GridView::widget()
     ->tableAttributes(['class' => 'grid'])
     ->tbodyAttributes(['class' => 'grid-body'])
     ->layout("{summary}\n{items}\n{pager}")
-    ->noResultsText($translator->translate('message.assignment.none-found'))
+    ->noResultsText($translator->translate(id: 'message.assignment.none-found', category: 'rbam'))
     ->columns(
         new DataColumn(
-            header: $translator->translate('label.user'),
-            content: static fn(Assignment $assignment) => $assignment->getUser()->getName(),
+            header: $translator->translate(id: 'label.user', category: 'rbam'),
+            content: static fn (Assignment $assignment) => $assignment->getUser()->getName(),
             filter: true,
             filterFactory: LikeFilterFactory::class,
             filterEmpty: true,
             bodyClass: 'user',
         ),
         new DataColumn(
-            header: $translator->translate('label.assigned-by'),
-            content: static fn(Assignment $assignment) => $assignment->getRole()->getName(),
+            header: $translator->translate(id: 'label.assigned-by', category: 'rbam'),
+            content: static fn (Assignment $assignment) => $assignment->getRole()->getName(),
             bodyClass: 'assigned-by',
         ),
         new DataColumn(
-            header: $translator->translate('label.assigned-at'),
-            content: static fn(Assignment $assignment) => (new DateTime())
+            header: $translator->translate(id: 'label.assigned-at', category: 'rbam'),
+            content: static fn (Assignment $assignment) => (new DateTime())
                 ->setTimestamp($assignment->getRole()->getCreatedAt())
                 ->format($rbamParameters->getDatetimeFormat()),
             bodyClass: 'assigned-at datetime',
         ),
         new ActionColumn(
             template: '{view}',
-            urlCreator: static fn($action, $context) => $urlGenerator->generate(
+            urlCreator: static fn ($action, $context) => $urlGenerator->generate(
                 "rbam.user.$action",
                 [
                     'id' => $context->data->getUser()->getid()
@@ -87,7 +87,10 @@ echo GridView::widget()
             ),
             buttons: [
                 'view' => new ActionButton(
-                    content: $translator->translate($rbamParameters->getButtons('view')['content']),
+                    content: $translator->translate(
+                        id: $rbamParameters->getButtons('view')['content'],
+                        category: 'rbam'
+                    ),
                     attributes: $rbamParameters->getButtons('view')['attributes'],
                 ),
             ],

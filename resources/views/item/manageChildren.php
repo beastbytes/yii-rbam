@@ -28,21 +28,23 @@ use Yiisoft\Yii\View\Renderer\Csrf;
 $this->registerJs('const rbam = new Rbam("manage-children");');
 
 $this->setTitle($translator->translate(
-    $type === Item::TYPE_PERMISSION
+    id: $type === Item::TYPE_PERMISSION
         ? 'label.child-permissions.manage'
         : ($childType === Item::TYPE_PERMISSION
             ? 'label.permissions.manage'
             : 'label.child-roles.manage'
         )
+    ,
+    category: 'rbam'
 ));
 
 $breadcrumbs = [
     [
-        'label' => $translator->translate('label.rbam'),
+        'label' => $translator->translate(id: 'label.rbam', category: 'rbam'),
         'url' => $urlGenerator->generate('rbam.rbam'),
     ],
     [
-        'label' => $translator->translate(sprintf('label.%ss', $type)),
+        'label' => $translator->translate(id: sprintf('label.%ss', $type), category: 'rbam'),
         'url' => $urlGenerator->generate(
             'rbam.item.index',
             [
@@ -82,6 +84,7 @@ echo Html::h2($translator->translate(
         )
     ,
     ['parent' => $parent->getName()],
+    'rbam'
 ));
 
 echo $this->render(

@@ -56,27 +56,27 @@ echo GridView::widget()
     )
     ->paginationWidget(OffsetPagination::widget())
     ->urlCreator(new PaginatorUrlCreator($urlGenerator->generate('rbam.user.roles', ['status' => 'unassigned'])))
-    ->noResultsText($translator->translate('message.role.none-unassigned'))
-    ->header($translator->translate('label.role.unassigned'))
+    ->noResultsText($translator->translate(id: 'message.role.none-unassigned'))
+    ->header($translator->translate(id: 'label.role.unassigned'))
     ->headerAttributes(['class' => 'header'])
     ->tableAttributes(['class' => 'grid'])
     ->tbodyAttributes(['class' => 'grid-body'])
     ->layout("{header}\n{summary}\n{items}\n{pager}")
     ->columns(
         new DataColumn(
-            header: $translator->translate('label.name'),
-            content: static fn(Role $role) => $translator->translate($role->getName()),
+            header: $translator->translate(id: 'label.name'),
+            content: static fn (Role $role) => $translator->translate(id: $role->getName(), category: 'rbac'),
             filter: true,
             filterFactory: LikeFilterFactory::class,
             filterEmpty: true,
         ),
         new DataColumn(
-            header: $translator->translate('label.description'),
-            content: static fn(Role $role) => $translator->translate($role->getDescription()),
+            header: $translator->translate(id: 'label.description'),
+            content: static fn (Role $role) => $translator->translate(id: $role->getDescription(), category: 'rbac'),
         ),
         new ActionColumn(
-            content: static fn($data) => Html::button(
-                content:$translator->translate($rbamParameters->getButtons('assign')['content']),
+            content: static fn ($data) => Html::button(
+                content:$translator->translate(id: $rbamParameters->getButtons('assign')['content'], category: 'rbam'),
                 attributes: array_merge(
                     $rbamParameters->getButtons('assign')['attributes'],
                     [
@@ -92,19 +92,21 @@ echo GridView::widget()
                                         ],
                                     ],
                                 ],
-                                'closeDialog' => $translator->translate('label.close-dialog'),
+                                'closeDialog' => $translator->translate(id: 'label.close-dialog'),
                                 'content' => $translator->translate(
                                     'message.user.assign-role',
                                     [
                                         'item' => $data->getName(),
                                         'user' => $user->getName(),
-                                    ]
+                                    ],
+                                    'rbam'
                                 ),
                                 'title' => $translator->translate(
                                     'header.user.assign-role',
                                     [
                                         'item' => $data->getName(),
-                                    ]
+                                    ],
+                                    'rbam'
                                 ),
                             ])
                         )

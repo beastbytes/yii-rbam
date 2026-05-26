@@ -25,12 +25,12 @@ use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\User\CurrentUser;
 use Yiisoft\View\WebView;
 
-$this->setTitle($translator->translate('label.' . $type . 's'));
+$this->setTitle($translator->translate(id: 'label.' . $type . 's'));
 $this->registerJs(sprintf('rbam = new Rbam("%s")', $type));
 
 $breadcrumbs = [
     [
-        'label' => $translator->translate('label.rbam'),
+        'label' => $translator->translate(id: 'label.rbam', category: 'rbam'),
         'url' => $urlGenerator->generate('rbam.rbam')
     ],
     $this->getTitle()
@@ -50,7 +50,10 @@ echo $this->render(
         'paginationUrl' => $urlGenerator->generate('rbam.item.index', ['type' => $type . 's']),
         'toolbar' => $currentUser->can(RbamPermission::itemCreate->getItemName())
             ? Html::div(Html::a(
-                content: $translator->translate($rbamParameters->getButtons('create' . ucfirst($type))['content']),
+                content: $translator->translate(
+                    id: $rbamParameters->getButtons('create' . ucfirst($type))['content'],
+                    category: 'rbam'
+                ),
                 url: $urlGenerator->generate('rbam.item.create', ['type' => $type]),
                 attributes: $rbamParameters->getButtons('create' . ucfirst($type))['attributes']
             ))

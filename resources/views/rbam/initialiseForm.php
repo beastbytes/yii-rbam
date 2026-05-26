@@ -23,11 +23,11 @@ use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\View\Renderer\Csrf;
 
-$this->setTitle($translator->translate('header.rbac.initialise'));
+$this->setTitle($translator->translate(id: 'header.rbac.initialise', category: 'rbam'));
 
 $breadcrumbs = [
     [
-        'label' => $translator->translate('label.rbam'),
+        'label' => $translator->translate(id: 'label.rbam', category: 'rbam'),
         'url' => $urlGenerator->generate('rbam.rbam'),
     ],
     $this->getTitle()
@@ -71,7 +71,7 @@ $tabIndex = 1;
     ])
     ->containerClass('border-t mt-1 pt-1')
     ->content(
-        Html::div(NoEncode::string($translator->translate('message.initialise'))),
+        Html::div(NoEncode::string($translator->translate(id: 'message.initialise', category: 'rbam'))),
         Field::checkbox($formModel, 'initialiseApplication')
             ->uncheckValue(false)
             ->containerClass('form-control-container')
@@ -90,7 +90,10 @@ $tabIndex = 1;
                 'x-transition' => true,
             ])
             ->content(
-                Html::div(NoEncode::string($translator->translate('message.initialise-application'))),
+                Html::div(NoEncode::string($translator->translate(
+                    id: 'message.initialise-application',
+                    category: 'rbam'
+                ))),
                 Field::text($formModel, 'srcDir')
                     ->autofocus(true)
                     ->required(true)
@@ -141,7 +144,7 @@ $tabIndex = 1;
                 ,
             )
     )
-    ->legend($translator->translate('label.application'))
+    ->legend($translator->translate(id: 'label.application', category: 'rbam'))
 ?>
 <div class="form-buttons">
     <?= Field::submitButton()
@@ -149,7 +152,7 @@ $tabIndex = 1;
         ->buttonClass($rbamParameters->getButtons('submit')['attributes']['class'])
         ->buttonId('submit-button')
         ->tabindex($tabIndex++)
-        ->content($translator->translate($rbamParameters->getButtons('submit')['content']))
+        ->content($translator->translate(id: $rbamParameters->getButtons('submit')['content'], category: 'rbam'))
     ?>
     <?= Field::button()
         ->containerClass('form-button')
@@ -158,7 +161,7 @@ $tabIndex = 1;
         ])
         ->buttonClass($rbamParameters->getButtons('cancel')['attributes']['class'])
         ->tabindex($tabIndex)
-        ->content($translator->translate($rbamParameters->getButtons('cancel')['content']))
+        ->content($translator->translate(id: $rbamParameters->getButtons('cancel')['content'], category: 'rbam'))
     ?>
 </div>
 <?= Html::form()

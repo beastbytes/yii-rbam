@@ -22,11 +22,11 @@ use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\View\Renderer\Csrf;
 
-$this->setTitle($translator->translate('header.rbac.clear'));
+$this->setTitle($translator->translate(id: 'header.rbac.clear', category: 'rbam'));
 
 $breadcrumbs = [
     [
-        'label' => $translator->translate('label.rbam'),
+        'label' => $translator->translate(id: 'label.rbam', category: 'rbam'),
         'url' => $urlGenerator->generate('rbam.rbam'),
     ],
     $this->getTitle()
@@ -39,7 +39,7 @@ $tabIndex = 1;
 <h2 class="header"><?= $this->getTitle() ?></h2>
 
 <div class="danger">
-    <?= $translator->translate('message.rbac.clear') ?>
+    <?= $translator->translate(id: 'message.rbac.clear', category: 'rbam') ?>
 </div>
 
 <?= Html::form()
@@ -66,7 +66,7 @@ $tabIndex = 1;
          ->buttonClass($rbamParameters->getButtons('submit')['attributes']['class'])
          ->buttonId('submit-button')
          ->tabindex($tabIndex++)
-         ->content($translator->translate($rbamParameters->getButtons('submit')['content']))
+         ->content($translator->translate(id: $rbamParameters->getButtons('submit')['content'], category: 'rbam'))
     ?>
     <?= Field::button()
         ->containerClass('form-button')
@@ -75,7 +75,7 @@ $tabIndex = 1;
         ])
         ->buttonClass($rbamParameters->getButtons('cancel')['attributes']['class'])
         ->tabindex($tabIndex)
-        ->content($translator->translate($rbamParameters->getButtons('cancel')['content']))
+        ->content($translator->translate(id: $rbamParameters->getButtons('cancel')['content'], category: 'rbam'))
     ?>
 </div>
 <?= Html::form()

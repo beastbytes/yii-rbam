@@ -36,11 +36,11 @@ use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 $this->registerJs(sprintf('rbam = new Rbam("users")'));
 $this->registerJs(sprintf('paginators.push(new Paginator("users", ".grid-view nav a"));'));
 
-$this->setTitle($translator->translate('label.users'));
+$this->setTitle($translator->translate(id: 'label.users', category: 'rbam'));
 
 $breadcrumbs = [
     [
-        'label' => $translator->translate('label.rbam'),
+        'label' => $translator->translate(id: 'label.rbam', category: 'rbam'),
         'url' => $urlGenerator->generate('rbam.rbam'),
     ],
     $this->getTitle()
@@ -70,33 +70,36 @@ $this->setParameter(
     ->headerAttributes(['class' => 'header'])
     ->tableAttributes(['class' => 'grid'])
     ->layout("{header}\n{summary}\n{items}\n{pager}")
-    ->noResultsText($translator->translate('message.user.none-found'))
+    ->noResultsText($translator->translate(id: 'message.user.none-found'))
     ->columns(
         new DataColumn(
-            header: $translator->translate('label.name'),
-            content: static fn(RbamUser $user): string => $user->getUser()->getName(),
+            header: $translator->translate(id: 'label.name'),
+            content: static fn (RbamUser $user): string => $user->getUser()->getName(),
             bodyClass: 'name',
         ),
         new DataColumn(
-            header: $translator->translate('label.roles'),
-            content: static fn(RbamUser $user): int => $user->getRoleCount(),
+            header: $translator->translate(id: 'label.roles'),
+            content: static fn (RbamUser $user): int => $user->getRoleCount(),
             bodyClass: 'number roles',
         ),
         new DataColumn(
-            header: $translator->translate('label.permissions'),
-            content: static fn(RbamUser $user): int => $user->getPermissionCount(),
+            header: $translator->translate(id: 'label.permissions'),
+            content: static fn (RbamUser $user): int => $user->getPermissionCount(),
             bodyClass: 'number permissions',
         ),
         new ActionColumn(
             template: '{view}',
-            urlCreator: static fn($action, $context) => $urlGenerator->generate(
+            urlCreator: static fn ($action, $context) => $urlGenerator->generate(
                 'rbam.user.view', [
                     'id' => $context->data->getUser()->getId()
                 ]
             ),
             buttons: [
                 'view' => new ActionButton(
-                    content: $translator->translate($rbamParameters->getButtons('view')['content']),
+                    content: $translator->translate(
+                        id: $rbamParameters->getButtons('view')['content'],
+                        category: 'rbam'
+                    ),
                     attributes: $rbamParameters->getButtons('view')['attributes'],
                 ),
             ],

@@ -24,18 +24,18 @@ use Yiisoft\Yii\View\Renderer\Csrf;
 
 $this->setTitle(
     ($formModel->isCreate()
-        ? $translator->translate("label.$type.create")
-        : $translator->translate("label.$type.update")
+        ? $translator->translate(id: "label.$type.create")
+        : $translator->translate(id: "label.$type.update")
     )
 );
 
 $breadcrumbs = [
     [
-        'label' => $translator->translate('label.rbam'),
+        'label' => $translator->translate(id: 'label.rbam', category: 'rbam'),
         'url' => $urlGenerator->generate('rbam.rbam'),
     ],
     [
-        'label' => $translator->translate('label.' . $type . 's'),
+        'label' => $translator->translate(id: 'label.' . $type . 's', category: 'rbam'),
         'url' => $urlGenerator->generate('rbam.item.index', ['type' => $type . 's']),
     ],
     $this->getTitle()
@@ -77,7 +77,7 @@ $tabIndex = 1;
     ->tabindex($tabIndex++)
 ?>
 <?= Field::select($formModel, 'ruleName', [
-    'prompt()' => [$translator->translate('prompt.select-rule')],
+    'prompt()' => [$translator->translate(id: 'prompt.select-rule', category: 'rbam')],
     'optionsData()' => [$ruleClasses],
 ])
     ->containerClass('form-control-container')
@@ -93,7 +93,7 @@ $tabIndex = 1;
          ->buttonClass($rbamParameters->getButtons('submit')['attributes']['class'])
          ->buttonId('submit-button')
          ->tabindex($tabIndex++)
-         ->content($translator->translate($rbamParameters->getButtons('submit')['content']))
+         ->content($translator->translate(id: $rbamParameters->getButtons('submit')['content'], category: 'rbam'))
     ?>
     <?= Field::button()
         ->containerClass('form-button')
@@ -105,7 +105,7 @@ $tabIndex = 1;
         ])
         ->buttonClass($rbamParameters->getButtons('cancel')['attributes']['class'])
         ->tabindex($tabIndex)
-        ->content($translator->translate($rbamParameters->getButtons('cancel')['content']))
+        ->content($translator->translate(id: $rbamParameters->getButtons('cancel')['content'], category: 'rbam'))
     ?>
 </div>
 <?= Html::form()

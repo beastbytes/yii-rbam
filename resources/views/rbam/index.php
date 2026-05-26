@@ -26,7 +26,7 @@ use Yiisoft\User\CurrentUser;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\View\Renderer\Csrf;
 
-$this->setTitle($translator->translate('label.rbam'));
+$this->setTitle($translator->translate(id: 'label.rbam', category: 'rbam'));
 $this->registerJs(sprintf('rbam = new Rbam("rbam")'));
 
 $breadcrumbs = [
@@ -37,11 +37,13 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
 
 <div id="rbam" data-_csrf="<?=$csrf?>">
     <div class="cards">
-        <?php foreach ([Item::TYPE_ROLE, Item::TYPE_PERMISSION] as $type): ?>
+        <?php foreach ([Item::TYPE_PERMISSION, Item::TYPE_ROLE] as $type): ?>
             <?php $types = $type . 's'; ?>
             <div class="card <?= $type ?>">
                 <div class="card-header">
-                    <span><?= $translator->translate(sprintf('label.%s', $types)) ?><span class='badge'><?= $$types ?></span></span>
+                    <span><?= $translator->translate(id: sprintf('label.%s', $types), category: 'rbam') ?>
+                        <span class='badge'><?= $$types ?></span>
+                    </span>
                 </div>
                 <div class="card-body">
                     <?php if($currentUser->can(RbamPermission::itemView->getItemName())): ?>
@@ -49,7 +51,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
                         'rbam.item.index',
                         ['type' => $types]
                     ) ?>">
-                        <?= $translator->translate(sprintf('label.%s.manage', $types)) ?>
+                        <?= $translator->translate(id: sprintf('label.%s.manage', $types), category: 'rbam') ?>
                     </a>
                     <?php endif; ?>
                 </div>
@@ -57,24 +59,28 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
         <?php endforeach; ?>
         <div class="card rules">
             <div class="card-header">
-                <span><?= $translator->translate('label.rules')?><span class='badge'><?= $rules ?></span></span>
+                <span><?= $translator->translate(id: 'label.rules', category: 'rbam')?>
+                    <span class='badge'><?= $rules ?></span>
+                </span>
             </div>
             <div class="card-body">
                 <?php if($currentUser->can(RbamPermission::ruleView->getItemName())): ?>
                 <a class="btn btn_manage" href="<?= $urlGenerator->generate('rbam.rule.index') ?>">
-                    <?= $translator->translate('label.rules.manage')?>
+                    <?= $translator->translate(id: 'label.rules.manage', category: 'rbam')?>
                 </a>
                 <?php endif; ?>
             </div>
         </div>
         <div class="card users">
             <div class="card-header">
-                <span><?= $translator->translate('label.users')?><span class='badge'><?= $users ?></span></span>
+                <span><?= $translator->translate(id: 'label.users', category: 'rbam')?>
+                    <span class='badge'><?= $users ?></span>
+                </span>
             </div>
             <div class="card-body">
                 <?php if($currentUser->can(RbamPermission::userView->getItemName())): ?>
                 <a class="btn btn_manage" href="<?= $urlGenerator->generate('rbam.user.index') ?>">
-                    <?= $translator->translate('label.users.manage')?>
+                    <?= $translator->translate(id: 'label.users.manage', category: 'rbam')?>
                 </a>
                 <?php endif; ?>
             </div>
@@ -88,7 +94,7 @@ if ($currentUser->can(RbamPermission::clear->getItemName())):
         'block-menu',
         '<div x-data x-menu class="header-menu">
             <button x-menu:button>
-                <span class="sr-only">' . $translator->translate('label.menu') . '</span>
+                <span class="sr-only">' . $translator->translate(id: 'label.menu', category: 'rbam') . '</span>
     
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100% 100%">
                     <path xmlns="http://www.w3.org/2000/svg" d="M5 5H18 5" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
@@ -102,7 +108,7 @@ if ($currentUser->can(RbamPermission::clear->getItemName())):
                 x-cloak
             >'
             . Html::li(
-                content: $translator->translate('label.menu.clear'),
+                content: $translator->translate(id: 'label.menu.clear', category: 'rbam'),
                 attributes: [
                     'x-menu:item' => true,
                     '@click' => sprintf(
@@ -113,9 +119,9 @@ if ($currentUser->can(RbamPermission::clear->getItemName())):
                                     'href' => $urlGenerator->generate('rbam.clear'),
                                 ]
                             ],
-                            'closeDialog' => $translator->translate('label.close-dialog'),
-                            'content' => $translator->translate('message.rbac.clear'),
-                            'title' => $translator->translate('header.rbac.clear'),
+                            'closeDialog' => $translator->translate(id: 'label.close-dialog', category: 'rbam'),
+                            'content' => $translator->translate(id: 'message.rbac.clear', category: 'rbam'),
+                            'title' => $translator->translate(id: 'header.rbac.clear', category: 'rbam'),
                         ])
                     ),
                 ]

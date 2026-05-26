@@ -61,10 +61,10 @@ $this->beginPage()
                     <div x-html="detail.content" class="content"></div>
                     <div class="footer">
                         <button type="button" @click="rbam.action($data.detail.buttons.continue)" class="btn btn_continue">
-                            <?= $translator->translate('button.continue') ?>
+                            <?= $translator->translate(id: 'button.continue') ?>
                         </button>
                         <button type="button" @click="$dialog.close()" class="btn btn_cancel">
-                            <?= $translator->translate('button.cancel') ?>
+                            <?= $translator->translate(id: 'button.cancel') ?>
                         </button>
                     </div>
                 </div>

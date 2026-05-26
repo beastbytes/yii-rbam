@@ -39,11 +39,11 @@ $this->setTitle($user->getName());
 
 $breadcrumbs = [
     [
-        'label' => $translator->translate('label.rbam'),
+        'label' => $translator->translate(id: 'label.rbam', category: 'rbam'),
         'url' => $urlGenerator->generate('rbam.rbam'),
     ],
     [
-        'label' => $translator->translate('label.users'),
+        'label' => $translator->translate(id: 'label.users', category: 'rbam'),
         'url' => $urlGenerator->generate('rbam.user.index'),
     ],
     Html::encode($this->getTitle())

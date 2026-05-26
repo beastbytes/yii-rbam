@@ -19,7 +19,7 @@ use Yiisoft\Yii\Widgets\Breadcrumbs;
 
 <header>
     <div class="header-inner">
-        <h1><?= $translator->translate('title.rbam') ?></h1>
+        <h1><?= $translator->translate(id: 'title.rbam', category: 'rbam') ?></h1>
         <?php if ($this->hasParameter('breadcrumbs')): ?>
             <?= Breadcrumbs::widget()
                 ->items($this->getParameter('breadcrumbs'))

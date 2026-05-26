@@ -53,7 +53,7 @@ echo GridView::widget()
     )
     ->paginationWidget(OffsetPagination::widget())
     ->urlCreator(new PaginatorUrlCreator($urlGenerator->generate('rbam.user.roles', ['status' => 'assigned'])))
-    ->header($translator->translate('label.role.assigned'))
+    ->header($translator->translate(id: 'label.role.assigned', category: 'rbam'))
     ->headerAttributes(['class' => 'header'])
     ->tableAttributes(['class' => 'grid'])
     ->tbodyAttributes(['class' => 'grid-body'])
@@ -61,7 +61,7 @@ echo GridView::widget()
     ->toolbar($currentUser->can(RbamPermission::userUpdate->getItemName()) && !empty($assignedRoles)
         ? Html::div(
             content: Html::button(
-                content: $translator->translate($rbamParameters->getButtons('revokeAll')['content']),
+                content: $translator->translate(id: $rbamParameters->getButtons('revokeAll')['content']),
                 attributes: array_merge(
                     $rbamParameters->getButtons('revokeAll')['attributes'],
                     [
@@ -75,14 +75,18 @@ echo GridView::widget()
                                         'data' => [],
                                     ],
                                 ],
-                                'closeDialog' => $translator->translate('label.close-dialog'),
+                                'closeDialog' => $translator->translate(id: 'label.close-dialog', category: 'rbam'),
                                 'content' => $translator->translate(
                                     'message.user.assignment.revoke-all',
                                     [
                                         'user' => $user->getName(),
-                                    ]
+                                    ],
+                                    'rbam'
                                 ),
-                                'title' => $translator->translate('header.user.assignment.revoke-all'),
+                                'title' => $translator->translate(
+                                    id: 'header.user.assignment.revoke-all',
+                                    category: 'rbam'
+                                ),
                             ])
                         ),
                     ]
@@ -93,21 +97,27 @@ echo GridView::widget()
             ->render()
         : ''
     )
-    ->noResultsText($translator->translate('message.role.none-assigned'))
+    ->noResultsText($translator->translate(id: 'message.role.none-assigned'))
     ->columns(
         new DataColumn(
-            header: $translator->translate('label.name'),
-            content: static fn(Item $item) => $translator->translate($item->getItem()->getName()),
+            header: $translator->translate(id: 'label.name'),
+            content: static fn (Item $item) => $translator->translate(
+                id: $item->getItem()->getName(),
+                category: 'rbac'
+            ),
             filter: true,
             filterFactory: LikeFilterFactory::class,
             filterEmpty: true,
         ),
         new DataColumn(
-            header: $translator->translate('label.description'),
-            content: static fn(Item $item) => $translator->translate($item->getItem()->getDescription()),
+            header: $translator->translate(id: 'label.description'),
+            content: static fn (Item $item) => $translator->translate(
+                id: $item->getItem()->getDescription(),
+                category: 'rbac'
+            ),
         ),
         new ActionColumn(
-            content: static fn($data) => array_reduce(
+            content: static fn ($data) => array_reduce(
                 $assignments,
                 fn(bool $carry, Assignment $assignment)
                     => $carry || $assignment->getItemName() === $data->getItem()->getName()
@@ -115,7 +125,10 @@ echo GridView::widget()
                 false
             )
                 ? Html::button(
-                    content: $translator->translate($rbamParameters->getButtons('revoke')['content']),
+                    content: $translator->translate(
+                        id: $rbamParameters->getButtons('revoke')['content'],
+                        category: 'rbam'
+                    ),
                     attributes: array_merge(
                         $rbamParameters->getButtons('revoke')['attributes'],
                         [
@@ -131,19 +144,21 @@ echo GridView::widget()
                                             ],
                                         ],
                                     ],
-                                    'closeDialog' => $translator->translate('label.close-dialog'),
+                                    'closeDialog' => $translator->translate(id: 'label.close-dialog', category: 'rbam'),
                                     'content' => $translator->translate(
                                         'message.user.assignment.revoke',
                                         [
                                             'item' => $data->getItem()->getName(),
                                             'user' => $user->getName(),
-                                        ]
+                                        ],
+                                        'rbam'
                                     ),
                                     'title' => $translator->translate(
                                         'header.user.assignment.revoke',
                                         [
                                             'item' => $data->getItem()->getName(),
-                                        ]
+                                        ],
+                                        'rbam'
                                     ),
                                 ])
                             )

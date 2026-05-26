@@ -60,39 +60,44 @@ echo GridView::widget()
     ->header($translator->translate(
         $childType === Item::TYPE_PERMISSION ? 'label.permissions' : 'label.roles',
         ['name' => $parent->getName()],
+        'rbam'
     ))
     ->headerAttributes(['class' => 'header'])
     ->tableAttributes(['class' => 'grid'])
     ->tbodyAttributes(['class' => 'grid-body'])
     ->layout("{header}\n{summary}\n{items}\n{pager}")
-    ->noResultsText($translator->translate(sprintf('message.%s.none-found', $childType)))
+    ->noResultsText($translator->translate(
+        id: sprintf('message.%s.none-found', $childType),
+        category: 'rbam'
+    ))
     ->columns(
         new DataColumn(
-            header: $translator->translate('label.name'),
-            content: static fn(Item $item) => $translator->translate($item->getName()),
+            header: $translator->translate(id: 'label.name'),
+            content: static fn (Item $item) => $translator->translate(id: $item->getName(), category: 'rbam'),
             filter: true,
             filterFactory: LikeFilterFactory::class,
             filterEmpty: true,
             bodyClass: 'name',
         ),
         new DataColumn(
-            header: $translator->translate('label.description'),
-            content: static fn(Item $item) => $translator->translate($item->getDescription()),
+            header: $translator->translate(id: 'label.description'),
+            content: static fn (Item $item) => $translator->translate(id: $item->getDescription(), category: 'rbam'),
             bodyClass: 'description',
         ),
         new ActionColumn(
             template: '{add}',
-            urlCreator: static fn(string $action, DataContext $context) => $urlGenerator->generate(
+            urlCreator: static fn (string $action, DataContext $context) => $urlGenerator->generate(
                 'rbam.item.add-child',
                 [
                     'child' => $context->data->getName(),
                     'parent' => $parent->getName(),
                     'type' => $type,
-                ]
+                ],
+                category: 'rbam'
             ),
             buttons: [
-                'add' => static fn(string $url, DataContext $context) => Html::button(
-                    content: $translator->translate(
+                'add' => static fn (string $url, DataContext $context) => Html::button(
+                    content: $translator->translate(id: 
                         $type === $childType
                             ? $rbamParameters->getButtons('add')['content']
                             : $rbamParameters->getButtons('grant')['content']
@@ -118,19 +123,21 @@ echo GridView::widget()
                                             ]
                                         ],
                                     ],
-                                    'closeDialog' => $translator->translate('label.close-dialog'),
+                                    'closeDialog' => $translator->translate(id: 'label.close-dialog', category: 'rbam'),
                                     'content' => $translator->translate(
                                         sprintf('message.%s.add-child', $childType),
                                         [
                                             'item' => $context->key,
                                             'parent' => $parent->getName(),
-                                        ]
+                                        ],
+                                        'rbam'
                                     ),
                                     'title' => $translator->translate(
                                         sprintf('header.%s.add-child', $childType),
                                         [
                                             'item' => $context->key,
-                                        ]
+                                        ],
+                                        'rbam'
                                     ),
                                 ])
                             ),

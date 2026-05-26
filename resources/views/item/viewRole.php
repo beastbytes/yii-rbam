@@ -60,11 +60,11 @@ $this->setTitle($item->getName());
 
 $breadcrumbs = [
     [
-        'label' => $translator->translate('label.rbam'),
+        'label' => $translator->translate(id: 'label.rbam', category: 'rbam'),
         'url' => $urlGenerator->generate('rbam.rbam'),
     ],
     [
-        'label' => $translator->translate('label.roles'),
+        'label' => $translator->translate(id: 'label.roles', category: 'rbam'),
         'url' => $urlGenerator->generate('rbam.item.index', ['type' => 'roles']),
     ],
     $this->getTitle()
@@ -78,37 +78,43 @@ echo DetailView::widget()
     ->data($item)
     ->fields(
         new DataField(
-            label: $translator->translate('label.name'),
-            value: static fn(GetValueContext $context) => $translator->translate($context->data->getName()),
+            label: $translator->translate(id: 'label.name'),
+            value: static fn (GetValueContext $context) => $translator->translate(
+                id: $context->data->getName(),
+                category: 'rbac'
+            ),
         ),
         new DataField(
-            label: $translator->translate('label.type'),
-            value: $translator->translate('label.role'),
+            label: $translator->translate(id: 'label.type', category: 'rbam'),
+            value: $translator->translate(id: 'label.role', category: 'rbam'),
         ),
         new DataField(
-            label: $translator->translate('label.description'),
-            value: static fn(GetValueContext $context) => $translator->translate($context->data->getDescription()),
+            label: $translator->translate(id: 'label.description', category: 'rbam'),
+            value: static fn (GetValueContext $context) => $translator->translate(
+                id: $context->data->getDescription(),
+                category: 'rbac'
+            ),
         ),
         new DataField(
-            label: $translator->translate('label.rule'),
-            value: static fn(GetValueContext $context) => is_string($context->data->getRuleName())
+            label: $translator->translate(id: 'label.rule'),
+            value: static fn (GetValueContext $context) => is_string($context->data->getRuleName())
                 ? substr($context->data->getRuleName(), 30, -4)
-                : $translator->translate('message.no-rule')
+                : $translator->translate(id: 'message.no-rule', category: 'rbam')
             ,
-            valueAttributes: static fn(ValueContext $context) => $context->data->getRuleName() === null
+            valueAttributes: static fn (ValueContext $context) => $context->data->getRuleName() === null
                 ? ['class' => 'no_rule']
                 : []
         ),
         new DataField(
-            label: $translator->translate('label.created-at'),
-            value: static fn(GetValueContext $context) => (new DateTime())
+            label: $translator->translate(id: 'label.created-at', category: 'rbam'),
+            value: static fn (GetValueContext $context) => (new DateTime())
                 ->setTimestamp($context->data->getCreatedAt())
                 ->format($rbamParameters->getDatetimeFormat())
             ,
         ),
         new DataField(
-            label: $translator->translate('label.updated-at'),
-            value: static fn(GetValueContext $context) => (new DateTime())
+            label: $translator->translate(id: 'label.updated-at', category: 'rbam'),
+            value: static fn (GetValueContext $context) => (new DateTime())
                 ->setTimestamp($context->data->getUpdatedAt())
                 ->format($rbamParameters->getDatetimeFormat())
             ,
@@ -116,11 +122,11 @@ echo DetailView::widget()
     )
     ->prepend(
         Html::div(
-            $translator->translate('label.role.name', ['name' => $item->getName()]),
+            $translator->translate('label.role.name', ['name' => $item->getName()], 'rbac'),
             ['class' => 'header']
         )
         . Html::div(Html::a(
-                content: $translator->translate('button.update'),
+                content: $translator->translate(id: 'button.update', category: 'rbam'),
                 url: $urlGenerator->generate(
                     'rbam.item.update',
                     [
@@ -136,8 +142,8 @@ echo DetailView::widget()
 
 echo Tabs::widget([
     'tabs' => [
-        $translator->translate('label.diagram') => $diagram->render(),
-        $translator->translate('label.child-roles') => $this->render(
+        $translator->translate(id: 'label.diagram', category: 'rbam') => $diagram->render(),
+        $translator->translate(id: 'label.child-roles', category: 'rbam') => $this->render(
             '_items',
             [
                 'actionButtons' => ['view'],
@@ -154,7 +160,10 @@ echo Tabs::widget([
                     ]
                 ),
                 'toolbar' => Html::div(Html::a(
-                    content: $translator->translate($rbamParameters->getButtons('manageChildRoles')['content']),
+                    content: $translator->translate(
+                        id: $rbamParameters->getButtons('manageChildRoles')['content'],
+                        category: 'rbam'
+                    ),
                     url: $urlGenerator->generate(
                         'rbam.item.manage-children',
                         [
@@ -171,7 +180,7 @@ echo Tabs::widget([
                 'user' => null,
             ]
         ),
-        $translator->translate('label.permissions') => $this->render(
+        $translator->translate(id: 'label.permissions') => $this->render(
             '_items',
             [
                 'actionButtons' => ['view'],
@@ -188,7 +197,10 @@ echo Tabs::widget([
                     ]
                 ),
                 'toolbar' => Html::div(Html::a(
-                    content: $translator->translate($rbamParameters->getButtons('managePermissions')['content']),
+                    content: $translator->translate(
+                        id: $rbamParameters->getButtons('managePermissions')['content'],
+                        category: 'rbam'
+                    ),
                     url: $urlGenerator->generate(
                         'rbam.item.manage-children',
                         [
@@ -205,7 +217,7 @@ echo Tabs::widget([
                 'user' => null,
             ]
         ),
-        $translator->translate('label.assignments') => $this->render(
+        $translator->translate(id: 'label.assignments') => $this->render(
             '_assignments',
             [
                 'assignments' => $assignments,

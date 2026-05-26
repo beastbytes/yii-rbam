@@ -35,15 +35,15 @@ use Yiisoft\Yii\DataView\DetailView\GetValueContext;
 
 $assetManager->register(PrismAsset::class);
 
-$this->setTitle($translator->translate('label.rule.name', ['name' => $rule->getName()]));
+$this->setTitle($translator->translate('label.rule.name', ['name' => $rule->getName()], 'rbam'));
 
 $breadcrumbs = [
     [
-        'label' => $translator->translate('label.rbam'),
+        'label' => $translator->translate(id: 'label.rbam', category: 'rbam'),
         'url' => $urlGenerator->generate('rbam.rbam'),
     ],
     [
-        'label' => $translator->translate('label.rules'),
+        'label' => $translator->translate(id: 'label.rules', category: 'rbam'),
         'url' => $urlGenerator->generate('rbam.rule.index'),
     ],
     $this->getTitle()
@@ -57,18 +57,18 @@ echo DetailView::widget()
     ->data($rule)
     ->fields(
         new DataField(
-            label: $translator->translate('label.name'),
-            value: static fn(GetValueContext $context) => $context->data->getName(),
+            label: $translator->translate(id: 'label.name', category: 'rbam'),
+            value: static fn (GetValueContext $context) => $context->data->getName(),
             fieldAttributes: ['class' => 'name'],
         ),
         new DataField(
-            label: $translator->translate('label.description'),
-            value: static fn(GetValueContext $context) => $context->data->getDescription(),
+            label: $translator->translate(id: 'label.description', category: 'rbam'),
+            value: static fn (GetValueContext $context) => $context->data->getDescription(),
             fieldAttributes: ['class' => 'description'],
         ),
         new DataField(
-            label: $translator->translate('label.code'),
-            value: static fn(GetValueContext $context) => sprintf(<<<'RULE'
+            label: $translator->translate(id: 'label.code'),
+            value: static fn (GetValueContext $context) => sprintf(<<<'RULE'
 <pre><code class="language-php">
 public function execute(?string $userId, Permission $item, RuleContext $context): bool
 {
@@ -83,7 +83,7 @@ RULE,
     )
     ->prepend($currentUser->can(RbamPermission::ruleUpdate->getItemName())
         ? Html::a(
-            content: $translator->translate('button.update', ['item' => $rule->getName()]),
+            content: $translator->translate('button.update', ['item' => $rule->getName()], 'rbam'),
             url: $urlGenerator->generate('rbam.rule.update', ['name' => $rule->getName()]),
             attributes: $rbamParameters->getButtons('update')['attributes']
         )
@@ -94,7 +94,7 @@ RULE,
 
 echo Tabs::widget([
     'tabs' => [
-        $translator->translate('label.roles') => $this->render(
+        $translator->translate(id: 'label.roles', category: 'rbam') => $this->render(
             '../item/_items',
             [
                 'actionButtons' => ['view'],
@@ -111,7 +111,7 @@ echo Tabs::widget([
                 'user' => null,
             ]
         ),
-        $translator->translate('label.permissions') => $this->render(
+        $translator->translate(id: 'label.permissions', category: 'rbam') => $this->render(
             '../item/_items',
             [
                 'actionButtons' => ['view'],

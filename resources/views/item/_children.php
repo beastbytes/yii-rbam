@@ -59,7 +59,7 @@ echo GridView::widget()
             'type' => $type,
         ]
     )))
-    ->header($translator->translate(
+    ->header($translator->translate(id: 
         $type === Item::TYPE_PERMISSION
             ? 'label.child-permissions'
             : ($childType === Item::TYPE_PERMISSION ? 'label.permissions.granted' : 'label.child-roles')
@@ -71,7 +71,10 @@ echo GridView::widget()
     ->toolbar(!empty($children)
         ? Html::div(
             content: Html::button(
-                content: $translator->translate($rbamParameters->getButtons('removeAll')['content']),
+                content: $translator->translate(
+                    id: $rbamParameters->getButtons('removeAll')['content'],
+                    category: 'rbam'
+                ),
                 attributes: array_merge(
                     $rbamParameters->getButtons('removeAll')['attributes'],
                     [
@@ -95,14 +98,18 @@ echo GridView::widget()
                                         ],
                                     ],
                                 ],
-                                'closeDialog' => $translator->translate('label.close-dialog'),
+                                'closeDialog' => $translator->translate(id: 'label.close-dialog'),
                                 'content' => $translator->translate(
                                     sprintf('message.%s.remove-all', $childType),
                                     [
                                         'parent' => $parent->getName(),
-                                    ]
+                                    ],
+                                    'rbam'
                                 ),
-                                'title' => $translator->translate(sprintf('header.%s.remove-all', $childType)),
+                                'title' => $translator->translate(
+                                    id: sprintf('header.%s.remove-all', $childType),
+                                    category: 'rbam'
+                                ),
                             ])
                         ),
                     ]
@@ -116,24 +123,33 @@ echo GridView::widget()
             ->render()
         : ''
     )
-    ->noResultsText($translator->translate(sprintf('message.%s.none-found', $childType)))
+    ->noResultsText($translator->translate(
+        id: sprintf('message.%s.none-found', $childType),
+        category: 'rbam'
+    ))
     ->columns(
         new DataColumn(
-            header: $translator->translate('label.name'),
-            content: static fn(RbamItem $item) => $translator->translate($item->getItem()->getName()),
+            header: $translator->translate(id: 'label.name', category: 'rbam'),
+            content: static fn (RbamItem $item) => $translator->translate(
+                id: $item->getItem()->getName(),
+                category: 'rbam'
+            ),
             filter: true,
             filterFactory: LikeFilterFactory::class,
             filterEmpty: true,
             bodyClass: 'name',
         ),
         new DataColumn(
-            header: $translator->translate('label.description'),
-            content: static fn(RbamItem $item) => $translator->translate($item->getItem()->getDescription()),
+            header: $translator->translate(id: 'label.description'),
+            content: static fn (RbamItem $item) => $translator->translate(
+                id: $item->getItem()->getDescription(),
+                category: 'rbam'
+            ),
             bodyClass: 'description',
         ),
         new ActionColumn(
             template: '{remove}',
-            urlCreator: static fn(string $action, DataContext $context) => $urlGenerator->generate(
+            urlCreator: static fn (string $action, DataContext $context) => $urlGenerator->generate(
                 'rbam.item.remove-child',
                 [
                     'child' => $context->data->getItem()->getName(),
@@ -142,8 +158,8 @@ echo GridView::widget()
                 ]
             ),
             buttons: [
-                'remove' => static fn(string $url, DataContext $context) => Html::button(
-                    content: $translator->translate($rbamParameters->getButtons('remove')['content']),
+                'remove' => static fn (string $url, DataContext $context) => Html::button(
+                    content: $translator->translate(id: $rbamParameters->getButtons('remove')['content']),
                     attributes: array_merge(
                         $rbamParameters->getButtons('remove')['attributes'],
                         [
@@ -162,19 +178,21 @@ echo GridView::widget()
                                             ]
                                         ],
                                     ],
-                                    'closeDialog' => $translator->translate('label.close-dialog'),
+                                    'closeDialog' => $translator->translate(id: 'label.close-dialog'),
                                     'content' => $translator->translate(
                                         sprintf('message.%s.remove-child', $childType),
                                         [
                                             'child' => $context->key,
                                             'parent' => $parent->getName(),
-                                        ]
+                                        ],
+                                        'rbam'
                                     ),
                                     'title' => $translator->translate(
                                         sprintf('header.%s.remove-child', $childType),
                                         [
                                             'child' => $context->key,
-                                        ]
+                                        ],
+                                        'rbam'
                                     ),
                                 ])
                             ),
