@@ -266,6 +266,12 @@ final class ItemController
         ]);
     }
 
+    #[PermissionAttribute(RbamPermission::itemUpdate)]
+    public function translate(): ResponseInterface
+    {
+        return $this->viewRenderer->render('translate');
+    }
+
     /**
      * Update an item - Role or Permission
      *
