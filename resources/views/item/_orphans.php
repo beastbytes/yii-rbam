@@ -92,8 +92,7 @@ echo GridView::widget()
                     'child' => $context->data->getName(),
                     'parent' => $parent->getName(),
                     'type' => $type,
-                ],
-                category: 'rbam'
+                ]
             ),
             buttons: [
                 'add' => static fn (string $url, DataContext $context) => Html::button(
