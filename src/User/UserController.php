@@ -114,6 +114,7 @@ final class UserController
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
+    #[PermissionAttribute(RbamPermission::userUpdate)]
     public function assign(ServerRequestInterface $request): ResponseInterface
     {
         /** @var array{name:string, item:string} $parsedBody */
@@ -140,6 +141,7 @@ final class UserController
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
+    #[PermissionAttribute(RbamPermission::userUpdate)]
     public function revoke(ServerRequestInterface $request): ResponseInterface
     {
         /** @var array{item:string, user:string} $parsedBody */
