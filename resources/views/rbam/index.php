@@ -101,7 +101,7 @@ $this->setBlock(
             x-cloak
         >'
         . Html::li(
-            content: $translator->translate('label.menu,clear'),
+            content: $translator->translate('label.menu.clear'),
             attributes: [
                 'x-menu:item' => true,
                 '@click' => sprintf(
