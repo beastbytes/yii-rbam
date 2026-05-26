@@ -87,7 +87,7 @@ $this->setBlock(
     'block-menu',
     '<div x-data x-menu class="header-menu">
         <button x-menu:button>
-            <span class="sr-only">Options</span>
+            <span class="sr-only">' . $translator->translate('label.menu') . '</span>
 
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100% 100%">
                 <path xmlns="http://www.w3.org/2000/svg" d="M5 5H18 5" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
@@ -101,7 +101,7 @@ $this->setBlock(
             x-cloak
         >'
         . Html::li(
-            content: $translator->translate('label.clear'),
+            content: $translator->translate('label.menu,clear'),
             attributes: [
                 'x-menu:item' => true,
                 '@click' => sprintf(
