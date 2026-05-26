@@ -137,15 +137,6 @@ echo DetailView::widget()
 echo Tabs::widget([
     'tabs' => [
         $translator->translate('label.diagram') => $diagram->render(),
-        $translator->translate('label.assignments') => $this->render(
-            '_assignments',
-            [
-                'assignments' => $assignments,
-                'item' => $item,
-                'translator' => $translator,
-                'urlGenerator' => $urlGenerator,
-            ]
-        ),
         $translator->translate('label.child-roles') => $this->render(
             '_items',
             [
@@ -212,6 +203,15 @@ echo Tabs::widget([
                 'type' => Item::TYPE_PERMISSION,
                 'urlGenerator' => $urlGenerator,
                 'user' => null,
+            ]
+        ),
+        $translator->translate('label.assignments') => $this->render(
+            '_assignments',
+            [
+                'assignments' => $assignments,
+                'item' => $item,
+                'translator' => $translator,
+                'urlGenerator' => $urlGenerator,
             ]
         ),
     ],
