@@ -122,7 +122,7 @@ echo DetailView::widget()
     )
     ->prepend(
         Html::div(
-            $translator->translate('label.role.name', ['name' => $item->getName()], 'rbac'),
+            $translator->translate('label.role.name', ['name' => $item->getName()], 'rbam'),
             ['class' => 'header']
         )
         . Html::div(Html::a(

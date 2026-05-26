@@ -141,7 +141,7 @@ echo DetailView::widget()
             content: $translator->translate(
                 'label.permission.name',
                 ['name' => $item->getItem()->getName()],
-                'rbac'
+                'rbam'
             ),
             attributes: ['class' => 'header']
         )
