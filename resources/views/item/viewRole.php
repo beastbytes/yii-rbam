@@ -24,6 +24,7 @@ use BeastBytes\Yii\Rbam\Diagram\MermaidHierarchyDiagram;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use Yiisoft\Assets\AssetManager;
 use Yiisoft\Html\Html;
+use Yiisoft\Html\NoEncode;
 use Yiisoft\Rbac\Assignment;
 use Yiisoft\Rbac\Item;
 use Yiisoft\Rbac\Permission;
@@ -125,7 +126,8 @@ echo DetailView::widget()
             $translator->translate('label.role.name', ['name' => $item->getName()], 'rbam'),
             ['class' => 'header']
         )
-        . Html::div(Html::a(
+        . Html::div(NoEncode::string(
+            Html::a(
                 content: $translator->translate(id: 'button.update', category: 'rbam'),
                 url: $urlGenerator->generate(
                     'rbam.item.update',
@@ -135,7 +137,19 @@ echo DetailView::widget()
                     ]
                 ),
                 attributes: $rbamParameters->getButtons('update')['attributes']
-            ))
+            )
+            . Html::a(
+                content: $translator->translate(id: 'button.translations', category: 'rbam'),
+                url: $urlGenerator->generate(
+                    'rbam.item.translate',
+                    [
+                        'name' => $item->getName(),
+                        'type' => 'role',
+                    ]
+                ),
+                attributes: $rbamParameters->getButtons('translate')['attributes']
+            )
+        ))
     )
     ->render()
 ;

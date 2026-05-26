@@ -24,6 +24,7 @@ use BeastBytes\Yii\Rbam\DTO\User as RbamUser;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use Yiisoft\Assets\AssetManager;
 use Yiisoft\Html\Html;
+use Yiisoft\Html\NoEncode;
 use Yiisoft\Rbac\Item;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\TranslatorInterface;
@@ -145,17 +146,30 @@ echo DetailView::widget()
             ),
             attributes: ['class' => 'header']
         )
-        . Html::div(Html::a(
-            content: $translator->translate(id: 'button.update', category: 'rbam'),
-            url: $urlGenerator->generate(
-                'rbam.item.update',
-                [
-                    'name' => $item->getItem()->getName(),
-                    'type' => 'permission',
-                ]
-            ),
-            attributes: $rbamParameters->getButtons('update')['attributes']
-        ))
+        . Html::div(NoEncode::string(
+            Html::a(
+                content: $translator->translate(id: 'button.update', category: 'rbam'),
+                url: $urlGenerator->generate(
+                    'rbam.item.update',
+                    [
+                        'name' => $item->getItem()->getName(),
+                        'type' => 'permission',
+                    ]
+                ),
+                attributes: $rbamParameters->getButtons('update')['attributes']
+            )
+            . Html::a(
+                content: $translator->translate(id: 'button.translations', category: 'rbam'),
+                url: $urlGenerator->generate(
+                    'rbam.item.translate',
+                    [
+                        'name' => $item->getItem()->getName(),
+                        'type' => 'permission',
+                    ]
+                ),
+                attributes: $rbamParameters->getButtons('translate')['attributes']
+            ))
+        )
     )
     ->render()
 ;
