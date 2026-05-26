@@ -11,14 +11,24 @@ use Yiisoft\Translator\Message\Php\MessageSource;
 
 return [
     // Configure application CategorySource
-    'translation.rbam' => [
+    'translation.rbac' => [
         'definition' => static function (Aliases $aliases) {
             return new CategorySource(
-                'rbam',
+                'rbac',
                 new MessageSource($aliases->get('@messages')),
                 new IntlMessageFormatter(),
             );
         },
         'tags' => ['translation.categorySource'],
-    ]
+    ],
+    'translation.rbam' => [
+    'definition' => static function (Aliases $aliases) {
+        return new CategorySource(
+            'rbam',
+            new MessageSource($aliases->get('@messages')),
+            new IntlMessageFormatter(),
+        );
+    },
+    'tags' => ['translation.categorySource'],
+]
 ];

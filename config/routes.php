@@ -73,6 +73,11 @@ return [
                         ->name('remove')
                         ->action([ItemController::class, 'remove'])
                     ,
+                    Route::methods([Method::GET, Method::POST], '/{name: \w.*}/translate')
+                        ->name('translate')
+                        ->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::itemUpdate))
+                        ->action([ItemController::class, 'translate'])
+                    ,
                     Route::methods([Method::GET, Method::POST], '/{name: \w.*}/update')
                         ->name('update')
                         ->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::itemUpdate))

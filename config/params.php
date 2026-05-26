@@ -22,10 +22,6 @@ return [
                 'attributes' => ['class' => 'btn btn_cancel'],
                 'content' => 'button.cancel',
             ],
-            'clear' => [
-                'attributes' => ['class' => 'btn btn_clear'],
-                'content' => 'button.clear',
-            ],
             'createPermission' => [
                 'attributes' => ['class' => 'btn btn_create'],
                 'content' => 'button.permission.create',
@@ -85,6 +81,10 @@ return [
             'submit' => [
                 'attributes' => ['class' => 'btn btn_submit'],
                 'content' => 'button.submit',
+            ],
+            'translate' => [
+                'attributes' => ['class' => 'btn btn_translate'],
+                'content' => 'button.translate',
             ],
             'update' => [
                 'attributes' => ['class' => 'btn btn_update'],
