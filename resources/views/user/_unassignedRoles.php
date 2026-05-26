@@ -6,7 +6,7 @@ declare(strict_types=1);
  * @var Assignment[] $assignments
  * @var Csrf $csrf
  * @var ?int $currentPage
- * @var ?int $currentPage
+ * @var CurrentUser $currentUser
  * @var Permission[] $permissionsGranted
  * @var Inflector $inflector
  * @var RbamParameters $rbamParameters
@@ -110,9 +110,7 @@ echo GridView::widget()
                         )
                     ]
                 )
-            )
-                ->render()
-            ,
+            ),
             bodyAttributes: [
                 'class' => 'action',
                 'x-data' => true
