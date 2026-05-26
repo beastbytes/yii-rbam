@@ -26,12 +26,51 @@
     --yii-green-light: oklch(0.99 0.19 131.803);
     --yii-orange: oklch(0.7285 0.1622 57.4256);
     --yii-red: oklch(0.638 0.212 32.357);
-    --yii-red-light: oklch(0.738 0.77 32.357);
+    --yii-red-light: oklch(0.9 0.1012 32.357);
+    --yii-red-dark: oklch(0.4377 0.1632 32.36);
 
     font-family: "trebuchet ms", verdana, arial, sans-serif;
 
     button {
         border: none;
+    }
+
+    header {
+        display: flex;
+        justify-content: space-between;
+
+        .header-menu {
+            position: relative;
+
+            button {
+                background: none;
+                border: none;
+                cursor: pointer;
+                justify-items: center;
+                position: relative;
+            }
+            svg {
+                height: 2rem;
+                width: 2rem;
+            }
+
+            ul {
+                background: var(--container-background);
+                border: var(--contaier-border);
+                border-radius: 0.25rem;
+                box-shadow: var(--shadow);
+                position: absolute;
+                top: 1rem;
+                right: 0;
+                white-space: nowrap;
+
+                li {
+                    cursor: pointer;
+                    list-style: none;
+                    padding: 0.5rem;
+                }
+            }
+        }
     }
 
     .breadcrumb {
@@ -277,13 +316,24 @@
         border: var(--contaier-border);
         border-radius: 0.375rem;
         width: 50%;
+
+        fieldset {
+            border: none;
+        }
+
+        .form-error {
+            background: var(--yii-red-light);
+            border-radius: 0.5rem;
+            color: var(--yii-red-dark);
+            padding: 0.5rem 1rem;
+        }
     }
 
     .form-buttons {
+        border-top: var(--contaier-border);
         display: flex;
         justify-content: space-around;
         padding: 1.5rem 3rem;
-        width: 50%;
     }
 
     .form-control-container {
@@ -291,10 +341,6 @@
         line-height: 1.5rem;
         padding: 0.75rem 0.75rem;
         position: relative;
-
-        &:nth-last-child(2) {
-            border-bottom: var(--contaier-border);
-        }
 
         .form-label {
             color: oklch(0 0 0);
@@ -311,11 +357,17 @@
             justify-content: flex-start;
         }
 
+        .form-hint {
+            transition: opacity 0.5s;
+            opacity: 0;
+        }
+
         .form-input {
             background-color: var(--yii-blue-light);
             border: 2px solid transparent;
             border-radius: 0.5rem;
             color: oklch(0.333 0 0);
+            margin-bottom: 0.25rem;
             margin-right: 0.75rem;
             outline: none;
             padding: 0.5rem 1rem;
@@ -328,7 +380,7 @@
                 border-bottom: 2px solid var(--yii-blue);
             }
 
-            &:user-invalid {
+            &:user-invalid, &.invalid {
                 background-color: var(--yii-red-light);
 
                 + span::before {
@@ -341,7 +393,7 @@
                 }
             }
 
-            &:user-valid {
+            &:user-valid, &.valid {
                 background-color: var(--yii-green-light);
 
                 + span::before {
@@ -359,6 +411,12 @@
             .form-input,
             .form-label {
                 color: oklch(0.5 0 0);
+            }
+        }
+
+        &:hover {
+            .form-hint {
+                opacity: 1;
             }
         }
     }
@@ -559,15 +617,6 @@
         }
     }
 
-    .sr-only {
-        position: absolute;
-        left: -10000px;
-        width: 1px;
-        height: 1px;
-        top: auto;
-        overflow: hidden;
-    }
-
     .tabs {
         margin-left: auto;
         margin-right: auto;
@@ -616,5 +665,26 @@
 
     svg {
         display: block;
+    }
+
+    .border-t {
+        border-top: var(--contaier-border);
+    }
+
+    .mt-1 {
+        margin-top: 1rem;
+    }
+
+    .pt-1 {
+        padding-top: 1rem;
+    }
+
+    .sr-only {
+        position: absolute;
+        left: -10000px;
+        width: 1px;
+        height: 1px;
+        top: auto;
+        overflow: hidden;
     }
 }

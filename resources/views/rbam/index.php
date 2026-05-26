@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 use BeastBytes\Yii\Rbam\Rbac\Permission as RbamPermission;
 use BeastBytes\Yii\Rbam\RbamParameters;use Yiisoft\Html\Html;
+use Yiisoft\Html\NoEncode;
 use Yiisoft\Json\Json;
 use Yiisoft\Rbac\Item;
 use Yiisoft\Router\UrlGeneratorInterface;
@@ -79,69 +80,45 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
             </div>
         </div>
     </div>
-
-    <div x-data="{ active: null }" class="mx-auto min-h-[16rem] w-full max-w-3xl">
-        <div x-data="{
-            id: 1,
-            get expanded() {
-                return this.active === this.id
-            },
-            set expanded(value) {
-                this.active = value ? this.id : null
-            },
-        }" role="region" class="block border-b border-gray-800/10 pb-4 pt-4 first:pt-0 last:border-b-0 last:pb-0">
-            <h2>
-                <button
-                    type="button"
-                    x-on:click="expanded = !expanded"
-                    :aria-expanded="expanded"
-                    class="group flex w-full items-center justify-between text-left font-medium text-gray-800"
-                >
-                    <span class="flex-1">Actions</span>
-
-                    <!-- Heroicons mini chevron-up -->
-                    <svg x-show="expanded" x-cloak class="size-5 shrink-0 text-gray-300 group-hover:text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M9.47 6.47a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 1 1-1.06 1.06L10 8.06l-3.72 3.72a.75.75 0 0 1-1.06-1.06l4.25-4.25Z" clip-rule="evenodd"></path>
-                    </svg>
-
-                    <!-- Heroicons mini chevron-down -->
-                    <svg x-show="!expanded" class="size-5 shrink-0 text-gray-300 group-hover:text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" data-slot="icon">
-                        <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"></path>
-                    </svg>
-                </button>
-            </h2>
-
-            <div x-show="expanded" x-collapse>
-                <div class="pt-2 text-gray-600 max-w-xl">
-                    Clear RBAC Assignments, Permission, and Roles
-                </div>
-                <div>
-                    <?= Html::button(
-                        content: $translator->translate($rbamParameters->getButtons('clear')['content']),
-                        attributes: array_merge(
-                            $rbamParameters->getButtons('clear')['attributes'],
-                            [
-                                'type' => 'button',
-                                '@click' => sprintf(
-                                   "\$dispatch('modal', %s)",
-                                    Json::encode([
-                                        'buttons' => [
-                                            'continue' => [
-                                                'href' => $urlGenerator->generate('rbam.clear'),
-                                            ]
-                                        ],
-                                        'closeDialog' => $translator->translate('label.close-dialog'),
-                                        'content' => $translator->translate('message.rbac.clear'),
-                                        'title' => $translator->translate('header.rbac.clear'),
-                                    ])
-                                ),
-                            ]
-                        )
-                    )
-                        ->render()
-                    ?>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
+
+<?php
+$this->setBlock(
+    'block-menu',
+    '<div x-data x-menu class="header-menu">
+        <button x-menu:button>
+            <span class="sr-only">Options</span>
+
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100% 100%">
+                <path xmlns="http://www.w3.org/2000/svg" d="M5 5H18 5" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                <path xmlns="http://www.w3.org/2000/svg" d="M5 11L18 11" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                <path xmlns="http://www.w3.org/2000/svg" d="M5 17L18 17" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
+        <ul
+            x-menu:items
+            x-transition.origin.top.left
+            x-cloak
+        >'
+        . Html::li(
+            content: $translator->translate('label.clear'),
+            attributes: [
+                'x-menu:item' => true,
+                '@click' => sprintf(
+                    "\$dispatch('modal', %s)",
+                    Json::encode([
+                        'buttons' => [
+                            'continue' => [
+                                'href' => $urlGenerator->generate('rbam.clear'),
+                            ]
+                        ],
+                        'closeDialog' => $translator->translate('label.close-dialog'),
+                        'content' => $translator->translate('message.rbac.clear'),
+                        'title' => $translator->translate('header.rbac.clear'),
+                    ])
+                ),
+            ]
+        )
+        . '</ul>
+    </div>'
+);

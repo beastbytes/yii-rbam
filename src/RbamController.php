@@ -152,7 +152,7 @@ final class RbamController
         $formModel = new InitialiseForm($this->translator);
 
         if ($formHydrator->populateFromPostAndValidate($formModel, $request, strict: false)) {
-            $files = FileHelper::findFiles(
+            $rbamFiles = FileHelper::findFiles(
                 dirname(__DIR__),
                 [
                     'filter' => (new PathMatcher())
@@ -161,7 +161,21 @@ final class RbamController
                 ]
             );
 
-            foreach ($files as $file) {
+            if ($formModel->shouldInitialiseApplication()) {
+                $applicationFiles = FileHelper::findFiles(
+                    $formModel->getSrcDir(),
+                    [
+                        'filter' => (new PathMatcher())
+                            ->except($formModel->getExcept())
+                            ->only($formModel->getOnly()),
+                        'recursive' => true,
+                    ]
+                );
+            } else {
+                $applicationFiles = [];
+            }
+
+            foreach (array_merge($rbamFiles, $applicationFiles) as $file) {
                 $this->initialisationService->processFile($file);
             }
 

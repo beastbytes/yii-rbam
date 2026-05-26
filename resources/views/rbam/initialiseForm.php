@@ -17,6 +17,7 @@ use BeastBytes\Yii\Rbam\Item\ItemForm;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
+use Yiisoft\Html\NoEncode;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
@@ -45,17 +46,102 @@ $tabIndex = 1;
     ->id('form-item')
     ->open()
 ?>
-<?= Field::errorSummary($formModel) ?>
+<?= Field::errorSummary($formModel)
+    ->containerClass('form-error')
+?>
 <?= Field::text($formModel, 'userId')
     ->autofocus(true)
     ->required(true)
     ->containerClass('form-control-container')
     ->inputContainerTag('div')
     ->inputContainerClass('form-input-container')
+    ->inputInvalidClass('invalid')
+    ->inputValidClass('valid')
     ->addInputClass('form-input')
     ->addLabelClass('form-label')
+    ->hintClass('form-hint')
     ->afterInput(Html::span())
+    ->template("{label}\n{input}\n{error}\n{hint}")
     ->tabindex($tabIndex++)
+?>
+<?= Field::fieldset()
+    ->containerAttributes([
+        'x-data' => '{initialiseApplication: false}',
+        'x-init' => "initialiseApplication = document.getElementById('initialiseform-initialiseapplication').checked",
+    ])
+    ->containerClass('border-t mt-1 pt-1')
+    ->content(
+        Html::div(NoEncode::string($translator->translate('message.initialise'))),
+        Field::checkbox($formModel, 'initialiseApplication')
+            ->uncheckValue(false)
+            ->containerClass('form-control-container')
+            ->inputContainerTag('div')
+            ->inputContainerClass('form-input-container')
+            ->inputAttributes(['x-model' => 'initialiseApplication'])
+            ->addInputClass('form-input')
+            ->addLabelClass('form-label')
+            ->errorClass('form-error')
+            ->hintClass('form-hint')
+            ->tabindex($tabIndex++)
+        ,
+        Html::div()
+            ->attributes([
+                'x-show' => 'initialiseApplication',
+                'x-transition' => true,
+            ])
+            ->content(
+                Html::div(NoEncode::string($translator->translate('message.initialise-application'))),
+                Field::text($formModel, 'srcDir')
+                    ->autofocus(true)
+                    ->required(true)
+                    ->containerClass('form-control-container')
+                    ->inputContainerTag('div')
+                    ->inputContainerClass('form-input-container')
+                    ->inputInvalidClass('invalid')
+                    ->inputValidClass('valid')
+                    ->addInputClass('form-input')
+                    ->addLabelClass('form-label')
+                    ->errorClass('form-error')
+                    ->hintClass('form-hint')
+                    ->afterInput(Html::span())
+                    ->template("{label}\n{input}\n{error}\n{hint}")
+                    ->tabindex($tabIndex++)
+                ,
+                Field::text($formModel, 'except')
+                    ->autofocus(true)
+                    ->required(true)
+                    ->containerClass('form-control-container')
+                    ->inputContainerTag('div')
+                    ->inputContainerClass('form-input-container')
+                    ->addInputClass('form-input')
+                    ->inputInvalidClass('invalid')
+                    ->inputValidClass('valid')
+                    ->addLabelClass('form-label')
+                    ->errorClass('form-error')
+                    ->hintClass('form-hint')
+                    ->afterInput(Html::span())
+                    ->template("{label}\n{input}\n{error}\n{hint}")
+                    ->tabindex($tabIndex++)
+                ,
+                Field::text($formModel, 'only')
+                    ->autofocus(true)
+                    ->required(true)
+                    ->containerClass('form-control-container')
+                    ->inputContainerTag('div')
+                    ->inputContainerClass('form-input-container')
+                    ->inputInvalidClass('invalid')
+                    ->inputValidClass('valid')
+                    ->addInputClass('form-input')
+                    ->addLabelClass('form-label')
+                    ->errorClass('form-error')
+                    ->hintClass('form-hint')
+                    ->afterInput(Html::span())
+                    ->template("{label}\n{input}\n{error}\n{hint}")
+                    ->tabindex($tabIndex++)
+                ,
+            )
+    )
+    ->legend($translator->translate('label.application'))
 ?>
 <div class="form-buttons">
     <?= Field::submitButton()
