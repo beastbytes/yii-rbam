@@ -147,6 +147,7 @@
         }
 
         &.btn_manage,
+        &.btn_translate,
         &.btn_update,
         &.btn_view {
             background: var(--yii-blue);
