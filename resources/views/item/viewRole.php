@@ -164,89 +164,101 @@ echo DetailView::widget()
 
 echo Tabs::widget([
     'tabs' => [
-        $translator->translate(id: 'label.diagram', category: 'rbam') => $diagram->render(),
-        $translator->translate(id: 'label.child-roles', category: 'rbam') => $this->render(
-            '_items',
-            [
-                'actionButtons' => ['view'],
-                'currentUser' => $currentUser,
-                'noResultsText' => 'message.role.none-found',
-                'header' => '',
-                'item' => $item,
-                'items' => $children,
-                'paginationUrl' => $urlGenerator->generate(
-                    'rbam.item.child-items',
-                    [
-                        'name' => $item->getName(),
-                        'type' => Item::TYPE_ROLE,
-                    ]
-                ),
-                'toolbar' => Html::div(Html::a(
-                    content: $translator->translate(
-                        id: $rbamParameters->getButtons('manageChildRoles')['content'],
-                        category: 'rbam'
-                    ),
-                    url: $urlGenerator->generate(
-                        'rbam.item.manage-children',
+        [
+            'label' => $translator->translate(id: 'label.diagram', category: 'rbam'),
+            'content' => $diagram->render(),
+        ],
+        [
+            'label' => $translator->translate(id: 'label.child-roles', category: 'rbam'),
+            'content' => $this->render(
+                '_items',
+                [
+                    'actionButtons' => ['view'],
+                    'currentUser' => $currentUser,
+                    'noResultsText' => 'message.role.none-found',
+                    'header' => '',
+                    'item' => $item,
+                    'items' => $children,
+                    'paginationUrl' => $urlGenerator->generate(
+                        'rbam.item.child-items',
                         [
-                            'childType' => Item::TYPE_ROLE,
                             'name' => $item->getName(),
                             'type' => Item::TYPE_ROLE,
                         ]
                     ),
-                    attributes: $rbamParameters->getButtons('manageChildRoles')['attributes']
-                )),
-                'translator' => $translator,
-                'type' => Item::TYPE_ROLE,
-                'urlGenerator' => $urlGenerator,
-                'user' => null,
-            ]
-        ),
-        $translator->translate(id: 'label.permissions') => $this->render(
-            '_items',
-            [
-                'actionButtons' => ['view'],
-                'currentUser' => $currentUser,
-                'noResultsText' => 'message.permission.none-found',
-                'header' => '',
-                'item' => $item,
-                'items' => $permissions,
-                'paginationUrl' => $urlGenerator->generate(
-                    'rbam.item.child-items',
-                    [
-                        'name' => $item->getName(),
-                        'type' => Item::TYPE_PERMISSION,
-                    ]
-                ),
-                'toolbar' => Html::div(Html::a(
-                    content: $translator->translate(
-                        id: $rbamParameters->getButtons('managePermissions')['content'],
-                        category: 'rbam'
-                    ),
-                    url: $urlGenerator->generate(
-                        'rbam.item.manage-children',
+                    'toolbar' => Html::div(Html::a(
+                        content: $translator->translate(
+                            id: $rbamParameters->getButtons('manageChildRoles')['content'],
+                            category: 'rbam'
+                        ),
+                        url: $urlGenerator->generate(
+                            'rbam.item.manage-children',
+                            [
+                                'childType' => Item::TYPE_ROLE,
+                                'name' => $item->getName(),
+                                'type' => Item::TYPE_ROLE,
+                            ]
+                        ),
+                        attributes: $rbamParameters->getButtons('manageChildRoles')['attributes']
+                    )),
+                    'translator' => $translator,
+                    'type' => Item::TYPE_ROLE,
+                    'urlGenerator' => $urlGenerator,
+                    'user' => null,
+                ]
+            ),
+        ],
+        [
+            'label' => $translator->translate(id: 'label.permissions'),
+            'content' => $this->render(
+                '_items',
+                [
+                    'actionButtons' => ['view'],
+                    'currentUser' => $currentUser,
+                    'noResultsText' => 'message.permission.none-found',
+                    'header' => '',
+                    'item' => $item,
+                    'items' => $permissions,
+                    'paginationUrl' => $urlGenerator->generate(
+                        'rbam.item.child-items',
                         [
-                            'childType' => Item::TYPE_PERMISSION,
                             'name' => $item->getName(),
-                            'type' => Item::TYPE_ROLE,
+                            'type' => Item::TYPE_PERMISSION,
                         ]
                     ),
-                    attributes: $rbamParameters->getButtons('managePermissions')['attributes']
-                )),
-                'translator' => $translator,
-                'type' => Item::TYPE_PERMISSION,
-                'urlGenerator' => $urlGenerator,
-                'user' => null,
-            ]
-        ),
-        $translator->translate(id: 'label.assignments') => $this->render(
-            '_assignments',
-            [
-                'assignments' => $assignments,
-                'item' => $item,
-                'translator' => $translator,
-                'urlGenerator' => $urlGenerator,
-            ]
-        ),
+                    'toolbar' => Html::div(Html::a(
+                        content: $translator->translate(
+                            id: $rbamParameters->getButtons('managePermissions')['content'],
+                            category: 'rbam'
+                        ),
+                        url: $urlGenerator->generate(
+                            'rbam.item.manage-children',
+                            [
+                                'childType' => Item::TYPE_PERMISSION,
+                                'name' => $item->getName(),
+                                'type' => Item::TYPE_ROLE,
+                            ]
+                        ),
+                        attributes: $rbamParameters->getButtons('managePermissions')['attributes']
+                    )),
+                    'translator' => $translator,
+                    'type' => Item::TYPE_PERMISSION,
+                    'urlGenerator' => $urlGenerator,
+                    'user' => null,
+                ]
+            ),
+        ],
+        [
+            'label' => $translator->translate(id: 'label.assignments'),
+            'content' => $this->render(
+                '_assignments',
+                [
+                    'assignments' => $assignments,
+                    'item' => $item,
+                    'translator' => $translator,
+                    'urlGenerator' => $urlGenerator,
+                ]
+            ),
+        ],
     ],
 ]);

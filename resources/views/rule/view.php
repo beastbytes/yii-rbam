@@ -94,39 +94,45 @@ RULE,
 
 echo Tabs::widget([
     'tabs' => [
-        $translator->translate(id: 'label.roles', category: 'rbam') => $this->render(
-            '../item/_items',
-            [
-                'actionButtons' => ['view'],
-                'currentUser' => $currentUser,
-                'noResultsText' => 'message.role.none-found',
-                'header' => '',
-                'item' => null,
-                'items' => $roles,
-                'paginationUrl' => $urlGenerator->generate('rbam.rule.items'),
-                'toolbar' => '',
-                'translator' => $translator,
-                'type' => Item::TYPE_ROLE,
-                'urlGenerator' => $urlGenerator,
-                'user' => null,
-            ]
-        ),
-        $translator->translate(id: 'label.permissions', category: 'rbam') => $this->render(
-            '../item/_items',
-            [
-                'actionButtons' => ['view'],
-                'currentUser' => $currentUser,
-                'noResultsText' => 'message.permission.none-found',
-                'header' => '',
-                'item' => null,
-                'items' => $permissions,
-                'paginationUrl' => $urlGenerator->generate('rbam.rule.items'),
-                'toolbar' => '',
-                'translator' => $translator,
-                'type' => Item::TYPE_PERMISSION,
-                'urlGenerator' => $urlGenerator,
-                'user' => null,
-            ]
-        ),
+        [
+            'label' => $translator->translate(id: 'label.roles', category: 'rbam'),
+            'content' => $this->render(
+                '../item/_items',
+                [
+                    'actionButtons' => ['view'],
+                    'currentUser' => $currentUser,
+                    'noResultsText' => 'message.role.none-found',
+                    'header' => '',
+                    'item' => null,
+                    'items' => $roles,
+                    'paginationUrl' => $urlGenerator->generate('rbam.rule.items'),
+                    'toolbar' => '',
+                    'translator' => $translator,
+                    'type' => Item::TYPE_ROLE,
+                    'urlGenerator' => $urlGenerator,
+                    'user' => null,
+                ]
+            )
+        ],
+        [
+            'label' => $translator->translate(id: 'label.permissions', category: 'rbam'),
+            'content' => $this->render(
+                '../item/_items',
+                [
+                    'actionButtons' => ['view'],
+                    'currentUser' => $currentUser,
+                    'noResultsText' => 'message.permission.none-found',
+                    'header' => '',
+                    'item' => null,
+                    'items' => $permissions,
+                    'paginationUrl' => $urlGenerator->generate('rbam.rule.items'),
+                    'toolbar' => '',
+                    'translator' => $translator,
+                    'type' => Item::TYPE_PERMISSION,
+                    'urlGenerator' => $urlGenerator,
+                    'user' => null,
+                ]
+            ),
+        ]
     ],
 ]);

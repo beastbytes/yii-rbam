@@ -187,50 +187,59 @@ echo DetailView::widget()
 
 echo Tabs::widget([
     'tabs' => [
-        $translator->translate(id: 'label.diagram', category: 'rbam') => $diagram->render(),
-        $translator->translate(id: 'label.child-permissions', category: 'rbam') => $this->render(
-            '_items',
-            [
-                'actionButtons' => ['view'],
-                'currentUser' => $currentUser,
-                'noResultsText' => 'message.permission.none-found',
-                'header' => '',
-                'item' => $item,
-                'items' => $children,
-                'paginationUrl' => $urlGenerator->generate(
-                    'rbam.item.child-items',
-                    [
-                        'name' => $item->getItem()->getName(),
-                        'type' => Item::TYPE_PERMISSION,
-                    ]
-                ),
-                'toolbar' => Html::div(Html::a(
-                    content: $translator->translate(
-                        id: $rbamParameters->getButtons('manageChildPermissions')['content'],
-                        category: 'rbam'
-                    ),
-                    url: $urlGenerator->generate(
-                        'rbam.item.manage-children',
+        [
+            'label' => $translator->translate(id: 'label.diagram', category: 'rbam'),
+            'content' => $diagram->render(),
+        ],
+        [
+            'label' => $translator->translate(id: 'label.child-permissions', category: 'rbam'),
+            'content' => $this->render(
+                '_items',
+                [
+                    'actionButtons' => ['view'],
+                    'currentUser' => $currentUser,
+                    'noResultsText' => 'message.permission.none-found',
+                    'header' => '',
+                    'item' => $item,
+                    'items' => $children,
+                    'paginationUrl' => $urlGenerator->generate(
+                        'rbam.item.child-items',
                         [
-                            'childType' => Item::TYPE_PERMISSION,
                             'name' => $item->getItem()->getName(),
                             'type' => Item::TYPE_PERMISSION,
                         ]
                     ),
-                    attributes: $rbamParameters->getButtons('manageChildRoles')['attributes']
-                )),
-                'translator' => $translator,
-                'type' => Item::TYPE_PERMISSION,
-                'urlGenerator' => $urlGenerator,
-                'user' => null,
-            ]
-        ),
-        $translator->translate(id: 'label.users.permitted') => $this->render(
-            '_permittedUsers',
-            [
-                'permission' => $item->getItem(),
-                'users' => $users,
-            ]
-        ),
+                    'toolbar' => Html::div(Html::a(
+                        content: $translator->translate(
+                            id: $rbamParameters->getButtons('manageChildPermissions')['content'],
+                            category: 'rbam'
+                        ),
+                        url: $urlGenerator->generate(
+                            'rbam.item.manage-children',
+                            [
+                                'childType' => Item::TYPE_PERMISSION,
+                                'name' => $item->getItem()->getName(),
+                                'type' => Item::TYPE_PERMISSION,
+                            ]
+                        ),
+                        attributes: $rbamParameters->getButtons('manageChildRoles')['attributes']
+                    )),
+                    'translator' => $translator,
+                    'type' => Item::TYPE_PERMISSION,
+                    'urlGenerator' => $urlGenerator,
+                    'user' => null,
+                ]
+            ),
+        ],
+        [
+            'label' => $translator->translate(id: 'label.users.permitted'),
+            'content' => $this->render(
+                '_permittedUsers',
+                [
+                    'permission' => $item->getItem(),
+                    'users' => $users,
+                ]
+            ),
+        ],
     ]
 ]);
