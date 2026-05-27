@@ -22,7 +22,7 @@ final class Tabs extends Widget
     private string $unselectedClass = 'unselected';
 
     /**
-     * @param array<string, string> $tabs Tabs, content indexed by header
+     * @param list<array{header: string, content: string}> $tabs Tabs
      */
     public function __construct(private readonly array $tabs)
     {
@@ -83,35 +83,39 @@ final class Tabs extends Widget
             '<div x-data x-tabs class="%s"><div x-tabs:list class="%s">%s</div><div x-tabs:panels class="%s">%s</div></div>',
             $this->containerClass,
             $this->headerContainerClass,
-            $this->renderHeadings(),
+            $this->renderHeaders(),
             $this->panelContainerClass,
             $this->renderPanels()
         );
     }
 
-    private function renderHeadings(): string
+    private function renderHeaders(): string
     {
-        $headings = [];
+        $headers = [];
 
-        foreach (array_keys($this->tabs) as $heading) {
-            $headings[] = sprintf(
+        foreach ($this->tabs as $tab) {
+            $headers[] = sprintf(
                 '<button x-tabs:tab type="button" :class="$tab.isSelected ? \'%s\' : \'%s\'" class="%s">%s</button>',
                 $this->selectedClass,
                 $this->unselectedClass,
                 $this->headerClass,
-                $heading
+                $tab['header']
             );
         }
 
-        return implode('', $headings);
+        return implode('', $headers);
     }
 
     private function renderPanels(): string
     {
         $panels = [];
 
-        foreach ($this->tabs as $panel) {
-            $panels[] = sprintf('<section x-tabs:panel class="%s">%s</section>', $this->panelClass, $panel);
+        foreach ($this->tabs as $tab) {
+            $panels[] = sprintf(
+                '<section x-tabs:panel class="%s">%s</section>',
+                $this->panelClass,
+                $tab['content']
+            );
         }
 
         return implode('', $panels);
