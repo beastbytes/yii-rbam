@@ -86,15 +86,11 @@ trait RbacTrait
         $rbacManager = self::getRbacManager();
 
         foreach (RbamPermission::cases() as $item) {
-            $rbacManager->addPermission((new Permission($item->getItemName()))
-                ->withDescription($item->getDescription())
-            );
+            $rbacManager->addPermission(new Permission($item->getItemName()));
         }
 
         foreach (RbamRole::cases() as $item) {
-            $rbacManager->addRole((new Role($item->getItemName()))
-                ->withDescription($item->getDescription())
-            );
+            $rbacManager->addRole(new Role($item->getItemName()));
         }
 
         foreach (self::$rbam['children'] as $parent => $children) {
