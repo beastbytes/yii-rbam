@@ -95,7 +95,7 @@ RULE,
 echo Tabs::widget([
     'tabs' => [
         [
-            'label' => $translator->translate(id: 'label.roles', category: 'rbam'),
+            'header' => $translator->translate(id: 'label.roles', category: 'rbam'),
             'content' => $this->render(
                 '../item/_items',
                 [
@@ -115,7 +115,7 @@ echo Tabs::widget([
             )
         ],
         [
-            'label' => $translator->translate(id: 'label.permissions', category: 'rbam'),
+            'header' => $translator->translate(id: 'label.permissions', category: 'rbam'),
             'content' => $this->render(
                 '../item/_items',
                 [

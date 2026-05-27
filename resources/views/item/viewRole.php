@@ -165,11 +165,11 @@ echo DetailView::widget()
 echo Tabs::widget([
     'tabs' => [
         [
-            'label' => $translator->translate(id: 'label.diagram', category: 'rbam'),
+            'header' => $translator->translate(id: 'label.diagram', category: 'rbam'),
             'content' => $diagram->render(),
         ],
         [
-            'label' => $translator->translate(id: 'label.child-roles', category: 'rbam'),
+            'header' => $translator->translate(id: 'label.child-roles', category: 'rbam'),
             'content' => $this->render(
                 '_items',
                 [
@@ -209,7 +209,7 @@ echo Tabs::widget([
             ),
         ],
         [
-            'label' => $translator->translate(id: 'label.permissions'),
+            'header' => $translator->translate(id: 'label.permissions'),
             'content' => $this->render(
                 '_items',
                 [
@@ -249,7 +249,7 @@ echo Tabs::widget([
             ),
         ],
         [
-            'label' => $translator->translate(id: 'label.assignments'),
+            'header' => $translator->translate(id: 'label.assignments'),
             'content' => $this->render(
                 '_assignments',
                 [
