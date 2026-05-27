@@ -49,7 +49,11 @@ final class MermaidHierarchyDiagram implements HierarchyDiagramInterface
             $this->translator->translate($this->item->getName()),
             $this->translator->translate(sprintf('label.%s', $this->item->getType()))
         ))
-            ->withAttribute(new Attribute($this->translator->translate($this->item->getDescription())))
+            ->withAttribute(new Attribute(
+                empty($this->item->getDescription())
+                    ? $this->translator->translate(id: $this->item->getName(), category: 'rbac-item')
+                    : $this->item->getDescription()
+            ))
             ->withStyleClass(sprintf('current_%s', $this->item->getType()))
         ;
         $this->classes[$this->item->getName()] = is_string($this->item->getRuleName())
@@ -72,15 +76,18 @@ final class MermaidHierarchyDiagram implements HierarchyDiagramInterface
 
     private function ancestors(Classs $child): void
     {
-        $childName = $child->getId();
         $parentItems = $this->itemsStorage->getParents($child->getId());
 
         foreach ($parentItems as $parentItem) {
             $parent = (new Classs(
                 $this->translator->translate($parentItem->getName()),
-                $this->translator->translate('label.' . $parentItem->getType())
+                $this->translator->translate(sprintf('label.%s', $parentItem->getType()))
             ))
-                ->withAttribute(new Attribute($this->translator->translate($parentItem->getDescription())))
+                ->withAttribute(new Attribute(
+                    empty($parentItem->getDescription())
+                        ? $this->translator->translate(id: $parentItem->getName(), category: 'rbac-item')
+                        : $parentItem->getDescription()
+                ))
                 ->withStyleClass('ancestor_' . $parentItem->getType())
                 ->withInteraction(
                     $this->urlGenerator->generate(
@@ -96,7 +103,7 @@ final class MermaidHierarchyDiagram implements HierarchyDiagramInterface
 
             if (!array_key_exists($parentItem->getName(), $this->classes)) {
                 $this->classes[$parentItem->getName()] = $parentItem->getRuleName()
-                    ? $parent->addMethod(new Method($parentItem->getRuleName()))
+                    ? $parent->addMethod(new Method(substr($parentItem->getRuleName(), 30, -4)))
                     : $parent
                 ;
             }
@@ -108,9 +115,13 @@ final class MermaidHierarchyDiagram implements HierarchyDiagramInterface
         foreach ($this->itemsStorage->getDirectChildren($parent->getId()) as $item) {
             $child = (new Classs(
                 $this->translator->translate($item->getName()),
-                $this->translator->translate(sprintf('label.%s', $this->item->getType()))
+                $this->translator->translate(sprintf('label.%s', $item->getType()))
             ))
-                ->withAttribute(new Attribute($this->translator->translate($item->getDescription())))
+                ->withAttribute(new Attribute(
+                    empty($item->getDescription())
+                        ? $this->translator->translate(id: $item->getName(), category: 'rbac-item')
+                        : $item->getDescription()
+                ))
                 ->withStyleClass(sprintf('descendant_%s', $this->item->getType()))
                 ->withInteraction(
                     $this->urlGenerator->generate(
@@ -126,7 +137,7 @@ final class MermaidHierarchyDiagram implements HierarchyDiagramInterface
 
             if (!array_key_exists($item->getName(), $this->classes)) {
                 $this->classes[$item->getName()] = is_string($item->getRuleName())
-                    ? $child->addMethod(new Method($item->getRuleName()))
+                    ? $child->addMethod(new Method(substr($item->getRuleName(), 30, -4)))
                     : $child
                 ;
             }
