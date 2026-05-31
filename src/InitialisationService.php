@@ -15,7 +15,7 @@ use Yiisoft\Rbac\Permission;
 use Yiisoft\Rbac\Role;
 use Yiisoft\Translator\TranslatorInterface;
 
-final class InitialisationService
+final class InitialisationService implements InitialisationServiceInterface
 {
     /** @var list<string> $errors */
     private array $errors = [];

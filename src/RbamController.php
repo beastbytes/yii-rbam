@@ -36,7 +36,6 @@ final class RbamController
 
     public function __construct(
         private readonly AssignmentsStorageInterface $assignmentsStorage,
-        private readonly InitialisationService $initialisationService,
         private readonly ItemsStorageInterface $itemsStorage,
         private TranslatorInterface $translator,
         private WebViewRenderer $viewRenderer
@@ -124,6 +123,7 @@ final class RbamController
     public function initialise(
         FlashInterface $flash,
         FormHydrator $formHydrator,
+        InitialisationServiceInterface $initialisationService,
         ManagerInterface $manager,
         RbamParameters $parameters,
         Redirect $redirect,
@@ -176,7 +176,7 @@ final class RbamController
             }
 
             foreach (array_merge($rbamFiles, $applicationFiles) as $file) {
-                $this->initialisationService->processFile($file);
+                $initialisationService->processFile($file);
             }
 
             if (!empty($manager->getDefaultRoleNames())) {
@@ -201,8 +201,8 @@ final class RbamController
                 $manager->assign(RbamRole::admin->getItemName(), $userId);
             }
 
-            if ($this->initialisationService->hasErrors()) {
-                foreach ($this->initialisationService->getErrors() as $error) {
+            if ($initialisationService->hasErrors()) {
+                foreach ($initialisationService->getErrors() as $error) {
                     $flash
                         ->add(
                             'error',
