@@ -22,8 +22,8 @@ use Yiisoft\Yii\View\Renderer\Csrf;
 
 $this->setTitle(
     ($formModel->isCreate()
-        ? $translator->translate(id: 'label.rule.create', category: 'rbam')
-        : $translator->translate(id: 'label.rule.update', category: 'rbam')
+        ? $translator->translate(id: 'header.rule.create', category: 'rbam')
+        : $translator->translate(id: 'header.rule.update', category: 'rbam')
     )
 );
 
