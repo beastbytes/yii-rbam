@@ -9,7 +9,8 @@
 
 .rbam {
     --container-background: oklch(0.95 0 0);
-    --contaier-border: 1px solid oklch(0.845 0 0);
+    --contaier-border: 1px solid var(--contaier-border-colour);
+    --contaier-border-colour: oklch(0.845 0 0);
 
     --disabled-background: oklch(0.95 0 0);
 
@@ -265,7 +266,7 @@
 
         dd:nth-child(4n),
         dt:nth-child(4n-1) {
-            background-color: oklch(0.85 0 0);
+            background-color: var(--even-row-background);
         }
     }
 
@@ -316,10 +317,31 @@
         background: var(--container-background);
         border: var(--contaier-border);
         border-radius: 0.375rem;
+        padding: 1rem 1.5rem;
         width: 50%;
+
+        div[role="region"] {
+            border-bottom: 1px dashed var(--contaier-border-colour);
+            margin-bottom: 0.75rem;
+
+            &:nth-last-child(2) {
+                border-bottom: none;
+                margin-bottom: 0;
+            }
+        }
 
         fieldset {
             border: none;
+        }
+
+        legend[aria-expanded] {
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+
+            span[x-show] {
+                font-size: 1.25rem;
+            }
         }
 
         .form-error {
@@ -342,6 +364,7 @@
         line-height: 1.5rem;
         padding: 0.75rem 0.75rem;
         position: relative;
+        width: 100%;
 
         .form-label {
             color: oklch(0 0 0);
@@ -372,6 +395,7 @@
             margin-right: 0.75rem;
             outline: none;
             padding: 0.5rem 1rem;
+            width: 100%;
 
             &:disabled {
                 background-color: var(--disabled-background);
@@ -514,6 +538,10 @@
 
     .indirect {
         color: oklch(0.5 0 0);
+    }
+
+    .justify-between {
+        justify-content: space-between;
     }
 
     .justify-evenly {
