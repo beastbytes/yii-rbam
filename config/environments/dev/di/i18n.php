@@ -3,14 +3,14 @@
 declare(strict_types=1);
 
 use Yiisoft\I18n\Locale;
+use Yiisoft\I18n\LocaleProvider;
 
 /** @var array $params */
 
 return [
-    Locale::class => [
-        'class' => Locale::class,
+    LocaleProvider::class => [
         '__construct()' => [
-            $params['app']['locale'],
+            new Locale(DEFAULT_LOCALE)
         ],
     ],
 ];

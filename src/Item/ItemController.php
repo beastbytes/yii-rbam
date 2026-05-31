@@ -267,9 +267,64 @@ final class ItemController
     }
 
     #[PermissionAttribute(RbamPermission::itemUpdate)]
-    public function translate(): ResponseInterface
+    public function translate(
+        CurrentRoute $currentRoute,
+        FormHydrator $formHydrator,
+        NotFound $notFound,
+        ServerRequestInterface $request,
+        TranslationServiceInterface $translationService,
+    ): ResponseInterface
     {
-        return $this->viewRenderer->render('translate');
+        $name = $currentRoute->getArgument('name');
+        $type = $currentRoute->getArgument('type');
+
+        if (!$this
+            ->itemsStorage
+            ->exists($name)
+        ) {
+            return $notFound->create();
+        }
+
+        $formModel = new TranslationForm();
+
+        if ($formHydrator->populateFromPostAndValidate($formModel, $request, strict: false)) {
+            $translations = [];
+
+            foreach ($formModel->getTranslations() as $translation) {
+                $translations[$translation->getLocale()]['rbac-item-description'][$name]
+                    = $translation->getDescription()
+                ;
+            }
+
+            $translationService->save($translations);
+
+            return $this
+                ->redirect
+                ->toRoute('rbam.item.view', ['name' => $name, 'type' => $type])
+                ->create()
+            ;
+        }
+
+        if (!$formModel->hasTranslations()) {
+            $formModel = $formModel->withTranslations(
+                $translationService->getTranslations($name, TranslationServiceInterface::TYPE_ITEM)
+            );
+        }
+
+        return $this
+            ->viewRenderer
+            ->render(
+                'translationForm',
+                [
+                    'formModel' => $formModel,
+                    'item' => $this
+                        ->itemsStorage
+                        ->get($name)
+                    ,
+                    'type' => $type,
+                ]
+            )
+        ;
     }
 
     /**

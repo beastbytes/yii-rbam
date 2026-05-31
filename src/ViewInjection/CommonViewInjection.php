@@ -7,7 +7,7 @@ namespace BeastBytes\Yii\Rbam\ViewInjection;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use JetBrains\PhpStorm\ArrayShape;
 use Yiisoft\Assets\AssetManager;
-use Yiisoft\I18n\Locale;
+use Yiisoft\I18n\LocaleProvider;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Translator\TranslatorInterface;
@@ -20,7 +20,7 @@ final readonly class CommonViewInjection implements CommonParametersInjectionInt
         private AssetManager $assetManager,
         private CurrentUser $currentUser,
         private Inflector $inflector,
-        private Locale $locale,
+        private LocaleProvider $localeProvider,
         private RbamParameters $rbamParameters,
         private TranslatorInterface $translator,
         private UrlGeneratorInterface $urlGenerator
@@ -31,7 +31,7 @@ final readonly class CommonViewInjection implements CommonParametersInjectionInt
         'assetManager' => AssetManager::class,
         'currentUser' => CurrentUser::class,
         'inflector' => Inflector::class,
-        'locale' => Locale::class,
+        'localeProvider' => LocaleProvider::class,
         'rbamParameters' => RbamParameters::class,
         'translator' => TranslatorInterface::class,
         'urlGenerator' => UrlGeneratorInterface::class
@@ -42,7 +42,7 @@ final readonly class CommonViewInjection implements CommonParametersInjectionInt
             'assetManager' => $this->assetManager,
             'currentUser' => $this->currentUser,
             'inflector' => $this->inflector,
-            'locale' => $this->locale,
+            'localeProvider' => $this->localeProvider,
             'rbamParameters' => $this->rbamParameters,
             'translator' => $this->translator,
             'urlGenerator' => $this->urlGenerator,
