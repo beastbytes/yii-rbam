@@ -79,30 +79,22 @@ echo DetailView::widget()
     ->data($item)
     ->fields(
         new DataField(
-            label: $translator->translate(id: 'label.raw-name'),
-            value: static fn (GetValueContext $context) => $context->data->getName(),
-        ),
-        new DataField(
             label: $translator->translate(id: 'label.name'),
-            value: static fn (GetValueContext $context) => $translator->translate(
-                id: $context->data->getName(),
-                category: 'rbac'
-            ),
+            value: static fn (GetValueContext $context) => $context->data->getName(),
         ),
         new DataField(
             label: $translator->translate(id: 'label.type', category: 'rbam'),
             value: $translator->translate(id: 'label.role', category: 'rbam'),
         ),
         new DataField(
-            label: $translator->translate(id: 'label.raw-description', category: 'rbam'),
-            value: static fn (GetValueContext $context) => $context->data->getDescription(),
-        ),
-        new DataField(
             label: $translator->translate(id: 'label.description', category: 'rbam'),
-            value: static fn (GetValueContext $context) => $translator->translate(
-                id: $context->data->getDescription(),
-                category: 'rbac'
-            ),
+            value: static fn (GetValueContext $context) => empty($context->data->getDescription())
+                ? $translator->translate(
+                    id: $context->data->getName(),
+                    category: 'rbac-item-description'
+                )
+                : $context->data->getDescription()
+            ,
         ),
         new DataField(
             label: $translator->translate(id: 'label.rule'),

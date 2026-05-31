@@ -133,6 +133,6 @@ echo Tabs::widget([
                     'user' => null,
                 ]
             ),
-        ]
+        ],
     ],
 ]);
