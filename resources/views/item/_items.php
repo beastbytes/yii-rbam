@@ -93,19 +93,19 @@ echo GridView::widget()
     ->columns(
         new DataColumn(
             header: $translator->translate(id: 'label.name'),
-            content: static fn (RbamItem $item): string => $translator->translate(
-                id: $item->getItem()->getName(),
-                category: 'rbac'
-            ),
+            content: static fn (RbamItem $item): string => $item->getItem()->getName(),
             bodyClass: static fn (RbamItem $item): string
                 => 'name' . ($item->isDefaultRole() ? ' default' : ($item->isGuestRole() ? ' guest' : ''))
         ),
         new DataColumn(
             header: $translator->translate(id: 'label.description'),
-            content: static fn (RbamItem $item) => $translator->translate(
-                id: $item->getItem()->getDescription(),
-                category: 'rbac'
-            ),
+            content: static fn (RbamItem $item) => empty($item->getItem()->getDescription())
+                ? $translator->translate(
+                    id: $item->getItem()->getName(),
+                    category: 'rbac-item-description'
+                )
+                : $item->getItem()->getDescription()
+            ,
             bodyClass: 'description'
         ),
         new DataColumn(
@@ -122,10 +122,7 @@ echo GridView::widget()
                 $grantedBy = [];
 
                 foreach ($item->getParents() as $parent) {
-                    $grantedBy[] = $translator->translate(
-                        id: $parent->getName(),
-                        category: 'rbac'
-                    );
+                    $grantedBy[] = $parent->getName();
                 }
 
                 return '<div>' . implode('</div><div>', $grantedBy) . '</div>';
