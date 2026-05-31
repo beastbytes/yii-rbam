@@ -75,16 +75,8 @@ echo DetailView::widget()
     ->data($item)
     ->fields(
         new DataField(
-            label: $translator->translate(id: 'label.raw-name', category: 'rbam'),
-            value: static fn (GetValueContext $context) => $context->data->getItem()->getName(),
-            fieldAttributes: ['class' => 'name'],
-        ),
-        new DataField(
             label: $translator->translate(id: 'label.name', category: 'rbam'),
-            value: static fn (GetValueContext $context) => $translator->translate(
-                id: $context->data->getItem()->getName(),
-                category: 'rbac'
-            ),
+            value: static fn (GetValueContext $context) => $context->data->getItem()->getName(),
             fieldAttributes: ['class' => 'name'],
         ),
         new DataField(
@@ -93,16 +85,14 @@ echo DetailView::widget()
             fieldAttributes: ['class' => 'type'],
         ),
         new DataField(
-            label: $translator->translate(id: 'label.raw-description', category: 'rbam'),
-            value: static fn (GetValueContext $context) => $context->data->getItem()->getDescription(),
-            fieldAttributes: ['class' => 'description'],
-        ),
-        new DataField(
             label: $translator->translate(id: 'label.description', category: 'rbam'),
-            value: static fn (GetValueContext $context) => $translator->translate(
-                id: $context->data->getItem()->getDescription(),
-                category: 'rbac'
-            ),
+            value: static fn (GetValueContext $context) => empty($context->data->getItem()->getDescription())
+                ? $translator->translate(
+                    id: $context->data->getItem()->getName(),
+                    category: 'rbac-item-description'
+                )
+                : $context->data->getItem()->getDescription()
+            ,
             fieldAttributes: ['class' => 'description'],
         ),
         new DataField(
@@ -111,7 +101,7 @@ echo DetailView::widget()
                 $grantedBy = [];
 
                 foreach ($context->data->getParents() as $parent) {
-                    $grantedBy[] = $translator->translate(id: $parent->getName(), category: 'rbac');
+                    $grantedBy[] = $parent->getName();
                 }
 
                 return '<div>' . implode('</div><div>', $grantedBy) . '</div>';
