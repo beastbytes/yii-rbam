@@ -22,12 +22,9 @@ use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\View\Renderer\Csrf;
 
-$this->setTitle(
-    ($formModel->isCreate()
-        ? $translator->translate(id: "label.$type.create")
-        : $translator->translate(id: "label.$type.update")
-    )
-);
+$this->setTitle($translator->translate(
+    sprintf(($formModel->isCreate() ? 'header.%s.create' : 'header.%s.update'), $type)
+));
 
 $breadcrumbs = [
     [
@@ -67,7 +64,6 @@ $tabIndex = 1;
     ->tabindex($tabIndex++)
 ?>
 <?= Field::text($formModel, 'description')
-    ->required(true)
     ->containerClass('form-control-container')
     ->inputContainerTag('div')
     ->inputContainerClass('form-input-container')
