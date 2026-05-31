@@ -10,22 +10,22 @@ abstract class Item
 {
     /**
      * @param ItemInterface $name
-     * @param string|null $description
+     * @param string $description
      * @param ItemInterface|list<ItemInterface> $parent
      * @param string|null $ruleName
      */
     public function __construct(
         private readonly ItemInterface $name,
-        private readonly ?string $description = null,
+        private readonly string $description = '',
         private readonly array|ItemInterface $parent = [],
         private readonly ?string $ruleName = null,
     )
     {
     }
 
-public function getDescription(): ?string
+public function getDescription(): string
     {
-        return $this->description ?? $this->name->getDescription();
+        return $this->description;
     }
 
     public function getName(): string
