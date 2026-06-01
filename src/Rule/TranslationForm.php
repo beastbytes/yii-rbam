@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BeastBytes\Yii\Rbam\Item;
+namespace BeastBytes\Yii\Rbam\Rule;
 
 use Yiisoft\FormModel\FormModel;
 use Yiisoft\Hydrator\Attribute\Parameter\Collection;
@@ -25,7 +25,6 @@ class TranslationForm extends FormModel
 
         foreach ($translations as $locale => $translation) {
             $new->translations[$locale] = new Translation(
-                $translation['name'],
                 $translation['description'],
                 $locale
             );

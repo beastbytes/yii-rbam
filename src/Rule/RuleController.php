@@ -11,6 +11,8 @@ use BeastBytes\Yii\Rbam\Rbac\Attribute\Permission as PermissionAttribute;
 use BeastBytes\Yii\Rbam\Rbac\Attribute\Role as RoleAttribute;
 use BeastBytes\Yii\Rbam\Rbac\Permission as RbamPermission;
 use BeastBytes\Yii\Rbam\Rbac\Role as RbamRole;
+use BeastBytes\Yii\Rbam\TranslationService;
+use BeastBytes\Yii\Rbam\TranslationServiceInterface;
 use HttpSoft\Message\ServerRequest;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -32,6 +34,7 @@ final class RuleController
     public function __construct(
         private readonly FlashInterface $flash,
         private readonly ItemsStorageInterface $itemsStorage,
+        private readonly Redirect $redirect,
         private readonly RuleServiceInterface $ruleService,
         private TranslatorInterface $translator,
         private WebViewRenderer $viewRenderer
@@ -144,7 +147,10 @@ final class RuleController
      * @return ResponseInterface
      */
     #[PermissionAttribute(RbamPermission::ruleDelete)]
-    public function delete(ServerRequestInterface $request): ResponseInterface
+    public function delete(
+        ServerRequestInterface $request,
+        TranslationService $translationService,
+    ): ResponseInterface
     {
         $parsedBody = $request->getParsedBody();
 
@@ -167,6 +173,7 @@ final class RuleController
         }
 
         $this->ruleService->delete($parsedBody['rule']);
+        $translationService->deleteRule($parsedBody['rule']);
 
         return $this
             ->viewRenderer
@@ -178,6 +185,60 @@ final class RuleController
                         ->getRules()
                 ]
             );
+    }
+
+    #[PermissionAttribute(RbamPermission::ruleUpdate)]
+    public function translate(
+        CurrentRoute $currentRoute,
+        FormHydrator $formHydrator,
+        NotFound $notFound,
+        ServerRequestInterface $request,
+        TranslationServiceInterface $translationService,
+    ): ResponseInterface
+    {
+        $name = $currentRoute->getArgument('name');
+        $rule = $this->ruleService->getRule($name);
+
+        if ($rule === null) {
+            return $notFound->create();
+        }
+
+        $formModel = new TranslationForm();
+
+        if ($formHydrator->populateFromPostAndValidate($formModel, $request, strict: false)) {
+            $translations = [];
+
+            foreach ($formModel->getTranslations() as $translation) {
+                $translations[$translation->getLocale()]['rbac-rule'][$rule->getDescription()]
+                    = $translation->getDescription()
+                ;
+            }
+
+            $translationService->save($translations);
+
+            return $this
+                ->redirect
+                ->toRoute('rbam.rule.view', ['name' => $name])
+                ->create()
+            ;
+        }
+
+        if (!$formModel->hasTranslations()) {
+            $formModel = $formModel->withTranslations(
+                $translationService->getRuleTranslations($rule)
+            );
+        }
+
+        return $this
+            ->viewRenderer
+            ->render(
+                'translationForm',
+                [
+                    'formModel' => $formModel,
+                    'rule' => $rule,
+                ]
+            )
+        ;
     }
 
     /**
@@ -197,6 +258,7 @@ final class RuleController
         NotFound $notFound,
         Redirect $redirect,
         ServerRequestInterface $request,
+        TranslationServiceInterface $translationService,
     ): ResponseInterface {
         $name = $currentRoute->getArgument('name');
 
@@ -225,6 +287,11 @@ final class RuleController
                     ->ruleService
                     ->save($formModel->getName(), $formModel->getDescription(), $formModel->getCode())
             ) {
+
+                $translationService
+                    ->updateRule($rule->getDescription(), $formModel->getDescription())
+                ;
+
                 $this
                     ->flash
                     ->add(

@@ -62,8 +62,16 @@ echo DetailView::widget()
             fieldAttributes: ['class' => 'name'],
         ),
         new DataField(
-            label: $translator->translate(id: 'label.description', category: 'rbam'),
+            label: $translator->translate(id: 'label.description.raw', category: 'rbam'),
             value: static fn (GetValueContext $context) => $context->data->getDescription(),
+            fieldAttributes: ['class' => 'description'],
+        ),
+        new DataField(
+            label: $translator->translate(id: 'label.description', category: 'rbam'),
+            value: static fn (GetValueContext $context) => $translator->translate(
+                id: $context->data->getDescription(),
+                category: 'rbac-rule',
+            ),
             fieldAttributes: ['class' => 'description'],
         ),
         new DataField(
@@ -86,6 +94,11 @@ RULE,
             content: $translator->translate('button.update', ['item' => $rule->getName()], 'rbam'),
             url: $urlGenerator->generate('rbam.rule.update', ['name' => $rule->getName()]),
             attributes: $rbamParameters->getButtons('update')['attributes']
+        )
+        . Html::a(
+            content: $translator->translate(id: 'button.translations', category: 'rbam'),
+            url: $urlGenerator->generate('rbam.rule.translate', ['name' => $rule->getName()]),
+            attributes: $rbamParameters->getButtons('translate')['attributes']
         )
         : ''
     )

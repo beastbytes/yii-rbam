@@ -110,7 +110,7 @@ echo GridView::widget()
             header: $translator->translate(id: 'label.description'),
             content: static fn (Item $item) => $translator->translate(
                 id: $item->getItem()->getDescription(),
-                category: 'rbac-item-description'
+                category: 'rbac-item'
             ),
         ),
         new ActionColumn(

@@ -21,6 +21,7 @@ use BeastBytes\Yii\Rbam\Alpine\Tabs;
 use BeastBytes\Yii\Rbam\Diagram\MermaidHierarchyDiagram;
 use BeastBytes\Yii\Rbam\DTO\Item as RbamItem;
 use BeastBytes\Yii\Rbam\DTO\User as RbamUser;
+use BeastBytes\Yii\Rbam\Rbac\Permission as RbamPermission;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use Yiisoft\Assets\AssetManager;
 use Yiisoft\Html\Html;
@@ -75,25 +76,35 @@ echo DetailView::widget()
     ->data($item)
     ->fields(
         new DataField(
-            label: $translator->translate(id: 'label.name', category: 'rbam'),
+            label: $translator->translate(id: 'label.name.raw', category: 'rbam'),
             value: static fn (GetValueContext $context) => $context->data->getItem()->getName(),
             fieldAttributes: ['class' => 'name'],
+        ),
+        new DataField(
+            label: $translator->translate(id: 'label.name', category: 'rbam'),
+            value: static fn (GetValueContext $context) => $translator->translate(
+                $context->data->getItem()->getName(),
+                category: 'rbac-item'
+            ),
+            fieldAttributes: ['class' => 'name'],
+        ),
+        new DataField(
+            label: $translator->translate(id: 'label.description.raw', category: 'rbam'),
+            value: static fn (GetValueContext $context) => $context->data->getItem()->getDescription(),
+            fieldAttributes: ['class' => 'description'],
+        ),
+        new DataField(
+            label: $translator->translate(id: 'label.description', category: 'rbam'),
+            value: static fn (GetValueContext $context) => $translator->translate(
+                id: $context->data->getItem()->getDescription(),
+                category: 'rbac-item'
+            ),
+            fieldAttributes: ['class' => 'description'],
         ),
         new DataField(
             label: $translator->translate(id: 'label.type', category: 'rbam'),
             value: $translator->translate(id: 'label.permission', category: 'rbam'),
             fieldAttributes: ['class' => 'type'],
-        ),
-        new DataField(
-            label: $translator->translate(id: 'label.description', category: 'rbam'),
-            value: static fn (GetValueContext $context) => empty($context->data->getItem()->getDescription())
-                ? $translator->translate(
-                    id: $context->data->getItem()->getName(),
-                    category: 'rbac-item-description'
-                )
-                : $context->data->getItem()->getDescription()
-            ,
-            fieldAttributes: ['class' => 'description'],
         ),
         new DataField(
             label: $translator->translate(id: 'label.granted-by'),
@@ -138,16 +149,8 @@ echo DetailView::widget()
             fieldAttributes: ['class' => 'updated-at datetime'],
         ),
     )
-    ->prepend(
-        Html::div(
-            content: $translator->translate(
-                'label.permission.name',
-                ['name' => $item->getItem()->getName()],
-                'rbam'
-            ),
-            attributes: ['class' => 'header']
-        )
-        . Html::div(NoEncode::string(
+    ->prepend($currentUser->can(RbamPermission::ruleUpdate->getItemName())
+        ? Html::div(NoEncode::string(
             Html::a(
                 content: $translator->translate(id: 'button.update', category: 'rbam'),
                 url: $urlGenerator->generate(
@@ -169,8 +172,9 @@ echo DetailView::widget()
                     ]
                 ),
                 attributes: $rbamParameters->getButtons('translate')['attributes']
-            ))
-        )
+            )
+        ))
+        : ''
     )
     ->render()
 ;

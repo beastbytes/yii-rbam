@@ -5,8 +5,8 @@ declare(strict_types=1);
 /**
  * @var Csrf $csrf
  * @var TranslationForm $formModel
- * @var Item $item
  * @var RbamParameters $rbamParameters
+ * @var RuleInterface $rule
  * @var WebView $this
  * @var array $translations
  * @var TranslatorInterface $translator
@@ -16,16 +16,16 @@ declare(strict_types=1);
 
 use BeastBytes\Yii\Rbam\Item\TranslationForm;
 use BeastBytes\Yii\Rbam\RbamParameters;
+use BeastBytes\Yii\Rbam\Rule\RuleInterface;
 use Yiisoft\FormModel\Field;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\NoEncode;
-use Yiisoft\Rbac\Item;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\View\Renderer\Csrf;
 
-$this->setTitle($translator->translate(sprintf('header.%s.translate', $type)));
+$this->setTitle($translator->translate('header.rule.translate'));
 
 $breadcrumbs = [
     [
@@ -33,8 +33,8 @@ $breadcrumbs = [
         'url' => $urlGenerator->generate('rbam.rbam'),
     ],
     [
-        'label' => $translator->translate(id: 'label.' . $type . 's', category: 'rbam'),
-        'url' => $urlGenerator->generate('rbam.item.index', ['type' => $type . 's']),
+        'label' => $translator->translate(id: 'label.rules', category: 'rbam'),
+        'url' => $urlGenerator->generate('rbam.rule.index'),
     ],
     $this->getTitle()
 ];
@@ -44,7 +44,7 @@ $tabIndex = 1;
 ?>
 
 <h2 class="header"><?= $this->getTitle() ?></h2>
-<h3><?= $translator->translate(sprintf('label.%s.name', $type), ['name' => $item->getName()]) ?></h3>
+<h3><?= $translator->translate('label.rule.name', ['name' => $rule->getName()]) ?></h3>
 
 <?= Html::form()
     ->attributes(['x-data' => '{active: null}'])
@@ -91,18 +91,6 @@ $tabIndex = 1;
                     ->inputId(sprintf('translation-%s-locale', $locale))
                     ->name(sprintf('TranslationForm[translations][%s][locale]', $locale))
                 ,
-                Field::text($translation, 'name')
-                    ->inputId(sprintf('translation-%s-name', $locale))
-                    ->name(sprintf('TranslationForm[translations][%s][name]', $locale))
-                    ->required(true)
-                    ->containerClass('form-control-container')
-                    ->inputContainerTag('div')
-                    ->inputContainerClass('form-input-container')
-                    ->addInputClass('form-input')
-                    ->addLabelClass('form-label')
-                    ->afterInput(Html::span())
-                    ->tabindex($tabIndex++)
-                ,
                 Field::text($translation, 'description')
                     ->inputId(sprintf('translation-%s-description', $locale))
                     ->name(sprintf('TranslationForm[translations][%s][description]', $locale))
@@ -133,7 +121,7 @@ $tabIndex = 1;
         ->buttonAttributes([
             'onClick' => sprintf(
                 'window.location.href = "%s"',
-                $urlGenerator->generate('rbam.item.view', ['name' => $item->getName(), 'type' => $type])
+                $urlGenerator->generate('rbam.rule.view', ['name' => $rule->getName()])
             )
         ])
         ->buttonClass($rbamParameters->getButtons('cancel')['attributes']['class'])

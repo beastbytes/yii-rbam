@@ -10,18 +10,18 @@ use Yiisoft\Translator\Message\Php\MessageSource;
 /** @var array $params */
 
 return [
-    'translation.rbac-item-description' => [
+    'translation.rbac-item' => [
         'definition' => static fn (Aliases $aliases) => new CategorySource(
-            'rbac-item-description',
+            'rbac-item',
             new MessageSource($aliases->get('@rbacTranslations')),
             new IntlMessageFormatter(),
             new MessageSource($aliases->get('@rbacTranslations')),
         ),
         'tags' => ['translation.categorySource'],
     ],
-    'translation.rbac-rule-description' => [
+    'translation.rbac-rule' => [
         'definition' => static fn (Aliases $aliases) => new CategorySource(
-            'rbac-rule-description',
+            'rbac-rule',
             new MessageSource($aliases->get('@rbacTranslations')),
             new IntlMessageFormatter(),
             new MessageSource($aliases->get('@rbacTranslations'))

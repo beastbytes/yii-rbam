@@ -9,12 +9,13 @@ use BeastBytes\Yii\Http\Response\Redirect;
 use BeastBytes\Yii\Rbam\Diagram\MermaidHierarchyDiagram;
 use BeastBytes\Yii\Rbam\DTO\Assignment as RbamAssignment;
 use BeastBytes\Yii\Rbam\DTO\Item as RbamItem;
-use BeastBytes\Yii\Rbam\DTO\User as  RbamUser;
+use BeastBytes\Yii\Rbam\DTO\User as RbamUser;
 use BeastBytes\Yii\Rbam\Rbac\Attribute\Permission as PermissionAttribute;
 use BeastBytes\Yii\Rbam\Rbac\Attribute\Role as RoleAttribute;
 use BeastBytes\Yii\Rbam\Rbac\Permission as RbamPermission;
 use BeastBytes\Yii\Rbam\Rbac\Role as RbamRole;
 use BeastBytes\Yii\Rbam\Rule\RuleServiceInterface;
+use BeastBytes\Yii\Rbam\TranslationServiceInterface;
 use BeastBytes\Yii\Rbam\User\UserRepositoryInterface;
 use HttpSoft\Message\ServerRequest;
 use Psr\Http\Message\ResponseInterface;
@@ -286,12 +287,19 @@ final class ItemController
         }
 
         $formModel = new TranslationForm();
+        $item = $this
+            ->itemsStorage
+            ->get($name)
+        ;
 
         if ($formHydrator->populateFromPostAndValidate($formModel, $request, strict: false)) {
             $translations = [];
 
             foreach ($formModel->getTranslations() as $translation) {
-                $translations[$translation->getLocale()]['rbac-item-description'][$name]
+                $translations[$translation->getLocale()]['rbac-item'][$name]
+                    = $translation->getName()
+                ;
+                $translations[$translation->getLocale()]['rbac-item'][$item->getDescription()]
                     = $translation->getDescription()
                 ;
             }
@@ -307,7 +315,7 @@ final class ItemController
 
         if (!$formModel->hasTranslations()) {
             $formModel = $formModel->withTranslations(
-                $translationService->getTranslations($name, TranslationServiceInterface::TYPE_ITEM)
+                $translationService->getItemTranslations($item)
             );
         }
 
@@ -317,10 +325,7 @@ final class ItemController
                 'translationForm',
                 [
                     'formModel' => $formModel,
-                    'item' => $this
-                        ->itemsStorage
-                        ->get($name)
-                    ,
+                    'item' => $item,
                     'type' => $type,
                 ]
             )
@@ -344,6 +349,7 @@ final class ItemController
         NotFound $notFound,
         RuleServiceInterface $ruleService,
         ServerRequestInterface $request,
+        TranslationServiceInterface $translationService,
     ): ResponseInterface
     {
         $name = $currentRoute->getArgument('name');
@@ -392,6 +398,10 @@ final class ItemController
                         ->updateRole($name, $newItem)
                     ;
                 }
+
+                $translationService
+                    ->updateItem($item, $newItem)
+                ;
 
                 $this
                     ->flash
@@ -815,11 +825,15 @@ final class ItemController
      * If the item has child items the parent/child relationships are deleted, but the child items are not
      *
      * @param ServerRequestInterface $request
+     * @param TranslationServiceInterface $translationService
      * @return ResponseInterface
      * @psalm-suppress PossiblyNullArgument
      */
     #[PermissionAttribute(RbamPermission::itemRemove)]
-    public function remove(ServerRequestInterface $request): ResponseInterface
+    public function remove(
+        ServerRequestInterface $request,
+        TranslationServiceInterface $translationService
+    ): ResponseInterface
     {
         [
             'action_buttons' => $actionButtons,
@@ -832,17 +846,31 @@ final class ItemController
             = $request->getParsedBody()
         ;
 
+        foreach ($this->itemsStorage->getPermissions() as $permission) {
+            if ($this->itemsStorage->hasChild($item, $permission->getName())) {
+                $this->itemsStorage->removeChild($item, $permission->getName());
+            }
+        }
+
         foreach ($this->itemsStorage->getRoles() as $role) {
             if ($this->itemsStorage->hasChild($item, $role->getName())) {
                 $this->itemsStorage->removeChild($item, $role->getName());
             }
         }
 
+        $method = 'get' . ucfirst($type);
+        $itemToRemove= $this
+            ->itemsStorage
+            ->$method($item)
+        ;
+
         $method = 'remove' . ucfirst($type);
         $this
             ->manager
             ->$method($item)
         ;
+
+        $translationService->deleteItem($itemToRemove);
 
         $items = $this->getViewParameters($item, $type)['items'];
 

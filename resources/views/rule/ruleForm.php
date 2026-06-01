@@ -29,6 +29,10 @@ $this->setTitle(
 
 $breadcrumbs = [
     [
+        'label' => $translator->translate(id: 'label.rbam', category: 'rbam'),
+        'url' => $urlGenerator->generate('rbam.rbam'),
+    ],
+    [
         'label' => $translator->translate(id: 'label.rules', category: 'rbam'),
         'url' => $urlGenerator->generate('rbam.rule.index')
     ],
@@ -51,6 +55,8 @@ $tabIndex = 1;
     ->autofocus($formModel->isCreate())
     ->disabled($formModel->isUpdate())
     ->containerClass('form-control-container')
+    ->inputContainerTag('div')
+    ->inputContainerClass('form-input-container')
     ->addInputClass('form-input')
     ->addLabelClass('form-label')
     ->invalidClass('invalid')
@@ -60,6 +66,8 @@ $tabIndex = 1;
 <?= Field::text($formModel, 'description')
     ->autofocus($formModel->isUpdate())
     ->containerClass('form-control-container')
+    ->inputContainerTag('div')
+    ->inputContainerClass('form-input-container')
     ->addInputClass('form-input')
     ->addLabelClass('form-label')
     ->invalidClass('invalid')
@@ -67,9 +75,11 @@ $tabIndex = 1;
     ->tabindex($tabIndex++)
 ?>
 <?= Field::textarea($formModel, 'code')
-    ->beforeInput("public function execute(?string \$userId, Permission \$item, RuleContext \$context): bool\n{")
-    ->afterInput('}')
+    ->beforeInput('<div>public function execute(?string $userId, Permission $item, RuleContext $context): bool {</div>')
+    ->afterInput('<div>}</div>')
     ->containerClass('form-control-container')
+    ->inputContainerTag('div')
+    ->inputContainerClass('form-input-container code')
     ->addInputClass('form-input')
     ->addLabelClass('form-label')
     ->invalidClass('invalid')

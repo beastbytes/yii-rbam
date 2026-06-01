@@ -120,6 +120,11 @@ return [
                         ->name('delete')
                         ->action([RuleController::class, 'delete'])
                     ,
+                    Route::methods([Method::GET, Method::POST], '/{name: \w.*}/translate')
+                        ->name('translate')
+                        ->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::ruleUpdate))
+                        ->action([RuleController::class, 'translate'])
+                    ,
                     Route::methods([Method::GET, Method::POST],'/{name: \w.*}/update')
                         ->name('update')
                         ->middleware(fn (AccessChecker $checker) => $checker->withPermission(Permission::ruleUpdate))
