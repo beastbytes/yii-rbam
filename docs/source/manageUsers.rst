@@ -10,6 +10,9 @@ Users
 The Users home page shows a paged list of users. For each user,
 their name and the number of Roles assigned and Permissions granted is shown.
 
+.. image:: /_images/users_index.png
+Users
+
 View a User
 -----------
 
@@ -21,7 +24,8 @@ A user can be assigned a Role or inherit it; an inherited Role is a descendant o
 Roles can be assigned to and revoked from the user; Roles can be revoked individually or all Roles
 can be revoked.
 
-:note:
+.. note::
+
     Inherited Roles can not be individually revoked.
 
     To revoke an inherited role the assigned ancestor Role must be revoked,

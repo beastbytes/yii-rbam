@@ -24,12 +24,15 @@ Example
 
 .. note::
 
-    The example only shows Attribute, class, and method definitions for RbamController class, not the code.
+    For clarity, the example only shows the relevant `use` statements,
+    Attribute, class, and method definitions for the RbamController class, but not code for the methods.
 
 .. code:: php
 
     use BeastBytes\Yii\Rbam\Rbac\Attribute\Permission as PermissionAttribute;
     use BeastBytes\Yii\Rbam\Rbac\Attribute\Role as RoleAttribute;
+    use BeastBytes\Yii\Rbam\Rbac\Permission as RbamPermission;
+    use BeastBytes\Yii\Rbam\Rbac\Role as RbamRole;
 
     #[RoleAttribute(item: RbamRole::admin)]
     final class RbamController {
@@ -76,8 +79,8 @@ API
     .. php:method:: __construct($item, $description = null, $parent = [], $ruleName = null)
 
         :param ItemInterface $item: An Item Enum case
-        :param ?string $description: The description of the Item (default: '')
+        :param ?string $description: The description of the Item (default: null)
         :param ItemInterface|list<ItemInterface> $parent: The parent(s) of the Item
-        :param string|null $ruleName: The name of a rule to be applied to the Item
+        :param ?string $ruleName: The name of a rule to be applied to the Item (default: null)
 
     Other methods are used internally by RBAM to initialise RBAC

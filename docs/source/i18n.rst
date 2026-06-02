@@ -7,14 +7,14 @@ if anyone would like to provide translations to another language or languages, y
 `./resources/messages/en-gb/rbam.php` relative to RBAM's root directory;
 fork the repository, do the work, then create a pull request.
 
-:note:
+.. note::
 
     Internationalisation must be configured for the application.
 
 In addition to RBAM itself, RBAM can also translate RBAC Permission and Role names and descriptions, and Rule
 descriptions.
 
-:note:
+.. note::
 
     Translation of RBAC Permissions, Roles, and Rules is optional.
 

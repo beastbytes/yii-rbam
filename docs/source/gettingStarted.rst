@@ -52,7 +52,8 @@ RBAC Initialisation
 -------------------
 
 Before RBAM can be used, RBAC must be initialised. As a minium, RBAM's RBAC items and hierarchy must be initialised,
-however RBAM can also initialise application RBAC items if it uses RBAM's Permission and Role PHP Attributes.
+however RBAM can also initialise application RBAC items if it uses RBAM's :doc:`attributes`
+to define Permissions and Roles.
 
 Initialisation is from RBAM's initialisation page. Navigate to `/rbam/initialise` and enter the user ID of the user
 to be assigned the `rbam.admin` role; this role allows the specified user to perform all RBAM actions.
@@ -65,9 +66,9 @@ to be assigned the `rbam.admin` role; this role allows the specified user to per
 Initialising Application RBAC Items
 -----------------------------------
 
-For RBAM to be able to initialise the application's RBAC items and hierarchy it *must* use
-RBAM's Permission and Role PHP Attributes. If they are not used, application RBAC items and hierarchy can be set up
-manually using RBAM.
+For RBAM to initialise the application's RBAC items and hierarchy it *must* use
+RBAM's :doc:`attributes` to define Permissions and Roles.
+If they are not used, application RBAC items and hierarchy can be created manually using RBAM.
 
 If RBAM is to initialise the application's RBAC items, specify the following:
 
@@ -80,6 +81,10 @@ If RBAM is to initialise the application's RBAC items, specify the following:
     See `Path Matcher documentation <https://github.com/yiisoft/files/tree/master#path-matchers>`__
     for details of how specify `Except` and `Only`.
     In both case, multiple entries can be given using a comma separates list.
+
+.. note::
+
+    It is assumed that RBAM is in the `{root}/vendor` directory.
 
 Initialising
 ------------

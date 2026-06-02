@@ -1,10 +1,10 @@
 Access Checker Middleware
 =========================
 
-RBAM's Access Checker middleware that can be used in route definitions to determine whether the current user
+RBAM's Access Checker middleware can be used in route definitions to determine whether the current user
 has permission to perform the action associated with the route.
 
-The Access Checker middleware uses the configured `AccessCheckerInterface` - typically `Yiisoft\Rbac\Manager` -
+The Access Checker middleware uses the configured `AccessCheckerInterface` - typically `Yiisoft\\Rbac\\Manager` -
 to check that the current user has permission. If the user does not have permission,
 it returns a response with staus 403 (Forbidden) and optionally a redirect header.
 
@@ -34,10 +34,10 @@ Using in a Route Definition
     ,
 
 The Permission ({permission}) can be either a string - the Permission name,
-or an instance of `\BeastBytes\Yii\Rbam\Rbac\ItemInterface` (see :ref:`item-interface`).
+or an instance of :ref:`item-interface`.
 
 If the redirect route has not been configured as above, or a different redirect route is required,
-this can be added in the route:
+this can be added in the route definition:
 
 .. code-block:: php
 
@@ -57,13 +57,13 @@ AccessChecker API
 
 .. php:class:: AccessChecker
 
-    Implements Psr\Http\Server\MiddlewareInterface
+    Implements Psr\\Http\\Server\\MiddlewareInterface
 
-    .. php:method:: withPermission(BeastBytes\Yii\Rbam\Rbac\Permission|string $permission)
+    .. php:method:: withPermission($permission)
 
         Defines the permission to check.
 
-        :param BeastBytes\Yii\Rbam\Rbac\Permission|string $permission: The permission to check. Either a Permission enum
+        :param BeastBytes\\Yii\\Rbam\\Rbac\\Permission|string $permission: The permission to check. Either a Permission enum
             or the name of the RBAC permission
         :returns: A new instance of the access checker with the permission to check
         :rtype: AccessChecker

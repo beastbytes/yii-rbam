@@ -13,6 +13,9 @@ the following information is given for each Rule:
 * Description of the Rule - either as entered or in the current locale (see :doc:`i18n`)
 * Buttons to `View`, `Update`, or `Remove` the Rule
 
+.. image:: /_images/rules_index.png
+Rules
+
 View a Rule
 -----------
 

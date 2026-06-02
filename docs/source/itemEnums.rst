@@ -9,8 +9,7 @@ and RBAM's :doc:`attributes`.
 The Enum below defines RBAM Roles. The name of an Enum case is the name that is used in code,
 the value is the name of the RBAC Item.
 
-It uses `\BeastBytes\Yii\Rbam\Rbac\ItemTrait` to implement `ItemInterface`;
-the `getItemName()` method returns the Item name.
+It uses `ItemTrait` to implement `ItemInterface`; the `getItemName()` method returns the fully qualified Item name.
 
 The `Prefix` PHP Attribute defines a prefix to all RBAC Item names in the Enum, and a separator between the prefix
 and Item names - the default separator is a space (' ').
@@ -57,12 +56,12 @@ API
 
     .. php:method:: getItemName()
 
-        Returns the name of the RBAC Item - Permission or Role
+        Returns the fully qualified name of the RBAC Item - Permission or Role
 
-        :returns: The name of the RBAC Item
+        :returns: The fully qualified name of the RBAC Item
         :rtype: string
 
-.. _prefix-attribute
+.. _prefix-attribute:
 Prefix Attribute
 ----------------
 
@@ -75,4 +74,4 @@ Prefix Attribute
         :param list<string>|string $prefix: Prefix for all Items in the Enum. If a list of strings they are concatenated using `$separator`
         :param string $separator: The separator between the prefix and the rest of the item name (default: ' ')
 
-    Other methods are used internally to generate the complete item name.
+    Other methods are used internally to generate the fully qualified item name.

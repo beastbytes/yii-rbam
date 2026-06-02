@@ -3,6 +3,10 @@ RBAM Dashboard
 
 The dashboard shows an overview of RBAC Roles, Permissions, Rules, and Users.
 
+.. image:: /_images/dashboard.png
+
+The RBAM dashboard
+
 Overview
 --------
 
@@ -11,11 +15,8 @@ Depending on the current user's role assignments, and hence permissions granted,
 
 If the current user has the appropriate permission, there is a dropdown menu with one item - Clear RBAC.
 
-Managing Roles, Permissions, Rules, and Users
----------------------------------------------
-
 Managing Roles
-++++++++++++++
+--------------
 
 Click `Manage Roles` to manage Roles.
 
@@ -33,7 +34,7 @@ Click `Delete` to delete a Role.
 See :doc:`manageRoles` for more details.
 
 Managing Permissions
-++++++++++++++++++++
+--------------------
 
 Click `Manage Permissions` to manage Permissions.
 
@@ -50,7 +51,7 @@ Click `Delete` to delete a Permission.
 See :doc:`managePermissions` for more details.
 
 Managing Rules
-++++++++++++++
+--------------
 
 Click `Manage Rules` to manage Rules.
 
@@ -68,7 +69,7 @@ Click `Delete` to delete a Rule.
 See :doc:`manageRules` for more details.
 
 Managing Users
-++++++++++++++
+--------------
 
 Click `Manage Users` to manage Users.
 
@@ -84,7 +85,7 @@ Clear RBAC
 
 `Clear RBAC` clears *all* RBAC items and hierarchy.
 
-:: warning
+.. danger::
 
     Clearing RBAC will prohibit access to all parts of the application where RBAC controls access; this includes RBAM.
 

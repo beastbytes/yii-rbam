@@ -16,6 +16,9 @@ the following information is given for each Role:
 * Date and time the Role was last updated
 * Buttons to `View`, `Update`, or `Remove` the Role
 
+.. image:: /_images/roles_index.png
+Roles
+
 View a Role
 -----------
 

@@ -18,6 +18,9 @@ the following information is given for each Permission:
 * Date and time the Permission was last updated
 * Buttons to `View`, `Update`, or `Remove` the Permission
 
+.. image:: /_images/permissions_index.png
+Permissions
+
 View a Permission
 -----------------
 
@@ -42,7 +45,7 @@ The page contains a list of Permissions that are currently children, and a list 
 
 Permissions that are currently children can be removed.
 
-:note:
+.. note::
 
     The child Permission is not removed from RBAC; only the parent - child relationship is removed.
 
@@ -84,7 +87,7 @@ Remove a Permission
 To remove a Permission, click the Remove button for the Permission and confirm the removal in the dialog.
 The Permission will be removed from RBAC.
 
-:note:
+.. note::
 
     Removing a Permissions *may* result in orphaned child Permissions.
     The RBAC hierarchy should be checked following Permission removal.
