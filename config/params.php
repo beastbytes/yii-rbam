@@ -132,7 +132,7 @@ return [
         'tabPageSize' => 10,
     ],
     'yiisoft/rbac' => [
-        'defaultRoles' => [], // <list array{name: string, description: string}>
+        'defaultRoles' => [], // list<array{name: string, description: string}>
         'guestRole' => [ // array{name: string, description: string}
             'name' => 'guest.role',
             'description' => 'guest.role.description',
