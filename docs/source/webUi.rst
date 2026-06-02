@@ -16,3 +16,4 @@ RBAM fully supports i18n in the UI to localise RBAC Item names and descriptions,
     manageUsers
     hierarchyDiagram
     i18n
+    rbamPermissionsRoles
