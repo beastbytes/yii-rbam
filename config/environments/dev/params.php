@@ -7,13 +7,28 @@ use Yiisoft\ErrorHandler\Middleware\ErrorCatcher;
 use Yiisoft\Router\Middleware\Router;
 use Yiisoft\Session\SessionMiddleware;
 
-const LOCALE = 'en-gb';
+const DEFAULT_LOCALE = 'en-GB'; // must be in locales
+const LOCALES = [
+    // ISO 3166 alpha-2 => BCP 47 formatted string
+    'de' => 'de-DE',
+    'fr' => 'fr-FR',
+    'gb' => 'en-GB',
+];
 
 return [
     'app' => [
         'charset' => 'UTF-8',
-        'locale' => LOCALE,
         'name' => 'Yii RBAM',
+    ],
+    'locale' => [
+        'defaultLocale' => DEFAULT_LOCALE,
+        'locales' => LOCALES,
+        'ignoredRequests' => [
+            '/gii**',
+            '/debug**',
+            '/inspect**',
+        ],
+        'queryParameterName' => 'locale',
     ],
     'middlewares' => [
         ErrorCatcher::class,
@@ -35,6 +50,7 @@ return [
             '@public' => '@root/public',
             '@rbac' => '@root/rbac',
             '@rbacRules' => '@root/rbac/rules',
+            '@rbacTranslations' => '@root/rbac/translations',
             '@resources' => '@root/resources',
             '@runtime' => '@root/runtime',
             '@src' => '@root/src',
@@ -49,8 +65,8 @@ return [
         ],
     ],
     'yiisoft/translator' => [
-        'locale' => LOCALE,
-        'fallbackLocale' => 'en',
+        'locale' => DEFAULT_LOCALE,
+        'fallbackLocale' => DEFAULT_LOCALE,
         'defaultCategory' => 'rbam',
     ],
     'yiisoft/view' => [
