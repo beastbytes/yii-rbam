@@ -46,13 +46,11 @@ final class MermaidHierarchyDiagram implements HierarchyDiagramInterface
     public function render(): string
     {
         $currentItem = (new Classs(
-            $this->translator->translate($this->item->getName()),
+            $this->item->getName(),
             $this->translator->translate(sprintf('label.%s', $this->item->getType()))
         ))
             ->withAttribute(new Attribute(
-                empty($this->item->getDescription())
-                    ? $this->translator->translate(id: $this->item->getName(), category: 'rbac-item')
-                    : $this->item->getDescription()
+                $this->translator->translate(id: $this->item->getDescription(), category: 'rbac-item')
             ))
             ->withStyleClass(sprintf('current_%s', $this->item->getType()))
         ;
@@ -80,13 +78,11 @@ final class MermaidHierarchyDiagram implements HierarchyDiagramInterface
 
         foreach ($parentItems as $parentItem) {
             $parent = (new Classs(
-                $this->translator->translate($parentItem->getName()),
+                $parentItem->getName(),
                 $this->translator->translate(sprintf('label.%s', $parentItem->getType()))
             ))
                 ->withAttribute(new Attribute(
-                    empty($parentItem->getDescription())
-                        ? $this->translator->translate(id: $parentItem->getName(), category: 'rbac-item')
-                        : $parentItem->getDescription()
+                    $this->translator->translate(id: $parentItem->getDescription(), category: 'rbac-item')
                 ))
                 ->withStyleClass('ancestor_' . $parentItem->getType())
                 ->withInteraction(
@@ -114,13 +110,11 @@ final class MermaidHierarchyDiagram implements HierarchyDiagramInterface
     {
         foreach ($this->itemsStorage->getDirectChildren($parent->getId()) as $item) {
             $child = (new Classs(
-                $this->translator->translate($item->getName()),
+                $item->getName(),
                 $this->translator->translate(sprintf('label.%s', $item->getType()))
             ))
                 ->withAttribute(new Attribute(
-                    empty($item->getDescription())
-                        ? $this->translator->translate(id: $item->getName(), category: 'rbac-item')
-                        : $item->getDescription()
+                    $this->translator->translate(id: $item->getDescription(), category: 'rbac-item')
                 ))
                 ->withStyleClass(sprintf('descendant_%s', $this->item->getType()))
                 ->withInteraction(
