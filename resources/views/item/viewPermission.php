@@ -43,7 +43,7 @@ $this->registerScriptTag(
 );
 
 $css = '';
-foreach ($rbamParameters->getMermaidDiagramStyles() as $class => $styles):
+foreach ($rbamParameters->getDiagramStyles() as $class => $styles):
     foreach ($styles as $element => $attributes):
         $css .= "#mermaid g.$class $element {";
         foreach ($attributes as $attribute => $style):
