@@ -20,7 +20,7 @@ View a Role
 -----------
 
 The Role view page contains buttons to update the Role and manage translations,
-details of the Role, and - tabs - a hierarchy diagram showing ancestors and children,
+details of the Role, and - tabs - a :doc:`hierarchyDiagram` showing ancestors and children,
 a list of `Child Roles`, a list of `Permissions` granted by the role, and a list of users `Assigned` the role.
 
 The `Child Roles` tab contains a button to manage child Roles of the current Role.

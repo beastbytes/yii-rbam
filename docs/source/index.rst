@@ -6,8 +6,9 @@ the `Yii3 Role Based Access Control (RBAC) <https://github.com/yiisoft/rbac>`__ 
 that greatly simplifies creating and managing a project's RBAC Roles, Permissions, Rules, hierarchy,
 and user Role assignments.
 
-The package also contains a console command to initialise RBAC and access checker middleware that can be used in
-route definitions to determine if the current user is permitted to access the requested resource.
+The package also access checker middleware that can be used in route definitions to determine if the current user is
+permitted to access the requested resource, PHP Attributes to define application RBAC Permissions, Roles, and hierarchy,
+and support for using Enums to define RBAC Permission and Role names.
 
 Features
 --------
@@ -19,6 +20,7 @@ Features
 * RBAC hierarchy visualisation
 * RBAC initialisation
 * PHP attributes to define application RBAC Permissions, Roles, and hierarchy
+* Support for Enums to define RBAC Permission and Role names
 * Access checker middleware
 * I18n
 
@@ -43,6 +45,7 @@ Composite rules are not currently supported.
     :caption: Contents
 
     installation
-    i18n
+    configuration
     gettingStarted
-    accessCheckerMiddleware
+    usage
+    tips

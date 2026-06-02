@@ -22,7 +22,7 @@ View a Permission
 -----------------
 
 The Permission view page contains buttons to update the Permission and manage translations,
-details of the Permission, and - tabs - a hierarchy diagram showing ancestors and children,
+details of the Permission, and - in tabs - a :doc:`hierarchyDiagram` showing ancestors and children,
 a list of `Child Permissions`, and a list of `Permitted Users`.
 
 The `Child Permissions` tab contains a button to manage child Permissions of the current Permission.

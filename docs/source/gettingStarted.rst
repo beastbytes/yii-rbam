@@ -1,8 +1,8 @@
 Getting Started
 ===============
 
-Prerequisite
-------------
+Prerequisites
+-------------
 
 There are two prerequisites for RBAM to integrate into an application:
 
@@ -28,7 +28,7 @@ UserRepositoryInterface
         :returns: All users
         :rtype: list<UserInterface>
 
-    .. php:method::
+    .. php:method:: findByIds($ids)
 
         :param list<string> $ids: The IDs of the users to find
         :returns: Users with the given IDs

@@ -6,7 +6,7 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'Mermaid Packet'
+project = 'Role Based Access Manager'
 copyright = '2026, BeastBytes'
 author = 'BeastBytes'
 
@@ -14,7 +14,6 @@ author = 'BeastBytes'
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
-    'sphinxcontrib.mermaid',
     'sphinxcontrib.phpdomain'
 ]
 
