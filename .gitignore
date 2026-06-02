@@ -62,8 +62,7 @@ package-lock.json
 /runtime
 /config/environments
 /public_html
-/rbac/*.php
-/rbac/rules/*.php
+/rbac/*
 .merge-plan.php
 
 .env.example
