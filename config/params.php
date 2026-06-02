@@ -96,7 +96,7 @@ return [
             ],
         ],
         'datetimeFormat' => 'Y-m-d H:i:s',
-        'mermaidDiagramStyles' => [
+        'diagramStyles' => [
             'ancestor_role' => [
                 '.label-group .nodeLabel' => [
                     'color' => 'hsl(29, 88%, 55%)',
