@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace BeastBytes\Yii\Rbam\Middleware;
 
-use BeastBytes\Yii\Rbam\Rbac\Permission;
+use BeastBytes\Yii\Rbam\Rbac\ItemInterface;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -61,10 +61,10 @@ final class AccessChecker implements MiddlewareInterface
         ;
     }
 
-    public function withPermission(Permission|string $permission): self
+    public function withPermission(ItemInterface|string $permission): self
     {
         $new = clone $this;
-        $new->permission = $permission instanceof Permission ? $permission->getItemName() : $permission;
+        $new->permission = $permission instanceof ItemInterface ? $permission->getItemName() : $permission;
         return $new;
     }
 
