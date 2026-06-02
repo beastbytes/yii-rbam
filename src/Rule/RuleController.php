@@ -28,7 +28,7 @@ use Yiisoft\Session\Flash\FlashInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
-#[RoleAttribute(name: RbamRole::ruleManager, parent: RbamRole::admin)]
+#[RoleAttribute(item: RbamRole::ruleManager, parent: RbamRole::admin)]
 final class RuleController
 {
     public function __construct(
@@ -53,7 +53,7 @@ final class RuleController
      * @param ServerRequest $request
      * @return ResponseInterface
      */
-    #[PermissionAttribute(RbamPermission::ruleView)]
+    #[PermissionAttribute(item: RbamPermission::ruleView)]
     public function index(ServerRequest $request): ResponseInterface
     {
         $queryParams = $request
@@ -95,7 +95,7 @@ final class RuleController
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    #[PermissionAttribute(RbamPermission::ruleCreate)]
+    #[PermissionAttribute(item: RbamPermission::ruleCreate)]
     public function create(
         FormHydrator $formHydrator,
         Redirect $redirect,
@@ -146,7 +146,7 @@ final class RuleController
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    #[PermissionAttribute(RbamPermission::ruleDelete)]
+    #[PermissionAttribute(item: RbamPermission::ruleDelete)]
     public function delete(
         ServerRequestInterface $request,
         TranslationService $translationService,
@@ -187,7 +187,7 @@ final class RuleController
             );
     }
 
-    #[PermissionAttribute(RbamPermission::ruleUpdate)]
+    #[PermissionAttribute(item: RbamPermission::ruleUpdate)]
     public function translate(
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
@@ -251,7 +251,7 @@ final class RuleController
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    #[PermissionAttribute(RbamPermission::ruleUpdate)]
+    #[PermissionAttribute(item: RbamPermission::ruleUpdate)]
     public function update(
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
@@ -325,7 +325,7 @@ final class RuleController
      * @param CurrentRoute $currentRoute
      * @return ResponseInterface
      */
-    #[PermissionAttribute(RbamPermission::ruleView)]
+    #[PermissionAttribute(item: RbamPermission::ruleView)]
     public function view(
         CurrentRoute $currentRoute,
         NotFound $notFound,

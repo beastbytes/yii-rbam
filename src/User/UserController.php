@@ -23,7 +23,7 @@ use Yiisoft\Rbac\Role;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
-#[RoleAttribute(name: RbamRole::userManager, parent: RbamRole::admin)]
+#[RoleAttribute(item: RbamRole::userManager, parent: RbamRole::admin)]
 final class UserController
 {
     public function __construct(
@@ -46,7 +46,7 @@ final class UserController
      * @param ServerRequest $request
      * @return ResponseInterface
      */
-    #[PermissionAttribute(RbamPermission::userView)]
+    #[PermissionAttribute(item: RbamPermission::userView)]
     public function index(ServerRequest $request): ResponseInterface
     {
         $queryParams = $request
@@ -94,7 +94,7 @@ final class UserController
      * @param CurrentRoute $currentRoute
      * @return ResponseInterface
      */
-    #[PermissionAttribute(RbamPermission::userView)]
+    #[PermissionAttribute(item: RbamPermission::userView)]
     public function view(CurrentRoute $currentRoute): ResponseInterface
     {
         return $this
@@ -114,7 +114,7 @@ final class UserController
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    #[PermissionAttribute(RbamPermission::userUpdate)]
+    #[PermissionAttribute(item: RbamPermission::userUpdate)]
     public function assign(ServerRequestInterface $request): ResponseInterface
     {
         /** @var array{name:string, item:string} $parsedBody */
@@ -141,7 +141,7 @@ final class UserController
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    #[PermissionAttribute(RbamPermission::userUpdate)]
+    #[PermissionAttribute(item: RbamPermission::userUpdate)]
     public function revoke(ServerRequestInterface $request): ResponseInterface
     {
         /** @var array{item:string, user:string} $parsedBody */

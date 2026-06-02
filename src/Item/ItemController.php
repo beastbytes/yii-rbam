@@ -38,7 +38,7 @@ use Yiisoft\Strings\Inflector;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
-#[RoleAttribute(name: RbamRole::itemManager, parent: RbamRole::admin)]
+#[RoleAttribute(item: RbamRole::itemManager, parent: RbamRole::admin)]
 final class ItemController
 {
     public function __construct(
@@ -71,7 +71,7 @@ final class ItemController
      * @param ServerRequest $request
      * @return ResponseInterface
      */
-    #[PermissionAttribute(RbamPermission::itemView)]
+    #[PermissionAttribute(item: RbamPermission::itemView)]
     public function index(CurrentRoute $currentRoute, ServerRequest $request): ResponseInterface
     {
         $filter = ArrayHelper::getValue($request->getQueryParams(), 'filter');
@@ -176,7 +176,7 @@ final class ItemController
      * @param RuleServiceInterface $ruleService
      * @return ResponseInterface
      */
-    #[PermissionAttribute(RbamPermission::itemCreate)]
+    #[PermissionAttribute(item: RbamPermission::itemCreate)]
     public function create(
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
@@ -267,7 +267,7 @@ final class ItemController
         ]);
     }
 
-    #[PermissionAttribute(RbamPermission::itemUpdate)]
+    #[PermissionAttribute(item: RbamPermission::itemUpdate)]
     public function translate(
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
@@ -342,7 +342,7 @@ final class ItemController
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    #[PermissionAttribute(RbamPermission::itemUpdate)]
+    #[PermissionAttribute(item: RbamPermission::itemUpdate)]
     public function update(
         CurrentRoute $currentRoute,
         FormHydrator $formHydrator,
@@ -465,7 +465,7 @@ final class ItemController
      * @param NotFound $notFound
      * @return ResponseInterface
      */
-    #[PermissionAttribute(RbamPermission::itemView)]
+    #[PermissionAttribute(item: RbamPermission::itemView)]
     public function view(CurrentRoute $currentRoute, NotFound $notFound): ResponseInterface
     {
         $name = $currentRoute->getArgument('name');
@@ -829,7 +829,7 @@ final class ItemController
      * @return ResponseInterface
      * @psalm-suppress PossiblyNullArgument
      */
-    #[PermissionAttribute(RbamPermission::itemRemove)]
+    #[PermissionAttribute(item: RbamPermission::itemRemove)]
     public function remove(
         ServerRequestInterface $request,
         TranslationServiceInterface $translationService
