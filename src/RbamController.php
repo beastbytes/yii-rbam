@@ -29,7 +29,7 @@ use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\User\CurrentUser;
 use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 
-#[RoleAttribute(RbamRole::admin)]
+#[RoleAttribute(item: RbamRole::admin)]
 final class RbamController
 {
     private const string CODE = 'bZc148QoubK0WjFJYngQwda';
@@ -59,7 +59,7 @@ final class RbamController
      * @return ResponseInterface
      */
     #[PermissionAttribute(
-        RbamPermission::index,
+        item: RbamPermission::index,
         parent: [RbamRole::itemManager, RbamRole::ruleManager, RbamRole::userManager]
     )]
     public function index(
@@ -89,7 +89,7 @@ final class RbamController
         ;
     }
 
-    #[PermissionAttribute(RbamPermission::clear)]
+    #[PermissionAttribute(item: RbamPermission::clear)]
     public function clear(
         FormHydrator $formHydrator,
         Redirect $redirect,
@@ -144,7 +144,7 @@ final class RbamController
             ;
 
             return $redirect
-                ->toRoute('rbam.rbam')
+                ->toUrl('/')
                 ->create()
             ;
         }
