@@ -30,9 +30,9 @@ final readonly class RbamParameters
         return $this->parameters['guestRole'];
     }
 
-    public function getMermaidDiagramStyles(): array
+    public function getDiagramStyles(): array
     {
-        return $this->parameters['mermaidDiagramStyles'];
+        return $this->parameters['diagramStyles'];
     }
 
     public function getPageSize(): int
