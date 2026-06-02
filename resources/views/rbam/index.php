@@ -37,7 +37,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
 
 <div id="rbam" data-_csrf="<?=$csrf?>">
     <div class="cards">
-        <?php foreach ([Item::TYPE_PERMISSION, Item::TYPE_ROLE] as $type): ?>
+        <?php foreach ([Item::TYPE_ROLE, Item::TYPE_PERMISSION] as $type): ?>
             <?php $types = $type . 's'; ?>
             <div class="card <?= $type ?>">
                 <div class="card-header">
