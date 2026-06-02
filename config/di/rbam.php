@@ -6,11 +6,11 @@ use BeastBytes\Yii\Rbam\Diagram\HierarchyDiagramInterface;
 use BeastBytes\Yii\Rbam\Diagram\MermaidHierarchyDiagram;
 use BeastBytes\Yii\Rbam\InitialisationService;
 use BeastBytes\Yii\Rbam\InitialisationServiceInterface;
-use BeastBytes\Yii\Rbam\Item\TranslationService;
-use BeastBytes\Yii\Rbam\Item\TranslationServiceInterface;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use BeastBytes\Yii\Rbam\Rule\RuleService;
 use BeastBytes\Yii\Rbam\Rule\RuleServiceInterface;
+use BeastBytes\Yii\Rbam\TranslationService;
+use BeastBytes\Yii\Rbam\TranslationServiceInterface;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Translator\TranslatorInterface;
 
@@ -22,7 +22,10 @@ return [
     RbamParameters::class => [
         'class' => RbamParameters::class,
         '__construct()' => [
-            'parameters' => array_merge($params['beastbytes/yii-rbam'], $params['yiisoft/rbac']),
+            'parameters' => array_merge(
+                $params['beastbytes/yii-rbam'],
+                $params['yiisoft/rbac'],
+            ),
         ],
     ],
     RuleServiceInterface::class => static fn (Aliases $aliases) => new RuleService(
