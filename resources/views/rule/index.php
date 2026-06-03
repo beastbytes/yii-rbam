@@ -91,7 +91,10 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
         ),
         new DataColumn(
             header: $translator->translate(id: 'label.description', category: 'rbam'),
-            content: static fn (RuleInterface $rule) => $rule->getDescription(),
+            content: static fn (RuleInterface $rule) => $translator->translate(
+                id: $rule->getDescription(),
+                category: 'rbac-rule'
+            ),
             bodyClass: 'description',
         ),
         new ActionColumn(
@@ -99,7 +102,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
             urlCreator: static fn (string $action, DataContext $context) => $urlGenerator->generate(
                 sprintf('rbam.rule.%s', $action),
                 [
-                    'name' => $context->data->getName(),
+                    'name' => $context->key,
                 ]
             ),
             buttons: [
