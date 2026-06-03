@@ -176,6 +176,10 @@
         }
     }
 
+    .node {
+        filter: drop-shadow(5px 5px 7px oklch(0.738 0 0));
+    }
+
     .cards {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
