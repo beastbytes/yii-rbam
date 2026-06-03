@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * @var Role[] $assignedRoles
+ * @var RbamItem[] $assignedRoles
  * @var string[] $assignments
  * @var Csrf $csrf
  * @var ?int $currentPage
@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @var UserInterface $user
  */
 
-use BeastBytes\Yii\Rbam\DTO\Item;
+use BeastBytes\Yii\Rbam\DTO\Item as RbamItem;
 use BeastBytes\Yii\Rbam\PaginatorUrlCreator;
 use BeastBytes\Yii\Rbam\Rbac\Permission as RbamPermission;
 use BeastBytes\Yii\Rbam\RbamParameters;
@@ -102,14 +102,14 @@ echo GridView::widget()
     ->columns(
         new DataColumn(
             header: $translator->translate(id: 'label.name'),
-            content: static fn (Item $item) => $item->getItem()->getName(),
+            content: static fn (RbamItem $item) => $item->getItem()->getName(),
             filter: true,
             filterFactory: LikeFilterFactory::class,
             filterEmpty: true,
         ),
         new DataColumn(
             header: $translator->translate(id: 'label.description'),
-            content: static fn (Item $item) => $translator->translate(
+            content: static fn (RbamItem $item) => $translator->translate(
                 id: $item->getItem()->getDescription(),
                 category: 'rbac-item'
             ),
@@ -164,7 +164,7 @@ echo GridView::widget()
                     ->render()
             ],
             visibleButtons: [
-                'revoke' => static fn ($data) => !$data->isGuestRole()
+                'revoke' => static fn (RbamItem $data) => !$data->isGuestRole()
                     && array_reduce(
                         $assignments,
                         fn(bool $carry, Assignment $assignment)

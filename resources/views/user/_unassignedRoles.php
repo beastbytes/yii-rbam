@@ -12,12 +12,12 @@ declare(strict_types=1);
  * @var RbamParameters $rbamParameters
  * @var WebView $this
  * @var TranslatorInterface $translator
- * @var Role[] $unassignedRoles
+ * @var RbamItem[] $unassignedRoles
  * @var UrlGeneratorInterface $urlGenerator
  * @var UserInterface $user
  */
 
-use BeastBytes\Yii\Rbam\DTO\Item;
+use BeastBytes\Yii\Rbam\DTO\Item as RbamItem;
 use BeastBytes\Yii\Rbam\PaginatorUrlCreator;
 use BeastBytes\Yii\Rbam\Rbac\Permission as RbamPermission;
 use BeastBytes\Yii\Rbam\RbamParameters;
@@ -67,7 +67,7 @@ echo GridView::widget()
     ->columns(
         new DataColumn(
             header: $translator->translate(id: 'label.name'),
-            content: static fn (Item $role) => $translator->translate(
+            content: static fn (RbamItem $role) => $translator->translate(
                 id: $role->getItem()->getName(),
                 category: 'rbac'
             ),
@@ -77,7 +77,7 @@ echo GridView::widget()
         ),
         new DataColumn(
             header: $translator->translate(id: 'label.description'),
-            content: static fn (Item $role) => $translator->translate(
+            content: static fn (RbamItem $role) => $translator->translate(
                 id: $role->getItem()->getDescription(),
                 category: 'rbac'
             ),
@@ -132,7 +132,7 @@ echo GridView::widget()
                     ->render()
             ],
             visibleButtons: [
-                'assign' => static fn ($data) => !$data->isGuestRole(),
+                'assign' => static fn (RbamItem $data) => !$data->isGuestRole(),
             ],
             bodyAttributes: [
                 'class' => 'action',
