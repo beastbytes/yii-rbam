@@ -95,7 +95,16 @@ echo GridView::widget()
             header: $translator->translate(id: 'label.name'),
             content: static fn (RbamItem $item): string => $item->getItem()->getName(),
             bodyClass: static fn (RbamItem $item): string
-                => 'name' . ($item->isDefaultRole() ? ' default' : ($item->isGuestRole() ? ' guest' : ''))
+                => 'name' . (str_starts_with($item->getItem()->getName(), 'rbam')
+                    ? ' rbam'
+                    : ($item->isDefaultRole()
+                        ? ' default'
+                        : ($item->isGuestRole()
+                            ? ' guest'
+                            : ''
+                        )
+                    )
+                )
         ),
         new DataColumn(
             header: $translator->translate(id: 'label.description'),
