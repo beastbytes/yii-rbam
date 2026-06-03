@@ -11,12 +11,11 @@ fork the repository, do the work, then create a pull request.
 
     Internationalisation must be configured for the application.
 
-In addition to RBAM itself, RBAM can also translate RBAC Permission and Role names and descriptions, and Rule
-descriptions.
+In addition to RBAM itself, RBAM can also translate RBAC Permission, Role, and Rule descriptions.
 
 .. note::
 
-    Translation of RBAC Permissions, Roles, and Rules is optional.
+    Names are not translated.
 
 RBAM uses three categories for translation:
 

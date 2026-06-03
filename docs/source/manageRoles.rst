@@ -10,7 +10,7 @@ The Roles home page contains a button to create a new Role and a paged list of R
 the following information is given for each Role:
 
 * Name of the Role
-* Description of the Role - either as entered or in the current locale (see :doc:`i18n`)
+* Description of the Role - translated to the current locale (see :doc:`i18n`)
 * Name of the Role(s) that grant the Role
 * Date and time the Role was created
 * Date and time the Role was last updated
@@ -30,8 +30,8 @@ The `Child Roles` tab contains a button to manage child Roles of the current Rol
 
 The details shown for each Role are:
 
-* Name - Role name translated to the current locale
-* Description - Role description translated to the current locale
+* Name - Role name
+* Description - Role description - both raw and translated to the current locale
 * Rule - Name of the Rule, if any, applied to the Role
 * Created - Date and time the Role was created
 * Updated - Date and time the Role was last updated
@@ -82,15 +82,7 @@ Translations
 
 Translations are listed by locale. To translate a locale, click on the locale to expand it and complete the form.
 
-.. note::
-
-    If either the Name or Description field for a locale is left empty it will not be translated for that locale.
-
 Repeat for all required locales then click `Submit`.
-
-If translations are used and either the name and/or description are changed,
-the current translations are moved to the new name and/or description.
-If the translations themselves require updating this must be done after updating the Role.
 
 Create a Role
 -------------
@@ -99,7 +91,7 @@ To create a Role, click the `Create` button on the Roles index page then
 complete the form. The form has the following fields:
 
 * Name - The name of the Role - Required
-* Description - Description of the Role - Optional, *must* be left blank if using translations
+* Description - Description of the Role - Required
 * Rule - The Rule to be applied to the Role - Optional
 
 Update a Role
@@ -107,8 +99,7 @@ Update a Role
 
 The fields and requirements are the same as those for creating a Role.
 
-If translations are used and either the name and/or description are changed,
-the current translations are moved to the new name and/or description.
+If translations are used and the description is changed the current translations are moved to the new description.
 If the translations themselves require updating this must be done after updating the Role.
 
 Remove a Role

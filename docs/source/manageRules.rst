@@ -35,7 +35,7 @@ To create a Rule, click the `Create` button on the Rules index page then
 complete the form. The form has the following fields:
 
 * Name - The name of the Rule - Required
-* Description - Description of the Rule - Optional, *must* be left blank if using translations
+* Description - Description of the Rule - Required
 * Code - Code for the `execute()` method of the Rule, the code must return a boolean; `true` to allow access or `false` to deny - Required
 
 Update a Rule

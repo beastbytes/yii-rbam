@@ -26,7 +26,6 @@ and the Role that gives that Permission is `rbam.item.manager`. The `rbam.admin`
 RBAM item descriptions simply have `.description` appended to the name; e.g. `rbam.admin.description`
 
 Using a hierarchical naming convention such as this helps keep items organised.
-Descriptive names can be shown using translations, though translating item descriptions may mean this is not necessary.
 
 RBAC Item Enums
 +++++++++++++++

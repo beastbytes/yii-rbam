@@ -46,6 +46,7 @@ Composite rules are not currently supported.
 
     installation
     configuration
-    gettingStarted
+    prerequisites
+    rbacInitialisation
     usage
     tips

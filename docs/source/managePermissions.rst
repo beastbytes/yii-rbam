@@ -12,7 +12,7 @@ The Permissions home page contains a button to create a new Permission and a pag
 the following information is given for each Permission:
 
 * Name of the Permission
-* Description of the Permission - either as entered or in the current locale (see :doc:`i18n`)
+* Description of the Permission - translated to the current locale (see :doc:`i18n`)
 * Name of the Role(s) that grant the Permission
 * Date and time the Permission was created
 * Date and time the Permission was last updated
@@ -32,8 +32,8 @@ The `Child Permissions` tab contains a button to manage child Permissions of the
 
 The details shown for each Permission are:
 
-* Name - Permission name translated to the current locale
-* Description - Permission description translated to the current locale
+* Name - Permission name
+* Description - Permission description - both raw and translated to the current locale
 * Rule - Name of the Rule, if any, applied to the Permission
 * Created - Date and time the Permission was created
 * Updated - Date and time the Permission was last updated
@@ -56,15 +56,7 @@ Translations
 
 Translations are listed by locale. To translate a locale, click on the locale to expand it and complete the form.
 
-.. note::
-
-    If either the Name or Description field for a locale is left empty it will not be translated for that locale.
-
 Repeat for all required locales then click `Submit`.
-
-If translations are used and either the name and/or description are changed,
-the current translations are moved to the new name and/or description.
-If the translations themselves require updating this must be done after updating the Permission.
 
 Create a Permission
 -------------------
@@ -73,13 +65,16 @@ To create a Permission, click the `Create` button on the Permissions index page 
 complete the form. The form has the following fields:
 
 * Name - The name of the Permission - Required
-* Description - Description of the Permission - Optional, *must* be left blank if using translations
+* Description - Description of the Permission - Required
 * Rule - The Rule to be applied to the Permission - Optional
 
 Update a Permission
 -------------------
 
 The fields and requirements are the same as those for creating a Permission.
+
+If translations are used and the description is changed the current translations are moved to the new description.
+If the translations themselves require updating this must be done after updating the Permission.
 
 Remove a Permission
 -------------------
