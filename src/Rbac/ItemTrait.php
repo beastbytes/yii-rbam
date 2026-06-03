@@ -10,6 +10,11 @@ use ReflectionClass;
 
 trait ItemTrait
 {
+    public function getItemDescription(): string
+    {
+        return $this->getItemName() . $this->getSeparator() . self::DESCRIPTION;
+    }
+
     public function getItemName(): string
     {
         return $this->prefixAttribute()?->getPrefix() . $this->value;

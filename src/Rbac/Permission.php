@@ -11,6 +11,8 @@ enum Permission: string implements ItemInterface
 {
     use ItemTrait;
 
+    private const string DESCRIPTION = 'description';
+
     case clear = 'clear';
     case index = 'index';
     case itemCreate = 'item.create';
