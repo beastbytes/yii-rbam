@@ -1066,7 +1066,7 @@ final class ItemController
                 $child = (new RbamItem($child))->withIsChild($this->manager->hasChild($parent, $child->getName()))
         );
 
-        array_filter(
+        $orphans = array_filter(
             $orphans,
             fn(string $orphan) => $this->manager->canAddChild($parent, $orphan),
             ARRAY_FILTER_USE_KEY
