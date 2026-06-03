@@ -52,8 +52,9 @@ $tabIndex = 1;
 ?>
 <?= Field::errorSummary($formModel) ?>
 <?= Field::text($formModel, 'name')
-    ->autofocus(true)
+    ->autofocus(!str_starts_with($formModel->getName(), 'rbam'))
     ->required(true)
+    ->readonly(str_starts_with($formModel->getName(), 'rbam'))
     ->containerClass('form-control-container')
     ->inputContainerTag('div')
     ->inputContainerClass('form-input-container')
@@ -64,6 +65,8 @@ $tabIndex = 1;
     ->tabindex($tabIndex++)
 ?>
 <?= Field::text($formModel, 'description')
+    ->required(true)
+    ->readonly(str_starts_with($formModel->getName(), 'rbam'))
     ->containerClass('form-control-container')
     ->inputContainerTag('div')
     ->inputContainerClass('form-input-container')
@@ -76,8 +79,8 @@ $tabIndex = 1;
     'prompt()' => [$translator->translate(id: 'prompt.select-rule', category: 'rbam')],
     'optionsData()' => [$ruleClasses],
 ])
+    ->autofocus(str_starts_with($formModel->getName(), 'rbam'))
     ->containerClass('form-control-container')
-    ->addContainerClass(empty($ruleNames) ? 'disabled' : '')
     ->addInputClass('form-input')
     ->addLabelClass('form-label')
     ->disabled(empty($ruleClasses))
