@@ -32,6 +32,7 @@ use Yiisoft\User\CurrentUser;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\DataView\Filter\Factory\LikeFilterFactory;
 use Yiisoft\Yii\DataView\GridView\Column\ActionColumn;
+use Yiisoft\Yii\DataView\GridView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView\GridView;
 use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
@@ -114,14 +115,12 @@ echo GridView::widget()
             ),
         ),
         new ActionColumn(
-            content: static fn ($data) => array_reduce(
-                $assignments,
-                fn(bool $carry, Assignment $assignment)
-                    => $carry || $assignment->getItemName() === $data->getItem()->getName()
-                ,
-                false
-            )
-                ? Html::button(
+            template: '{revoke}',
+            urlCreator: static fn (string $action, DataContext $context) => $urlGenerator->generate(
+                'rbam.user.assignment.revoke',
+            ),
+            buttons: [
+                'revoke' => static fn (string $url, DataContext $context) => Html::button(
                     content: $translator->translate(
                         id: $rbamParameters->getButtons('revoke')['content'],
                         category: 'rbam'
@@ -135,9 +134,9 @@ echo GridView::widget()
                                 Json::encode([
                                     'buttons' => [
                                         'continue' => [
-                                            'href' => $urlGenerator->generate('rbam.user.assignment.revoke'),
+                                            'href' => $url,
                                             'data' => [
-                                                'item' => $data->getItem()->getName(),
+                                                'item' => $context->data->getItem()->getName(),
                                             ],
                                         ],
                                     ],
@@ -145,7 +144,7 @@ echo GridView::widget()
                                     'content' => $translator->translate(
                                         'message.user.assignment.revoke',
                                         [
-                                            'item' => $data->getItem()->getName(),
+                                            'item' => $context->data->getItem()->getName(),
                                             'user' => $user->getName(),
                                         ],
                                         'rbam'
@@ -153,7 +152,7 @@ echo GridView::widget()
                                     'title' => $translator->translate(
                                         'header.user.assignment.revoke',
                                         [
-                                            'item' => $data->getItem()->getName(),
+                                            'item' => $context->data->getItem()->getName(),
                                         ],
                                         'rbam'
                                     ),
@@ -162,8 +161,19 @@ echo GridView::widget()
                         ]
                     )
                 )
-                : ''
-            ,
+                    ->render()
+            ],
+            visibleButtons: [
+                'revoke' => static fn ($data) => !$data->isGuestRole()
+                    && array_reduce(
+                        $assignments,
+                        fn(bool $carry, Assignment $assignment)
+                        => $carry || $assignment->getItemName() === $data->getItem()->getName()
+                        ,
+                        false
+                    )
+                ,
+            ],
             bodyAttributes: [
                 'class' => 'action',
                 'x-data' => true

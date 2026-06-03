@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BeastBytes\Yii\Rbam\User;
 
 use BeastBytes\Yii\Rbam\DTO\Item;
+use BeastBytes\Yii\Rbam\DTO\Item as RbamItem;
 use BeastBytes\Yii\Rbam\DTO\User as RbamUser;
 use BeastBytes\Yii\Rbam\Rbac\Attribute\Permission as PermissionAttribute;
 use BeastBytes\Yii\Rbam\Rbac\Attribute\Role as RoleAttribute;
@@ -266,8 +267,27 @@ final class UserController
         $unassignedRoles = array_diff_key($roles, $assignedRoles);
 
         ksort($assignedRoles, SORT_STRING);
-        array_walk($assignedRoles, fn(Role &$item) => $item = new Item($item));
+        array_walk(
+            $assignedRoles,
+            fn(Role &$item, $key, $defaultRoles) => $item = (new Item($item))
+                ->withIsDefaultRole(in_array($key, $defaultRoles))
+            ,
+            $this
+                ->manager
+                ->getDefaultRoleNames()
+        );
+
         ksort($unassignedRoles, SORT_STRING);
+        array_walk(
+            $unassignedRoles,
+            fn(Role &$item, $key, $guestRole) => $item = (new RbamItem($item))
+                ->withIsdGuestRole($key === $guestRole)
+            ,
+            $this
+                ->manager
+                ->getGuestRoleName()
+        );
+
         ksort($permissionsGranted, SORT_STRING);
         array_walk(
             $permissionsGranted,
