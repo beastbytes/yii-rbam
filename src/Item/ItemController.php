@@ -934,7 +934,9 @@ final class ItemController
         $parents = [];
 
         foreach ($this->itemsStorage->getParents($permission->getName()) as $ancestor) {
-            if ($this->itemsStorage->hasDirectChild($ancestor->getName(), $permission->getName())) {
+            if ($ancestor instanceof Permission) {
+                $parents = array_merge($parents, $this->getGrantedBy($ancestor));
+            } elseif ($this->itemsStorage->hasDirectChild($ancestor->getName(), $permission->getName())) {
                 $parents[] = $ancestor;
             }
         }
@@ -1072,6 +1074,25 @@ final class ItemController
             ARRAY_FILTER_USE_KEY
         );
         ksort($orphans);
+
+        $defaultRoles = $this
+            ->manager
+            ->getDefaultRoleNames()
+        ;
+
+        $guestRole = $this
+            ->manager
+            ->getGuestRoleName()
+        ;
+
+        array_walk(
+            $orphans,
+            fn(Item &$item, $key, $roles) => $item = (new RbamItem($item))
+                ->withIsDefaultRole(in_array($key, $roles['defaultRoles']))
+                ->withIsdGuestRole($key === $roles['guestRole'])
+            ,
+            compact('defaultRoles', 'guestRole')
+        );
 
         $viewParameters = [
             'children' => $children,
