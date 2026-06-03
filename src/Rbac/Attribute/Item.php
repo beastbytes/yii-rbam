@@ -25,7 +25,7 @@ abstract class Item
 
     public function getDescription(): string
     {
-        return $this->description ?? '';
+        return $this->description ?? $this->item->getItemDescription();
     }
 
     public function getName(): string
