@@ -1,18 +1,10 @@
-+@keyframes fadeout {
-    from {
-        opacity: 1
-    }
-    to {
-        opacity: 0
-    }
-}
-
 .rbam {
     --container-background: oklch(0.95 0 0);
     --contaier-border: 1px solid var(--contaier-border-colour);
     --contaier-border-colour: oklch(0.845 0 0);
 
     --disabled-background: oklch(0.95 0 0);
+    --read-only-background: var(--disabled-background);
 
     --even-row-background: oklch(0.95 0 0);
 
@@ -282,7 +274,6 @@
     }
 
     .flash {
-        animation: 1s ease 3s normal forwards 1 fadeout;
         border-radius: 0.5rem;
         opacity: 1;
         margin: 1em 3em;
@@ -415,6 +406,10 @@
                 border-bottom: 2px solid var(--yii-blue);
             }
 
+            &[type="text"]:read-only {
+                background-color: var(--read-only-background);
+            }
+
             &:user-invalid, &.invalid {
                 background-color: var(--yii-red-light);
 
@@ -540,6 +535,10 @@
                     &.guest::after {
                         background-color: var(--yii-blue);
                         content: '\02205'; /* empty */
+                    }
+                    &.rbam::after {
+                        background-color: var(--yii-red);
+                        content: '\02202'; /* part */
                     }
                 }
             }
