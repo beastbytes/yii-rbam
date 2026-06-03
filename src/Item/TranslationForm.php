@@ -25,7 +25,6 @@ class TranslationForm extends FormModel
 
         foreach ($translations as $locale => $translation) {
             $new->translations[$locale] = new Translation(
-                $translation['name'],
                 $translation['description'],
                 $locale
             );
