@@ -6,7 +6,7 @@ declare(strict_types=1);
  * @var string $childType
  * @var Csrf $csrf
  * @var ?int $currentPage
- * @var Item[] $orphans
+ * @var RbamItem[] $orphans
  * @var Item $parent
  * @var RbamParameters $rbamParameters
  * @var WebView $this
@@ -15,6 +15,7 @@ declare(strict_types=1);
  * @var UrlGeneratorInterface $urlGenerator
  */
 
+use BeastBytes\Yii\Rbam\DTO\Item as RbamItem;
 use BeastBytes\Yii\Rbam\PaginatorUrlCreator;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use Yiisoft\Data\Paginator\OffsetPaginator;
@@ -73,7 +74,7 @@ echo GridView::widget()
     ->columns(
         new DataColumn(
             header: $translator->translate(id: 'label.name'),
-            content: static fn (Item $item) => $item->getName(),
+            content: static fn (RbamItem $item) => $item->getItem()->getName(),
             filter: true,
             filterFactory: LikeFilterFactory::class,
             filterEmpty: true,
@@ -81,7 +82,10 @@ echo GridView::widget()
         ),
         new DataColumn(
             header: $translator->translate(id: 'label.description'),
-            content: static fn (Item $item) => $translator->translate(id: $item->getDescription(), category: 'rbam'),
+            content: static fn (RbamItem $item) => $translator->translate(
+                id: $item->getItem()->getDescription(),
+                category: 'rbac-item'
+            ),
             bodyClass: 'description',
         ),
         new ActionColumn(
@@ -89,7 +93,7 @@ echo GridView::widget()
             urlCreator: static fn (string $action, DataContext $context) => $urlGenerator->generate(
                 'rbam.item.add-child',
                 [
-                    'child' => $context->data->getName(),
+                    'child' => $context->key,
                     'parent' => $parent->getName(),
                     'type' => $type,
                 ]
@@ -144,6 +148,9 @@ echo GridView::widget()
                     )
                 )
                     ->render()
+            ],
+            visibleButtons: [
+                'add' => static fn (RbamItem $data) => !$data->isDefaultRole() && !$data->isGuestRole()
             ],
             bodyAttributes: [
                 'class' => 'action',

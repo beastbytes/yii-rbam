@@ -140,7 +140,7 @@ echo GridView::widget()
             header: $translator->translate(id: 'label.description'),
             content: static fn (RbamItem $item) => $translator->translate(
                 id: $item->getItem()->getDescription(),
-                category: 'rbam'
+                category: 'rbac-item'
             ),
             bodyClass: 'description',
         ),
@@ -149,7 +149,7 @@ echo GridView::widget()
             urlCreator: static fn (string $action, DataContext $context) => $urlGenerator->generate(
                 'rbam.item.remove-child',
                 [
-                    'child' => $context->data->getItem()->getName(),
+                    'child' => $context->key,
                     'parent' => $parent->getName(),
                     'type' => $type,
                 ]
