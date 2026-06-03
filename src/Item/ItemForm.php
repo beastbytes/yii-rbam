@@ -23,6 +23,7 @@ final class ItemForm extends FormModel implements PropertyTranslatorProviderInte
     public const string MODE_UPDATE = 'update';
     public const string NAME_REGEX = '([a-zA-Z0-9]+[ ._\-]?)+';
 
+    #[Required]
     #[StringValue]
     private string $description = '';
     #[Required]

@@ -76,16 +76,8 @@ echo DetailView::widget()
     ->data($item)
     ->fields(
         new DataField(
-            label: $translator->translate(id: 'label.name.raw', category: 'rbam'),
-            value: static fn (GetValueContext $context) => $context->data->getItem()->getName(),
-            fieldAttributes: ['class' => 'name'],
-        ),
-        new DataField(
             label: $translator->translate(id: 'label.name', category: 'rbam'),
-            value: static fn (GetValueContext $context) => $translator->translate(
-                $context->data->getItem()->getName(),
-                category: 'rbac-item'
-            ),
+            value: static fn (GetValueContext $context) => $context->data->getItem()->getName(),
             fieldAttributes: ['class' => 'name'],
         ),
         new DataField(

@@ -13,8 +13,6 @@ final class Translation extends FormModel
 
     public function __construct(
         #[StringValue]
-        private readonly string $name = '',
-        #[StringValue]
         private readonly string $description = '',
         private readonly string $locale = '',
     )
@@ -24,11 +22,6 @@ final class Translation extends FormModel
     public function getDescription(): string
     {
         return $this->description;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
     }
 
     public function getLocale(): string

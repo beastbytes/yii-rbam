@@ -130,10 +130,7 @@ echo GridView::widget()
     ->columns(
         new DataColumn(
             header: $translator->translate(id: 'label.name', category: 'rbam'),
-            content: static fn (RbamItem $item) => $translator->translate(
-                id: $item->getItem()->getName(),
-                category: 'rbam'
-            ),
+            content: static fn (RbamItem $item) => $item->getItem()->getName(),
             filter: true,
             filterFactory: LikeFilterFactory::class,
             filterEmpty: true,

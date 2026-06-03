@@ -93,10 +93,7 @@ echo GridView::widget()
     ->columns(
         new DataColumn(
             header: $translator->translate(id: 'label.name'),
-            content: static fn (RbamItem $item): string => $translator->translate(
-                $item->getItem()->getName(),
-                category: 'rbac-item'
-            ),
+            content: static fn (RbamItem $item): string => $item->getItem()->getName(),
             bodyClass: static fn (RbamItem $item): string
                 => 'name' . ($item->isDefaultRole() ? ' default' : ($item->isGuestRole() ? ' guest' : ''))
         ),

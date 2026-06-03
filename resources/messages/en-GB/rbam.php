@@ -92,7 +92,6 @@ return [
     'label.menu' => 'Menu',
     'label.menu.clear' => 'Clear RBAC',
     'label.name' => 'Name',
-    'label.name.raw' => 'Name (Raw)',
     'label.only' => 'Only',
     'label.permission' => 'Permission',
     'label.permission.name' => '{name} Permission',

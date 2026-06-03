@@ -80,15 +80,8 @@ echo DetailView::widget()
     ->data($item)
     ->fields(
         new DataField(
-            label: $translator->translate(id: 'label.name.raw', category: 'rbam'),
-            value: static fn (GetValueContext $context) => $context->data->getName(),
-        ),
-        new DataField(
             label: $translator->translate(id: 'label.name', category: 'rbam'),
-            value: static fn (GetValueContext $context) => $translator->translate(
-                id: $context->data->getName(),
-                category: 'rbac-item'
-            ),
+            value: static fn (GetValueContext $context) => $context->data->getName(),
         ),
         new DataField(
             label: $translator->translate(id: 'label.description.raw', category: 'rbam'),

@@ -296,9 +296,6 @@ final class ItemController
             $translations = [];
 
             foreach ($formModel->getTranslations() as $translation) {
-                $translations[$translation->getLocale()]['rbac-item'][$name]
-                    = $translation->getName()
-                ;
                 $translations[$translation->getLocale()]['rbac-item'][$item->getDescription()]
                     = $translation->getDescription()
                 ;
