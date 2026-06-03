@@ -112,16 +112,12 @@ final readonly class TranslationService implements TranslationServiceInterface
         foreach ($this->getLocales() as $locale) {
             $messages = $categorySource->getMessages($locale);
 
-            foreach (['Description', 'Name'] as $method) {
-                $getter = "get$method";
+            $old = $oldItem->getDescription();
+            $new = $newItem->getDescription();;
 
-                $old = $oldItem->$getter();
-                $new = $newItem->$getter();
-
-                if ($old !== $new) {
-                    $messages[$new] = $messages[$old];
-                    unset($messages[$old]);
-                }
+            if ($old !== $new && array_key_exists($old, $messages)) {
+                $messages[$new] = $messages[$old];
+                unset($messages[$old]);
             }
 
             ksort($messages);
