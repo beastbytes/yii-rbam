@@ -91,18 +91,6 @@ $tabIndex = 1;
                     ->inputId(sprintf('translation-%s-locale', $locale))
                     ->name(sprintf('TranslationForm[translations][%s][locale]', $locale))
                 ,
-                Field::text($translation, 'name')
-                    ->inputId(sprintf('translation-%s-name', $locale))
-                    ->name(sprintf('TranslationForm[translations][%s][name]', $locale))
-                    ->required(true)
-                    ->containerClass('form-control-container')
-                    ->inputContainerTag('div')
-                    ->inputContainerClass('form-input-container')
-                    ->addInputClass('form-input')
-                    ->addLabelClass('form-label')
-                    ->afterInput(Html::span())
-                    ->tabindex($tabIndex++)
-                ,
                 Field::text($translation, 'description')
                     ->inputId(sprintf('translation-%s-description', $locale))
                     ->name(sprintf('TranslationForm[translations][%s][description]', $locale))
