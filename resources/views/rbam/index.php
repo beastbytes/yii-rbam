@@ -91,7 +91,7 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
 <?php
 if ($currentUser->can(RbamPermission::clear->getItemName())):
     $this->setBlock(
-        'block-menu',
+        'rbam-menu',
         '<div x-data x-menu class="header-menu">
             <button x-menu:button>
                 <span class="sr-only">' . $translator->translate(id: 'label.menu', category: 'rbam') . '</span>
