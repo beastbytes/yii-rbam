@@ -9,6 +9,7 @@ use Yiisoft\Yii\View\Renderer\CsrfViewInjection;
 
 return [
     'beastbytes/yii-rbam' => [
+        'applicationLayout' => '@layout/main',
         'buttons' => [ // allows use of icon fonts and/or CSS frameworks to style buttons
             'add' => [
                 'attributes' => ['class' => 'btn btn_add'],
@@ -97,33 +98,39 @@ return [
         ],
         'datetimeFormat' => 'Y-m-d H:i:s',
         'diagramStyles' => [
+            'ancestor_permission' => [
+                '.label-group .nodeLabel' => [
+                    'color' => 'oklch(0.7285 0.1622 57.4256)',
+                    'font-size' => '1.125rem',
+                ],
+            ],
             'ancestor_role' => [
                 '.label-group .nodeLabel' => [
-                    'color' => 'hsl(29, 88%, 55%)',
+                    'color' => 'oklch(0.7285 0.1622 57.4256)',
                     'font-size' => '1.125rem',
                 ],
             ],
             'current_permission' => [
                 '.label-group .nodeLabel' => [
-                    'color' => 'hsl(88, 60%, 49%)',
+                    'color' => 'oklch(0.759 0.19 131.803)',
                     'font-size' => '1.25rem',
                 ],
             ],
             'current_role' => [
                 '.label-group .nodeLabel' => [
-                    'color' => 'hsl(88, 60%, 49%)',
+                    'color' => 'oklch(0.759 0.19 131.803)',
                     'font-size' => '1.25rem',
                 ],
             ],
             'descendant_permission' => [
                 '.label-group .nodeLabel' => [
-                    'color' => 'hsl(195, 66%, 55%)',
+                    'color' => 'oklch(0.7156 0.1136 224.1826)',
                     'font-size' => '1.125rem',
                 ],
             ],
             'descendant_role' => [
                 '.label-group .nodeLabel' => [
-                    'color' => 'hsl(195, 66%, 55%)',
+                    'color' => 'oklch(0.7156 0.1136 224.1826)',
                     'font-size' => '1.125rem',
                 ],
             ],
@@ -131,16 +138,9 @@ return [
         'pageSize' => 20,
         'tabPageSize' => 10,
     ],
-    'yiisoft/rbac' => [
-        'defaultRoles' => [], // list<array{name: string, description: string}>
-        'guestRole' => [ // array{name: string, description: string}
-            'name' => 'guest.role',
-            'description' => 'guest.role.description',
-        ]
-    ],
     'yiisoft/yii-view-renderer' => [
         'viewPath' => '@views',
-        'layout' => '@layout/main',
+        'layout' => '@layout/rbam',
         'injections' => [
             Reference::to(CommonViewInjection::class),
             Reference::to(CsrfViewInjection::class),

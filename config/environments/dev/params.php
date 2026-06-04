@@ -37,6 +37,9 @@ return [
         Router::class,
     ],
     'traceLink' => 'phpstorm://open?url=file://{file}&line={line}',
+    'beastbytes/yii-rbam' => [
+        'applicationLayout' => '@root/support/views/main',
+    ],
     'yiisoft/aliases' => [
         'aliases' => [
             '@root' => dirname(__DIR__, 3),
@@ -71,5 +74,15 @@ return [
     ],
     'yiisoft/view' => [
         'basePath' => '@views'
+    ],
+    'yiisoft/rbac' => [
+        'defaultRoles' => [[ // list<array{name: string, description: string}>
+            'name' => 'default.role',
+            'description' => 'default.role.description',
+        ]],
+        'guestRole' => [ // array{name: string, description: string}
+            'name' => 'guest.role',
+            'description' => 'guest.role.description',
+        ]
     ],
 ];
