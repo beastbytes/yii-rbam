@@ -133,7 +133,7 @@ return [
     'message.permission.none-found' => 'No permissions found',
     'message.permission.none-granted' => 'No permissions granted',
     'message.permission.remove' => '<p>Removing the <i>{item}</i> permission is permanent and can not be undone</p>',
-    'message.permission.remove-all' => 'Remove all permissions from <i>{parent}</i> role',
+    'message.permission.remove-all-permissions' => '<p>Remove all permissions from <i>{parent}</i> permission</p>',
     'message.permission.remove-child' => '<p>Remove <i>{child}</i> permission from <i>{parent}</i> role?</p>',
     'message.rbac.clear' => '<p>Clear all RBAC Assignments, Permissions, and Roles?</p>
     <p>This will prohibit access to all parts of the application where RBAC controls access; this includes RBAM</p>
@@ -147,7 +147,8 @@ return [
     'message.role.none-unassigned' => 'No unassigned roles',
     'message.rule.none-found' => 'No rules found',
     'message.role.remove' => '<p>Removing the <i>{item}</i> role is permanent and can not be undone</p>',
-    'message.role.remove-all' => '<p>Remove all child roles from <i>{parent}</i> role?</p><p>All permissions will also be removed.</p>',
+    'message.role.remove-all-permissions' => '<p>Remove all permissions from <i>{parent}</i> role</p>',
+    'message.role.remove-all-roles' => '<p>Remove all child roles from <i>{parent}</i> role?</p><p>All permissions will also be removed.</p>',
     'message.role.remove-child' => '<p>Remove <i>{child}</i> child role from <i>{parent}</i> role?</p><p>Permissions granted by <i>{child}</i> will also be removed.</p>',
     'message.rule.remove' => '<p>Removing the <i>{rule}</i> rule is permanent and can not be undone</p>',
     'message.user.assign-role' => '<p>Assign the <i>{item}</i> role to {user}?</p>',

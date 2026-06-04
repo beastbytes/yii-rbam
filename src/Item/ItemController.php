@@ -908,9 +908,11 @@ final class ItemController
     public function removeChild(ServerRequestInterface $request): ResponseInterface
     {
         $parsedBody = $request->getParsedBody();
-        ['child' => $child, 'childType' => $childType, 'parent' => $parent] = $parsedBody;
+        ['childType' => $childType, 'parent' => $parent] = $parsedBody;
 
-        if (isset($child)) {
+        $child = (isset($parsedBody['child'])) ? $parsedBody['child'] : null;
+
+        if (is_string($child)) {
             $this
                 ->manager
                 ->removeChild($parent, $child);

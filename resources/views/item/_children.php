@@ -100,7 +100,7 @@ echo GridView::widget()
                                 ],
                                 'closeDialog' => $translator->translate(id: 'label.close-dialog'),
                                 'content' => $translator->translate(
-                                    sprintf('message.%s.remove-all', $childType),
+                                    sprintf('message.%s.remove-all-%ss', $type, $childType),
                                     [
                                         'parent' => $parent->getName(),
                                     ],
