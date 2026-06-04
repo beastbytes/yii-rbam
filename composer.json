@@ -36,7 +36,7 @@
         "yiisoft/yii-event": "^2.0",
         "yiisoft/yii-runner-console": "^2.0",
         "yiisoft/yii-view-renderer": "^7.0",
-        "yiisoft/yii-widgets": "^2.0"
+        "yiisoft/yii-widgets": "dev-master"
     },
     "require-dev": {
         "dg/bypass-finals": "^v1.0",
