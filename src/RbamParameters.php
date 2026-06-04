@@ -10,6 +10,11 @@ final readonly class RbamParameters
     {
     }
 
+    public function getApplicationLayout()
+    {
+        return $this->parameters['applicationLayout'];
+    }
+
     public function getButtons(string $name): array
     {
         return $this->parameters['buttons'][$name];
