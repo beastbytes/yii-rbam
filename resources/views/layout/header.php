@@ -20,12 +20,10 @@ use Yiisoft\Yii\Widgets\Breadcrumbs;
 <header class="header rbam">
     <div class="header-inner">
         <h1><?= $translator->translate(id: 'title.rbam', category: 'rbam') ?></h1>
-        <?php if ($this->hasParameter('breadcrumbs')): ?>
             <?= Breadcrumbs::widget()
                 ->items($this->getParameter('breadcrumbs'))
                 ->render()
             ?>
-        <?php endif; ?>
     </div>
 
     <?php if ($this->hasBlock('rbam-menu')): ?>
