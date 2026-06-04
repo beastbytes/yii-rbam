@@ -17,7 +17,7 @@ use Yiisoft\View\WebView;
 use Yiisoft\Yii\Widgets\Breadcrumbs;
 ?>
 
-<header>
+<header class="header rbam">
     <div class="header-inner">
         <h1><?= $translator->translate(id: 'title.rbam', category: 'rbam') ?></h1>
         <?php if ($this->hasParameter('breadcrumbs')): ?>
@@ -28,7 +28,7 @@ use Yiisoft\Yii\Widgets\Breadcrumbs;
         <?php endif; ?>
     </div>
 
-    <?php if ($this->hasBlock('block-menu')):
-        echo $this->getBlock('block-menu');
-    endif; ?>
+    <?php if ($this->hasBlock('rbam-menu')): ?>
+        <?= $this->getBlock('rbam-menu'); ?>
+    <?php endif; ?>
 </header>
