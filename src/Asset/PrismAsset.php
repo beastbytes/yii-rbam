@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BeastBytes\Yii\Rbam\Assets;
+namespace BeastBytes\Yii\Rbam\Asset;
 
 use Yiisoft\Assets\AssetBundle;
 
