@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 
 use BeastBytes\Yii\Rbam\Alpine\Tabs;
-use BeastBytes\Yii\Rbam\Assets\PrismAsset;
+use BeastBytes\Yii\Rbam\Asset\PrismAsset;
 use BeastBytes\Yii\Rbam\DTO\Item as RbamItem;
 use BeastBytes\Yii\Rbam\Rbac\Permission as RbamPermission;
 use BeastBytes\Yii\Rbam\RbamParameters;
