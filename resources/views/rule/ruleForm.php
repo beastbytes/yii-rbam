@@ -38,6 +38,14 @@ $breadcrumbs = [
     ],
     $this->getTitle()
 ];
+
+if (!$formModel->isCreate()) {
+    array_splice($breadcrumbs, 2, 0, [[
+        'label' => $translator->translate('label.rule.name', ['name' => $formModel->getName()], 'rbam'),
+        'url' => $urlGenerator->generate('rbam.rule.view', ['name' => $formModel->getName()]),
+    ]]);
+}
+
 $this->setParameter('breadcrumbs', $breadcrumbs);
 $tabIndex = 1;
 ?>

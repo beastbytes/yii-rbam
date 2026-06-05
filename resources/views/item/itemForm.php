@@ -32,11 +32,19 @@ $breadcrumbs = [
         'url' => $urlGenerator->generate('rbam.rbam'),
     ],
     [
-        'label' => $translator->translate(id: 'label.' . $type . 's', category: 'rbam'),
+        'label' => $translator->translate(id: sprintf('label.%ss', $type), category: 'rbam'),
         'url' => $urlGenerator->generate('rbam.item.index', ['type' => $type . 's']),
     ],
     $this->getTitle()
 ];
+
+if (!$formModel->isCreate()) {
+    array_splice($breadcrumbs, 2, 0, [[
+        'label' => $formModel->getName(),
+        'url' => $urlGenerator->generate('rbam.item.view', ['name' => $formModel->getName(), 'type' => $type]),
+    ]]);
+}
+
 $this->setParameter('breadcrumbs', $breadcrumbs);
 
 $tabIndex = 1;
