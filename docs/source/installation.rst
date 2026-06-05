@@ -1,14 +1,14 @@
 Installation
 ============
 
-The preferred way to install this extension is through `composer <https://getcomposer.org/download/>`__.
+Install this package using `composer <https://getcomposer.org/download/>`__.
 
 Either run
 
-``php composer.phar require --prefer-dist beastbytes/yii-rbam``
+`php composer.phar require --prefer-dist beastbytes/yii-rbam`
 
 or add
 
-``"beastbytes/yii-rbam": "{{versionConstraint}}"``
+`"beastbytes/yii-rbam": "{{versionConstraint}}"`
 
-to the ``require`` section of your composer.json.
+to the `require` section of your composer.json.

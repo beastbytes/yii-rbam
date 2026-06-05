@@ -10,13 +10,15 @@ to be assigned the `rbam.admin` role; this role allows the specified user to per
 
 .. note::
 
-    RBAM prevents initialisation if there are any RBAC items defined.
-    This ensures RBAC can not accidentally re-initialised.
+    RBAM prevents initialisation if there are any RBAC Permissions or Roles defined.
+
+.. image:: /_images/initialise_rbam_rbac.png
+Initialise RBAM RBAC
 
 Initialising Application RBAC Items
 -----------------------------------
 
-For RBAM to initialise the application's RBAC items and hierarchy it *must* use
+For RBAM to initialise the application's RBAC items and hierarchy (as well as RBAM) the application *must* use
 RBAM's :doc:`attributes` to define Permissions and Roles.
 If they are not used, application RBAC items and hierarchy can be created manually using RBAM.
 
@@ -35,6 +37,9 @@ If RBAM is to initialise the application's RBAC items, specify the following:
 .. note::
 
     It is assumed that RBAM is in the `{root}/vendor` directory.
+
+.. image:: /_images/initialise_application_rbac.png
+Initialise RBAM RBAC
 
 Initialising
 ------------

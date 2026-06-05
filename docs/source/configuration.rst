@@ -1,10 +1,18 @@
 Configuration
 =============
 
+Application Layout
+------------------
+
+RBAM does not have a HTML layout; instead it relies on the application layout to generate a complete HTML document.
+An alias to the application layout must be configured in `$params['beastbytes/yii-rbam']['applicationLayout']`.
+
+See :doc:`applicationIntegration` for details about the layout.
+
 Buttons
 -------
 
-The buttons in RBAM can be configured in the `$params['beastbytes/yii-rbam']['buttons']`.
+The buttons in RBAM can be configured in `$params['beastbytes/yii-rbam']['buttons']`.
 
 The HTML attributes and content for each button can be configured.
 
@@ -42,12 +50,14 @@ Default and Guest Roles
 
 If the application uses Default and/or Guest Roles, they are defined when configuring the RBAC Manager.
 
-The example below uses the Default roles defined in `$params['yiisoft/rbac']['defaultRoles']`
-and the Guest role in `$params['yiisoft/rbac']['guestRole']`.
+RBAM expects the Default Roles to be defined in `$params['yiisoft/rbac']['defaultRoles']`
+and the Guest Role in `$params['yiisoft/rbac']['guestRole']`.
 
-The definition of Default Roles is `list<array{name: string, description: string}>`.
+The type definition of Default Roles is `list<array{name: string, description: string}>`.
 
-The definition of Guest Role is `array{name: string, description: string}`.
+The type definition of Guest Role is `array{name: string, description: string}`.
+
+To add them to RBAC, configure the RBAC `ManagerInterface` as below:
 
 .. code-bloc:: php
 

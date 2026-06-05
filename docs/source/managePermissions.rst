@@ -13,19 +13,21 @@ the following information is given for each Permission:
 
 * Name of the Permission
 * Description of the Permission - translated to the current locale (see :doc:`i18n`)
+* Name of the Rule, if any, that applies to the Permission
 * Name of the Role(s) that grant the Permission
 * Date and time the Permission was created
 * Date and time the Permission was last updated
 * Buttons to `View`, `Update`, or `Remove` the Permission
 
-.. image:: /_images/permissions_index.png
+.. image:: /_images/permission_index.png
+
 Permissions
 
 View a Permission
 -----------------
 
 The Permission view page contains buttons to update the Permission and manage translations,
-details of the Permission, and - in tabs - a :doc:`hierarchyDiagram` showing ancestors and children,
+details of the Permission, and - in tabs - a :doc:`hierarchyDiagram` showing ancestors and descendants,
 a list of `Child Permissions`, and a list of `Permitted Users`.
 
 The `Child Permissions` tab contains a button to manage child Permissions of the current Permission.
@@ -38,8 +40,21 @@ The details shown for each Permission are:
 * Created - Date and time the Permission was created
 * Updated - Date and time the Permission was last updated
 
+.. image:: /_images/permission_view.png
+
+Permission View
+
+RBAM Permissions
+++++++++++++++++
+
+RBAM Permissions are shown with the Part symbol (∂) in a red circle after the name.
+
 Manage Child Permissions
 ------------------------
+
+To see a list of Child Permissions, click the `Child Permissions` tab.
+
+To manage Child Permissions, click the `Manage Child Permissions` button.
 
 The page contains a list of Permissions that are currently children, and a list of Permissions that are not.
 
@@ -51,12 +66,36 @@ Permissions that are currently children can be removed.
 
 Permissions that are not currently children can be added.
 
+.. note::
+
+    Not all Permissions can be added as a Child Permission.
+
+    Permissions that would create a circular reference can not be added as a Child Permission;
+    these Permissions do not have an `Add` button.
+
+
+.. image:: /_images/permission_manage_child_permissions.png
+
+Manage Child Permissions
+
 Translations
 ------------
+
+To create or update translations for the Permission description, click the `Translations` button.
 
 Translations are listed by locale. To translate a locale, click on the locale to expand it and complete the form.
 
 Repeat for all required locales then click `Submit`.
+
+.. note::
+
+    The translation may not immediately show in the Permission view; this is due to the way Yii caches translations.
+
+    Refresh the Permission view to see the translation.
+
+.. image:: /_images/permission_translate.png
+
+Translate Permission
 
 Create a Permission
 -------------------
@@ -68,13 +107,25 @@ complete the form. The form has the following fields:
 * Description - Description of the Permission - Required
 * Rule - The Rule to be applied to the Permission - Optional
 
+.. image:: /_images/permission_create.png
+
+Create a Permission
+
 Update a Permission
 -------------------
 
 The fields and requirements are the same as those for creating a Permission.
 
+.. note::
+
+    The name and description fields for RBAM Permissions can not be edited.
+
 If translations are used and the description is changed the current translations are moved to the new description.
 If the translations themselves require updating this must be done after updating the Permission.
+
+.. image:: /_images/permission_update.png
+
+Update a Permission
 
 Remove a Permission
 -------------------

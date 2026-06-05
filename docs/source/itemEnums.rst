@@ -3,8 +3,17 @@ Item Enums
 
 Item Enums provide a convenient method of defining Permission and Role names, and provide code completion and checking.
 
+.. important::
+
+    Yii's RBAC documentation describes using string backed enums to define RBAC items; this *will not* work in RBAM.
+
+    RBAM requires Item Enums to implement :ref:`item-interface`.
+
 Item Enums can be used with RBAM's :doc:`accessCheckerMiddleware` to provide access checking in route definitions,
 and RBAM's :doc:`attributes`.
+
+ItemEnums can have a private constant named `DESCRIPTION` which is used if the item's description is generated
+(as opposed to being specified in the PHP Attribute).
 
 The Enum below defines RBAM Roles. The name of an Enum case is the name that is used in code,
 the value is the name of the RBAC Item.
@@ -12,7 +21,7 @@ the value is the name of the RBAC Item.
 It uses `ItemTrait` to implement `ItemInterface`; the `getItemName()` method returns the fully qualified Item name.
 
 The `Prefix` PHP Attribute defines a prefix to all RBAC Item names in the Enum, and a separator between the prefix
-and Item names - the default separator is a space (' ').
+and Item names; the default separator is a space (' ').
 
 .. code-block:: php
 
@@ -25,6 +34,8 @@ and Item names - the default separator is a space (' ').
     {
         use ItemTrait;
 
+        private const string DESCRIPTION = 'description';
+
         case admin = 'admin';
         case itemManager = 'item.manager';
         case ruleManager = 'rule.manager';
@@ -36,7 +47,7 @@ Example
 
 .. code-block:: php
 
-    $itemName = Role::itemManager->getItemName(); // SitemName === 'rbam.item.manager'
+    $itemName = Role::itemManager->getItemName(); // itemName === 'rbam.item.manager'
 
 .. _item-interface:
 ItemInterface
@@ -74,4 +85,4 @@ Prefix Attribute
         :param list<string>|string $prefix: Prefix for all Items in the Enum. If a list of strings they are concatenated using `$separator`
         :param string $separator: The separator between the prefix and the rest of the item name (default: ' ')
 
-    Other methods are used internally to generate the fully qualified item name.
+    Other methods are used internally to generate the fully qualified item name and description.

@@ -79,7 +79,8 @@ API
     .. php:method:: __construct($item, $description = null, $parent = [], $ruleName = null)
 
         :param ItemInterface $item: An Item Enum case
-        :param ?string $description: The description of the Item (default: null)
+        :param ?string $description: The description of the Item. If `NULL` the description is generated;
+            the format is {itemName}{separator}{ItemEnum::DESCRIPTION} (default: null)
         :param ItemInterface|list<ItemInterface> $parent: The parent(s) of the Item
         :param ?string $ruleName: The name of a rule to be applied to the Item (default: null)
 

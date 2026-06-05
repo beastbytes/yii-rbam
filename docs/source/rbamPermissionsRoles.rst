@@ -70,17 +70,13 @@ Roles
 -----
 
 rbam.admin
-
     Perform all RBAM functions
 
 rbam.item.manager
-
     Create, update, delete, and view RBAC Roles and Permissions
 
 rbam.rule.manager
-
     Create, update, delete, and view RBAC Rules
 
 rbam.user.manager
-
     View users, and assign and revoke RBAC Roles

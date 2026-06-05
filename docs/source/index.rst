@@ -46,7 +46,7 @@ Composite rules are not currently supported.
 
     installation
     configuration
-    prerequisites
+    applicationIntegration
     rbacInitialisation
     usage
     tips

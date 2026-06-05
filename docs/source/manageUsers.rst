@@ -10,7 +10,7 @@ Users
 The Users home page shows a paged list of users. For each user,
 their name and the number of Roles assigned and Permissions granted is shown.
 
-.. image:: /_images/users_index.png
+.. image:: /_images/user_index.png
 Users
 
 View a User
@@ -31,20 +31,32 @@ can be revoked.
     To revoke an inherited role the assigned ancestor Role must be revoked,
     or the inherited Role removed from the assigned Role's hierarchy.
 
+.. image:: /_images/user_view.png
+User Role Assignments View
+
 Assign a Role
--------------
++++++++++++++
 
 To assign a Role to a user, click Assign button for an unassigned Role and confirm in the dialog.
 The user will be assigned the Role, inherit any descendant Roles,
 and granted Permissions associated with the assigned and inherited Roles.
 
+.. note::
+
+    The Guest Role can not be assigned
+
 Revoke a Role
--------------
++++++++++++++
 
 To revoke a Role from a user, click the Revoke button for an assigned Role and confirm in the dialog.
 The Role and any descendant Roles will be revoked, as will Permissions associated with all the revoked Roles.
 
-Revoke all Roles
-----------------
+.. note::
 
-Click the Revoke All button and confirm in the dialog. All Roles and Permissions will be revoked from the user.
+    Default Roles can not be revoked
+
+Revoke all Roles
+++++++++++++++++
+
+Click the Revoke All button and confirm in the dialog.
+All Roles (apart from any Default Roles) and Permissions will be revoked from the user.
