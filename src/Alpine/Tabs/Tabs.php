@@ -1,7 +1,9 @@
 <?php
 
-namespace BeastBytes\Yii\Rbam\Alpine;
+namespace BeastBytes\Yii\Rbam\Alpine\Tabs;
 
+use BeastBytes\Yii\Rbam\Alpine\AlpineComponentAsset;
+use Yiisoft\Assets\AssetManager;
 use Yiisoft\Widget\Widget;
 
 final class Tabs extends Widget
@@ -18,14 +20,13 @@ final class Tabs extends Widget
     private string $panelContainerClass = 'panels';
     /** @var string $selectedClass CSS class for the selected tab header */
     private string $selectedClass = 'selected';
+    private array $tabs = [];
     /** @var string $unselectedClass CSS class for unselected tab headers */
     private string $unselectedClass = 'unselected';
 
-    /**
-     * @param list<array{header: string, content: string}> $tabs Tabs
-     */
-    public function __construct(private readonly array $tabs)
+    public function __construct(AssetManager $assetManager)
     {
+        $assetManager->register(AlpineComponentAsset::class);
     }
 
     public function containerClass(string $containerClass): self
@@ -67,6 +68,13 @@ final class Tabs extends Widget
     {
         $new = clone $this;
         $new->selectedClass = $selectedClass;
+        return $new;
+    }
+
+    public function tabs(array $tabs): self
+    {
+        $new = clone $this;
+        $new->tabs = $tabs;
         return $new;
     }
 
