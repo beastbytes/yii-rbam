@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @var UrlGeneratorInterface $urlGenerator
  */
 
-use BeastBytes\Yii\Rbam\Alpine\Tabs;
+use BeastBytes\Yii\Rbam\Alpine\Tabs\Tabs;
 use BeastBytes\Yii\Rbam\Asset\PrismAsset;
 use BeastBytes\Yii\Rbam\DTO\Item as RbamItem;
 use BeastBytes\Yii\Rbam\Rbac\Permission as RbamPermission;
@@ -105,8 +105,8 @@ RULE,
     ->render()
 ;
 
-echo Tabs::widget([
-    'tabs' => [
+echo Tabs::widget([$assetManager])
+    ->tabs([
         [
             'header' => $translator->translate(id: 'label.roles', category: 'rbam'),
             'content' => $this->render(
@@ -147,5 +147,5 @@ echo Tabs::widget([
                 ]
             ),
         ],
-    ],
-]);
+    ])
+;

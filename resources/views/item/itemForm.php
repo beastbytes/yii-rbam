@@ -94,6 +94,7 @@ $tabIndex = 1;
     ->disabled(empty($ruleClasses))
     ->tabindex($tabIndex++)
 ?>
+
 <div class="form-buttons">
     <?= Field::submitButton()
          ->containerClass('form-button')

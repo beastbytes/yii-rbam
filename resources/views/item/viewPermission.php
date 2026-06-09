@@ -17,7 +17,7 @@ declare(strict_types=1);
  */
 
 use BeastBytes\Mermaid\Mermaid;
-use BeastBytes\Yii\Rbam\Alpine\Tabs;
+use BeastBytes\Yii\Rbam\Alpine\Tabs\Tabs;
 use BeastBytes\Yii\Rbam\Diagram\MermaidHierarchyDiagram;
 use BeastBytes\Yii\Rbam\DTO\Item as RbamItem;
 use BeastBytes\Yii\Rbam\DTO\User as RbamUser;
@@ -171,8 +171,8 @@ echo DetailView::widget()
     ->render()
 ;
 
-echo Tabs::widget([
-    'tabs' => [
+echo Tabs::widget([$assetManager])
+    ->tabs([
         [
             'header' => $translator->translate(id: 'label.diagram', category: 'rbam'),
             'content' => $diagram->render(),
@@ -227,5 +227,5 @@ echo Tabs::widget([
                 ]
             ),
         ],
-    ]
-]);
+    ])
+;

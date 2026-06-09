@@ -17,7 +17,6 @@ use Yiisoft\Assets\AssetManager;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\Widgets\ContentDecorator;
 
-$assetManager->register(AlpineComponentAsset::class);
 $assetManager->register(PaginationAsset::class);
 $assetManager->register(RbamAsset::class);
 
