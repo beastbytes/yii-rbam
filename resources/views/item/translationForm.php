@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 /**
  * @var Csrf $csrf
+ * @var FieldFactory $fieldFactory
  * @var TranslationForm $formModel
  * @var Item $item
  * @var RbamParameters $rbamParameters
@@ -16,7 +17,7 @@ declare(strict_types=1);
 
 use BeastBytes\Yii\Rbam\Item\TranslationForm;
 use BeastBytes\Yii\Rbam\RbamParameters;
-use Yiisoft\FormModel\Field;
+use Yiisoft\FormModel\FieldFactory;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\NoEncode;
 use Yiisoft\Rbac\Item;
@@ -55,7 +56,7 @@ $tabIndex = 1;
 ?>
 
 <?php foreach ($formModel->getTranslations() as $locale => $translation): ?>
-    <?= Field::fieldset()
+    <?= $fieldFactory->fieldset()
             ->containerAttributes([
                 'x-data' => sprintf('{
                     id: "%s",
@@ -87,11 +88,11 @@ $tabIndex = 1;
                 'x-collapse' => true,
             ])
             ->content(
-                Field::hidden($translation, 'locale')
+                $fieldFactory->hidden($translation, 'locale')
                     ->inputId(sprintf('translation-%s-locale', $locale))
                     ->name(sprintf('TranslationForm[translations][%s][locale]', $locale))
                 ,
-                Field::text($translation, 'description')
+                $fieldFactory->text($translation, 'description')
                     ->inputId(sprintf('translation-%s-description', $locale))
                     ->name(sprintf('TranslationForm[translations][%s][description]', $locale))
                     ->required(true)
@@ -109,14 +110,14 @@ $tabIndex = 1;
  <?php endforeach; ?>
 
 <div class="form-buttons">
-    <?= Field::submitButton()
+    <?= $fieldFactory->submitButton()
         ->containerClass('form-button')
         ->buttonClass($rbamParameters->getButtons('submit')['attributes']['class'])
         ->buttonId('submit-button')
         ->tabindex($tabIndex++)
         ->content($translator->translate(id: $rbamParameters->getButtons('submit')['content'], category: 'rbam'))
     ?>
-    <?= Field::button()
+    <?= $fieldFactory->button()
         ->containerClass('form-button')
         ->buttonAttributes([
             'onClick' => sprintf(

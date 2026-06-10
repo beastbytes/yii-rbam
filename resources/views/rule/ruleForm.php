@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 /**
  * @var Csrf $csrf
+ * @var FieldFactory $fieldFactory
  * @var RuleForm $formModel
  * @var RbamParameters $rbamParameters
  * @var TranslatorInterface $translator
@@ -13,7 +14,7 @@ declare(strict_types=1);
 
 use BeastBytes\Yii\Rbam\RbamParameters;
 use BeastBytes\Yii\Rbam\Rule\RuleForm;
-use Yiisoft\FormModel\Field;
+use Yiisoft\FormModel\FieldFactory;
 use Yiisoft\Html\Html;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\TranslatorInterface;
@@ -58,8 +59,8 @@ $tabIndex = 1;
     ->id('form-rule')
     ->open()
 ?>
-<?= Field::errorSummary($formModel) ?>
-<?= Field::text($formModel, 'name')
+<?= $fieldFactory->errorSummary($formModel) ?>
+<?= $fieldFactory->text($formModel, 'name')
     ->autofocus($formModel->isCreate())
     ->disabled($formModel->isUpdate())
     ->containerClass('form-control-container')
@@ -71,7 +72,7 @@ $tabIndex = 1;
     ->validClass('valid')
     ->tabindex($tabIndex++)
 ?>
-<?= Field::text($formModel, 'description')
+<?= $fieldFactory->text($formModel, 'description')
     ->autofocus($formModel->isUpdate())
     ->containerClass('form-control-container')
     ->inputContainerTag('div')
@@ -82,7 +83,7 @@ $tabIndex = 1;
     ->validClass('valid')
     ->tabindex($tabIndex++)
 ?>
-<?= Field::textarea($formModel, 'code')
+<?= $fieldFactory->textarea($formModel, 'code')
     ->beforeInput('<div>public function execute(?string $userId, Permission $item, RuleContext $context): bool {</div>')
     ->afterInput('<div>}</div>')
     ->containerClass('form-control-container')
@@ -95,7 +96,7 @@ $tabIndex = 1;
     ->tabindex($tabIndex++)
 ?>
     <div class='form-buttons'>
-        <?= Field::submitButton()
+        <?= $fieldFactory->submitButton()
             ->containerClass('form-button')
             ->buttonClass($rbamParameters->getButtons('submit')['attributes']['class'])
             ->buttonId('submit-button')
@@ -105,7 +106,7 @@ $tabIndex = 1;
                 category: 'rbam'
             ))
         ?>
-        <?= Field::button()
+        <?= $fieldFactory->button()
             ->containerClass('form-button')
             ->buttonAttributes(['onClick' => sprintf(
                 'window.location.href = "%s"',
