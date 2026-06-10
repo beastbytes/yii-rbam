@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BeastBytes\Yii\Rbam\ViewInjection;
 
+use BeastBytes\Yii\Rbam\Alpine\FieldFactory;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use JetBrains\PhpStorm\ArrayShape;
 use Yiisoft\Assets\AssetManager;
@@ -19,6 +20,7 @@ final readonly class CommonViewInjection implements CommonParametersInjectionInt
     public function __construct(
         private AssetManager $assetManager,
         private CurrentUser $currentUser,
+        private FieldFactory $fieldFactory,
         private Inflector $inflector,
         private LocaleProvider $localeProvider,
         private RbamParameters $rbamParameters,
@@ -30,6 +32,7 @@ final readonly class CommonViewInjection implements CommonParametersInjectionInt
     #[ArrayShape([
         'assetManager' => AssetManager::class,
         'currentUser' => CurrentUser::class,
+        'fieldFactory' => FieldFactory::class,
         'inflector' => Inflector::class,
         'localeProvider' => LocaleProvider::class,
         'rbamParameters' => RbamParameters::class,
@@ -41,6 +44,7 @@ final readonly class CommonViewInjection implements CommonParametersInjectionInt
         return [
             'assetManager' => $this->assetManager,
             'currentUser' => $this->currentUser,
+            'fieldFactory' => $this->fieldFactory,
             'inflector' => $this->inflector,
             'localeProvider' => $this->localeProvider,
             'rbamParameters' => $this->rbamParameters,
