@@ -106,10 +106,10 @@ RULE,
 ;
 
 echo Tabs::widget([$assetManager])
-    ->tabs([
+    ->tabs(
         [
-            'header' => $translator->translate(id: 'label.roles', category: 'rbam'),
-            'content' => $this->render(
+            'tab' => $translator->translate(id: 'label.roles', category: 'rbam'),
+            'panel' => $this->render(
                 '../item/_items',
                 [
                     'actionButtons' => ['view'],
@@ -128,8 +128,8 @@ echo Tabs::widget([$assetManager])
             )
         ],
         [
-            'header' => $translator->translate(id: 'label.permissions', category: 'rbam'),
-            'content' => $this->render(
+            'tab' => $translator->translate(id: 'label.permissions', category: 'rbam'),
+            'panel' => $this->render(
                 '../item/_items',
                 [
                     'actionButtons' => ['view'],
@@ -147,5 +147,5 @@ echo Tabs::widget([$assetManager])
                 ]
             ),
         ],
-    ])
+    )
 ;

@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BeastBytes\Yii\Rbam\Alpine\Tabs;
 
-use BeastBytes\Yii\Rbam\Alpine\AlpineComponentAsset;
+use BeastBytes\Yii\Rbam\Alpine\AlpineAsset;
 use Yiisoft\Assets\AssetManager;
 use Yiisoft\Widget\Widget;
 
@@ -10,23 +12,34 @@ final class Tabs extends Widget
 {
     /** @var string $containerClass CSS class for the container tag */
     private string $containerClass = 'tabs';
-    /** @var string $headerClass CSS class for tab headers */
-    private string $headerClass = 'header';
-    /** @var string $headerContainerClass CSS class for tab headers container */
-    private string $headerContainerClass = 'headers';
+    /** @var string $tabClass CSS class for tabs */
+    private string $tabClass = 'tab';
+    /** @var string $tabContainerClass CSS class for the tabs container */
+    private string $tabContainerClass = 'tabs';
     /** @var string $panelClass CSS class for tab content panels */
     private string $panelClass = 'panel';
-    /** @var string $panelContainerClass CSS class fortab content panels container */
+    /** @var string $panelContainerClass CSS class for tab content panels container */
     private string $panelContainerClass = 'panels';
-    /** @var string $selectedClass CSS class for the selected tab header */
-    private string $selectedClass = 'selected';
+    /** @var string $selectedTabClass CSS class for the selected tab */
+    private string $selectedTabClass = 'selected';
     private array $tabs = [];
-    /** @var string $unselectedClass CSS class for unselected tab headers */
-    private string $unselectedClass = 'unselected';
+    /** @var string $unselectedTabClass CSS class for unselected tabs */
+    private string $unselectedTabClass = 'unselected';
 
     public function __construct(AssetManager $assetManager)
     {
-        $assetManager->register(AlpineComponentAsset::class);
+        $assetManager->register(AlpineAsset::class);
+    }
+
+    /**
+     * @param array{tab: string, panel: string} ...$tabs
+     * @return self
+     */
+    public function addTabs(array ...$tabs): self
+    {
+        $new = clone $this;
+        $new->tabs = array_merge($this->tabs, $tabs);
+        return $new;
     }
 
     public function containerClass(string $containerClass): self
@@ -36,17 +49,17 @@ final class Tabs extends Widget
         return $new;
     }
 
-    public function headerClass(string $headerClass): self
+    public function tabClass(string $tabClass): self
     {
         $new = clone $this;
-        $new->headerClass = $headerClass;
+        $new->tabClass = $tabClass;
         return $new;
     }
 
-    public function headerContainerClass(string $headerContainerClass): self
+    public function tabContainerClass(string $tabContainerClass): self
     {
         $new = clone $this;
-        $new->headerContainerClass = $headerContainerClass;
+        $new->tabContainerClass = $tabContainerClass;
         return $new;
     }
 
@@ -64,24 +77,29 @@ final class Tabs extends Widget
         return $new;
     }
 
-    public function selectedClass(string $selectedClass): self
+    public function selectedTabClass(string $selectedTabClass): self
     {
         $new = clone $this;
-        $new->selectedClass = $selectedClass;
+        $new->selectedTabClass = $selectedTabClass;
         return $new;
     }
 
-    public function tabs(array $tabs): self
+
+    /**
+     * @param array{tab: string, panel: string} ...$tabs
+     * @return self
+     */
+    public function tabs(array ...$tabs): self
     {
         $new = clone $this;
         $new->tabs = $tabs;
         return $new;
     }
 
-    public function unselectedClass(string $unselectedClass): self
+    public function unselectedTabClass(string $unselectedTabClass): self
     {
         $new = clone $this;
-        $new->unselectedClass = $unselectedClass;
+        $new->unselectedTabClass = $unselectedTabClass;
         return $new;
     }
 
@@ -90,28 +108,28 @@ final class Tabs extends Widget
         return sprintf(
             '<div x-data x-tabs class="%s"><div x-tabs:list class="%s">%s</div><div x-tabs:panels class="%s">%s</div></div>',
             $this->containerClass,
-            $this->headerContainerClass,
-            $this->renderHeaders(),
+            $this->tabContainerClass,
+            $this->renderTabs(),
             $this->panelContainerClass,
             $this->renderPanels()
         );
     }
 
-    private function renderHeaders(): string
+    private function renderTabs(): string
     {
-        $headers = [];
+        $tabs = [];
 
         foreach ($this->tabs as $tab) {
-            $headers[] = sprintf(
+            $tabs[] = sprintf(
                 '<button x-tabs:tab type="button" :class="$tab.isSelected ? \'%s\' : \'%s\'" class="%s">%s</button>',
-                $this->selectedClass,
-                $this->unselectedClass,
-                $this->headerClass,
-                $tab['header']
+                $this->selectedTabClass,
+                $this->unselectedTabClass,
+                $this->tabClass,
+                $tab['tab']
             );
         }
 
-        return implode('', $headers);
+        return implode('', $tabs);
     }
 
     private function renderPanels(): string
@@ -122,7 +140,7 @@ final class Tabs extends Widget
             $panels[] = sprintf(
                 '<section x-tabs:panel class="%s">%s</section>',
                 $this->panelClass,
-                $tab['content']
+                $tab['panel']
             );
         }
 
