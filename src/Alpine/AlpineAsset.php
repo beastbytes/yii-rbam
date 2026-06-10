@@ -4,7 +4,7 @@ namespace BeastBytes\Yii\Rbam\Alpine;
 
 use Yiisoft\Assets\AssetBundle;
 
-final class AlpineComponentAsset extends AssetBundle
+final class AlpineAsset extends AssetBundle
 {
     public bool $cdn = true;
     public array $js = [
