@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use BeastBytes\Yii\Rbam\Alpine\FieldFactory;
 use BeastBytes\Yii\Rbam\Diagram\HierarchyDiagramInterface;
 use BeastBytes\Yii\Rbam\Diagram\MermaidHierarchyDiagram;
 use BeastBytes\Yii\Rbam\InitialisationService;
@@ -17,6 +18,7 @@ use Yiisoft\Translator\TranslatorInterface;
 /** @var array $params */
 
 return [
+    FieldFactory::class => FieldFactory::class,
     HierarchyDiagramInterface::class => MermaidHierarchyDiagram::class,
     InitialisationServiceInterface::class => InitialisationService::class,
     RbamParameters::class => [
