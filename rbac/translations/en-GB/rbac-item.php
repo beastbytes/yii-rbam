@@ -1,7 +1,10 @@
 <?php
 return [
-    'rbam.administrator' => 'RBAM Administrator',
-    'rbam.administrator.description' => 'Perform all RBAM functions',
+    'application.permission.one.description' => 'An Application Permission',
+    'application.permission.two.description' => 'Another Application Permission',
+    'application.role.description' => 'An Application Role',
+    'application.role.two.description' => 'Another Application Role',
+    'rbam.admin.description' => 'Perform all RBAM functions',
     'rbam.clear.description' => 'Clear RBAC Assignments, Permissions, and Roles',
     'rbam.index.description' => 'View RBAM',
     'rbam.item.create.description' => 'Create Permissions and Roles',
@@ -14,7 +17,7 @@ return [
     'rbam.rule.manager.description' => 'Create, update, delete, and view RBAC Rules',
     'rbam.rule.update.description' => 'Update Rules',
     'rbam.rule.view.description' => 'View Rules',
-    'rbam.user.manager.description' => 'View users, and assign, and revoke RBAC Roles',
+    'rbam.user.manager.description' => 'View users, and assign and revoke RBAC Roles',
     'rbam.user.update.description' => 'Update Users',
     'rbam.user.view.description' => 'View Users',
 ];

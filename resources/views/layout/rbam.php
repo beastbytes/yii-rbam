@@ -10,13 +10,14 @@ declare(strict_types=1);
  */
 
 use BeastBytes\Yii\Rbam\Asset\PaginationAsset;
-use BeastBytes\Yii\Rbam\Alpine\AlpineComponentAsset;
+use BeastBytes\Yii\Rbam\Alpine\AlpineAsset;
 use BeastBytes\Yii\Rbam\Asset\RbamAsset;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use Yiisoft\Assets\AssetManager;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\Widgets\ContentDecorator;
 
+$assetManager->register(AlpineAsset::class);
 $assetManager->register(PaginationAsset::class);
 $assetManager->register(RbamAsset::class);
 

@@ -1,6 +1,4 @@
-Hierarchy Diagram
------------------
-
+# Hierarchy Diagram
 RBAM provides a hierarchy diagram for all Permissions and Roles. This shows where an item is in the hierarchy
 in relation to its ancestors (if any) and descendants (if any).
 The diagram is drawn using the `Mermaid Class Diagram package <https://mermaid.js.org/syntax/classDiagram.html>`__.
@@ -14,5 +12,5 @@ For each item the following information is shown (from top to bottom):
 
 Clicking on an item in the diagram will go to that item's page.
 
-.. image:: /_images/hierarchy_diagram.png
+![Hierarchy diagram](../images/hierarchy_diagram.png)
 Example hierarchy diagram (rbam.item.manager)

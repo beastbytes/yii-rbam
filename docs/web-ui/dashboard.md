@@ -1,9 +1,5 @@
-RBAM Dashboard
-==============
-
-Overview
---------
-
+# RBAM Dashboard
+## Overview
 The dashboard shows an overview of RBAC Roles, Permissions, Rules, and Users.
 
 For each of Permissions, Roles, Rules, Users, the number of each is shown.
@@ -11,13 +7,10 @@ Depending on the current user's role assignments, and hence permissions granted,
 
 If the current user has the appropriate permission, there is a dropdown menu with one item - Clear RBAC.
 
-.. image:: /_images/dashboard.png
-
+![The RBAM dashboard](../images/dashboard.png)
 The RBAM dashboard
 
-Managing Roles
---------------
-
+## Managing Roles
 Click `Manage Roles` to manage Roles.
 
 A list of Roles is displayed with their descriptions, Rules used, and create and update datetimes.
@@ -31,11 +24,9 @@ Click `Update` to update a Role.
 
 Click `Delete` to delete a Role.
 
-See :doc:`manageRoles` for more details.
+See [Manage Roles](./manage-roles) for more details.
 
-Managing Permissions
---------------------
-
+## Managing Permissions
 Click `Manage Permissions` to manage Permissions.
 
 A list of Permissions is displayed with their descriptions, Rules used, and create and update datetimes.
@@ -48,11 +39,9 @@ Click `Update` to update a Permission.
 
 Click `Delete` to delete a Permission.
 
-See :doc:`managePermissions` for more details.
+See [Manage Permissions](./manage-permissions) for more details.
 
-Managing Rules
---------------
-
+## Managing Rules
 Click `Manage Rules` to manage Rules.
 
 A list of Rules is displayed with the number of Roles and Permissions that use them.
@@ -66,11 +55,9 @@ Click `Update` to update a Rule.
 
 Click `Delete` to delete a Rule.
 
-See :doc:`manageRules` for more details.
+See [Manage Rules](./manage-rules) for more details.
 
-Managing Users
---------------
-
+## Managing Users
 Click `Manage Users` to manage Users.
 
 A list of users is displayed with the number of Roles that each is assigned and Permissions granted.
@@ -78,18 +65,16 @@ A list of users is displayed with the number of Roles that each is assigned and 
 Clicking `View` shows the Roles assigned to the user and the Permissions granted; unassigned Roles are also listed.
 Assigned Roles can be unassigned, and unassigned Roles can be assigned to the user. Permissions are updated accordingly.
 
-See :doc:`manageUsers` for more details.
+See [Manage Users](./manage-users) for more details.
 
-Clear RBAC
-----------
-
+## Clear RBAC
 Available in the `menu` button (top-right on the dashboard), `Clear RBAC` clears *all* RBAC items and hierarchy.
 
-.. danger::
+::: danger
+Clearing RBAC will prohibit access to all parts of the application where RBAC controls access; this includes RBAM.
 
-    Clearing RBAC will prohibit access to all parts of the application where RBAC controls access; this includes RBAM.
-
-    RBAC must be re-initialised to regain access.
+RBAC must be re-initialised to regain access.
+:::
 
 Selecting `Clear RBAC` shows a confirmation dialog. Clicking `Continue` shows a form that requires a code to be entered
 to complete the action to ensure that the action can not be taken accidentally.

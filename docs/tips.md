@@ -1,15 +1,10 @@
-RBAC Tips
+# RBAC Tips
 =========
-
-RBAC Item Naming Convention
----------------------------
-
+## RBAC Item Naming Convention
 It is strongly suggested to use some kind of naming convention for application RBAC items to make management simpler,
 particularly in larger applications.
 
-RBAM Naming Convention
-++++++++++++++++++++++
-
+### RBAM Naming Convention
 RBAM Permission and Role names use the following convention:
 
 `rbam.{section}.{task}`
@@ -27,7 +22,5 @@ RBAM item descriptions simply have `.description` appended to the name; e.g. `rb
 
 Using a hierarchical naming convention such as this helps keep items organised.
 
-RBAC Item Enums
-+++++++++++++++
-
-Using Enums to define RBAC items helps to ensure a consistent naming convention. See :doc:`itemEnums` for details.
+### RBAC Item Enums
+Using Enums to define RBAC items helps to ensure a consistent naming convention. See [Item Enums](./item-enums) for details.
