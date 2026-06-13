@@ -34,7 +34,6 @@ final class ItemForm extends FormModel implements PropertyTranslatorProviderInte
     #[StringValue]
     private string $ruleName = '';
 
-
     public function __construct(
         private readonly TranslatorInterface $translator,
         private readonly ItemsStorageInterface $itemsStorage,
