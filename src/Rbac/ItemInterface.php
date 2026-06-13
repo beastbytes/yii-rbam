@@ -6,5 +6,6 @@ namespace BeastBytes\Yii\Rbam\Rbac;
 
 interface ItemInterface
 {
+    public function getItemDescription(): string;
     public function getItemName(): string;
 }
