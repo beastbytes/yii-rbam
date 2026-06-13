@@ -1,10 +1,8 @@
 # phpstorm project files
 .idea
 
-# Sphinx
-/sphinx.docs/build
-# Python Virtual Environment
-.venv
+# VitePress generated documentation
+.vitepress/dist
 
 # netbeans project files
 nbproject
