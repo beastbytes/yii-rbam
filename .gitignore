@@ -2,7 +2,7 @@
 .idea
 
 # Sphinx
-/docs/build
+/sphinx.docs/build
 # Python Virtual Environment
 .venv
 

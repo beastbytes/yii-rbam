@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 /**
  * @var Csrf $csrf
+ * @var FieldFactory $fieldFactory
  * @var ItemForm $formModel
  * @var RbamParameters $rbamParameters
  * @var array<string, string> $ruleClasses
@@ -15,7 +16,7 @@ declare(strict_types=1);
 
 use BeastBytes\Yii\Rbam\Item\ItemForm;
 use BeastBytes\Yii\Rbam\RbamParameters;
-use Yiisoft\FormModel\Field;
+use Yiisoft\FormModel\FieldFactory;
 use Yiisoft\Html\Html;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\TranslatorInterface;
@@ -46,7 +47,6 @@ if (!$formModel->isCreate()) {
 }
 
 $this->setParameter('breadcrumbs', $breadcrumbs);
-
 $tabIndex = 1;
 ?>
 
@@ -58,8 +58,8 @@ $tabIndex = 1;
     ->id('form-item')
     ->open()
 ?>
-<?= Field::errorSummary($formModel) ?>
-<?= Field::text($formModel, 'name')
+<?= $fieldFactory->errorSummary($formModel) ?>
+<?= $fieldFactory->text($formModel, 'name')
     ->autofocus(!str_starts_with($formModel->getName(), 'rbam'))
     ->required(true)
     ->readonly(str_starts_with($formModel->getName(), 'rbam'))
@@ -72,7 +72,7 @@ $tabIndex = 1;
     ->afterInput(Html::span())
     ->tabindex($tabIndex++)
 ?>
-<?= Field::text($formModel, 'description')
+<?= $fieldFactory->text($formModel, 'description')
     ->required(true)
     ->readonly(str_starts_with($formModel->getName(), 'rbam'))
     ->containerClass('form-control-container')
@@ -83,7 +83,7 @@ $tabIndex = 1;
     ->afterInput(Html::span())
     ->tabindex($tabIndex++)
 ?>
-<?= Field::select($formModel, 'ruleName', [
+<?= $fieldFactory->select($formModel, 'ruleName', [
     'prompt()' => [$translator->translate(id: 'prompt.select-rule', category: 'rbam')],
     'optionsData()' => [$ruleClasses],
 ])
@@ -96,14 +96,16 @@ $tabIndex = 1;
 ?>
 
 <div class="form-buttons">
-    <?= Field::submitButton()
-         ->containerClass('form-button')
-         ->buttonClass($rbamParameters->getButtons('submit')['attributes']['class'])
-         ->buttonId('submit-button')
-         ->tabindex($tabIndex++)
-         ->content($translator->translate(id: $rbamParameters->getButtons('submit')['content'], category: 'rbam'))
+    <?= $fieldFactory->submitButton()
+        ->containerClass('form-button')
+        ->buttonClass($rbamParameters->getButtons('submit')['attributes']['class'])
+        ->buttonId('submit-button')
+        ->tabindex($tabIndex++)
+        ->content(
+            $translator->translate(id: $rbamParameters->getButtons('submit')['content'], category: 'rbam')
+        )
     ?>
-    <?= Field::button()
+    <?= $fieldFactory->button()
         ->containerClass('form-button')
         ->buttonAttributes([
             'onClick' => sprintf(
@@ -113,7 +115,9 @@ $tabIndex = 1;
         ])
         ->buttonClass($rbamParameters->getButtons('cancel')['attributes']['class'])
         ->tabindex($tabIndex)
-        ->content($translator->translate(id: $rbamParameters->getButtons('cancel')['content'], category: 'rbam'))
+        ->content(
+            $translator->translate(id: $rbamParameters->getButtons('cancel')['content'], category: 'rbam')
+        )
     ?>
 </div>
 <?= Html::form()
