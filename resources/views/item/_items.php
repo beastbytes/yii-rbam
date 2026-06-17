@@ -23,6 +23,7 @@ declare(strict_types=1);
  * @var ?UserInterface $user
  */
 
+use BeastBytes\Yii\Rbam\Alpine\Modal\Modal;
 use BeastBytes\Yii\Rbam\DTO\Item as RbamItem;
 use BeastBytes\Yii\Rbam\PaginatorUrlCreator;
 use BeastBytes\Yii\Rbam\Rbac\Permission as RbamPermission;
@@ -165,46 +166,53 @@ echo GridView::widget()
                 )
             ,
             buttons: [
-                'remove' => static fn (string $url, DataContext $context): string => Html::button(
-                    content: $translator->translate(
-                        id: $rbamParameters->getButtons('remove')['content'],
-                        category: 'rbam'
-                    ),
-                    attributes: array_merge(
-                        $rbamParameters->getButtons('remove')['attributes'],
-                        [
-                            'type' => 'button',
-                            '@click' => sprintf(
-                               "\$dispatch('modal', %s)",
-                                Json::encode([
-                                    'buttons' => [
-                                        'continue' => [
-                                            'href' => $url,
-                                            'data' => [
-                                                'item' => $context->key,
-                                            ]
-                                        ],
-                                    ],
-                                    'closeDialog' => $translator->translate(id: 'label.close-dialog'),
-                                    'content' => $translator->translate(
-                                        sprintf('message.%s.remove', $type),
-                                        [
-                                            'item' => $context->key,
-                                        ],
-                                        'rbam'
-                                    ),
-                                    'title' => $translator->translate(
-                                        sprintf('header.%s.remove', $type),
-                                        [
-                                            'item' => $context->key,
-                                        ],
-                                        'rbam'
-                                    ),
-                                ])
-                            ),
-                        ]
+                'remove' => static fn (string $url, DataContext $context): string => (new Modal($assetManager))
+                    ->button(
+                        Html::button(
+                            content: $translator->translate(id: 'button.continue', category: 'rbam'),
+                            attributes: [
+                                'class' => 'btn btn_continue',
+                                '@click' => sprintf(
+                                    "rbam.action({href: '%s', data: %s})",
+                                    $url,
+                                    Json::encode(['item' => $context->key]),
+                                ),
+                            ]
+                        ),
+                        Html::button(
+                            content: $translator->translate(id: 'button.cancel', category: 'rbam'),
+                            attributes: [
+                                'class' => 'btn btn_cancel',
+                            ]
+                        ),
                     )
-                )
+                    ->closeText($translator->translate(id: 'label.close-dialog', category: 'rbam'),)
+                    ->content($translator->translate(
+                        sprintf('message.%s.remove', $type),
+                        [
+                            'item' => $context->key,
+                        ],
+                        'rbam'
+                    ))
+                    ->title($translator->translate(
+                        sprintf('header.%s.remove', $type),
+                        [
+                            'item' => $context->key,
+                        ],
+                        'rbam'
+                    ))
+                    ->trigger(Html::button(
+                        content: $translator->translate(
+                            id: $rbamParameters->getButtons('remove')['content'],
+                            category: 'rbam'
+                        ),
+                        attributes: array_merge(
+                            $rbamParameters->getButtons('remove')['attributes'],
+                            [
+                                'type' => 'button',
+                            ]
+                        )
+                    ))
                     ->render()
                 ,
                 'update' => new ActionButton(
@@ -223,13 +231,14 @@ echo GridView::widget()
                 ),
             ],
             visibleButtons: [
-                'remove' => $currentUser->can(RbamPermission::itemRemove->getItemName()),
-                'update' => $currentUser->can(RbamPermission::itemUpdate->getItemName()),
+                'remove' => static fn (RbamItem $item): bool => !($item->isDefaultRole() || $item->isGuestRole())
+                    && $currentUser->can(RbamPermission::itemRemove->getItemName()),
+                'update' => static fn (RbamItem $item): bool => !($item->isDefaultRole() || $item->isGuestRole())
+                    && $currentUser->can(RbamPermission::itemUpdate->getItemName()),
                 'view' => $currentUser->can(RbamPermission::itemUpdate->getItemName()),
             ],
             bodyAttributes: [
                 'class' => 'action',
-                'x-data' => true
             ],
         )
     )

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 /**
+ * @var AssetManager $assetManager
  * @var string $childType
  * @var Csrf $csrf
  * @var ?int $currentPage
@@ -15,9 +16,11 @@ declare(strict_types=1);
  * @var UrlGeneratorInterface $urlGenerator
  */
 
+use BeastBytes\Yii\Rbam\Alpine\Modal\Modal;
 use BeastBytes\Yii\Rbam\DTO\Item as RbamItem;
 use BeastBytes\Yii\Rbam\PaginatorUrlCreator;
 use BeastBytes\Yii\Rbam\RbamParameters;
+use Yiisoft\Assets\AssetManager;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Html\Html;
@@ -99,54 +102,63 @@ echo GridView::widget()
                 ]
             ),
             buttons: [
-                'add' => static fn (string $url, DataContext $context) => Html::button(
-                    content: $translator->translate(id: 
-                        $type === $childType
-                            ? $rbamParameters->getButtons('add')['content']
-                            : $rbamParameters->getButtons('grant')['content']
-                    ),
-                    attributes: array_merge(
-                        $type === $childType
-                            ? $rbamParameters->getButtons('add')['attributes']
-                            : $rbamParameters->getButtons('grant')['attributes']
-                        ,
-                        [
-                            'type' => 'button',
-                            '@click' => sprintf(
-                                "\$dispatch('modal', %s)",
-                                Json::encode([
-                                    'buttons' => [
-                                        'continue' => [
-                                            'href' => $url,
-                                            'data' => [
-                                                'child' => $context->key,
-                                                'childType' => $childType,
-                                                'parent' => $parent->getName(),
-                                                'type' => $type,
-                                            ]
-                                        ],
-                                    ],
-                                    'closeDialog' => $translator->translate(id: 'label.close-dialog', category: 'rbam'),
-                                    'content' => $translator->translate(
-                                        sprintf('message.%s.add-child', $childType),
-                                        [
-                                            'item' => $context->key,
-                                            'parent' => $parent->getName(),
-                                        ],
-                                        'rbam'
-                                    ),
-                                    'title' => $translator->translate(
-                                        sprintf('header.%s.add-child', $childType),
-                                        [
-                                            'item' => $context->key,
-                                        ],
-                                        'rbam'
-                                    ),
-                                ])
-                            ),
-                        ]
+                'add' => static fn (string $url, DataContext $context) => (new Modal($assetManager))
+                    ->button(
+                        Html::button(
+                            content: $translator->translate(id: 'button.continue', category: 'rbam'),
+                            attributes: [
+                                'class' => 'btn btn_continue',
+                                '@click' => sprintf(
+                                    "rbam.action({href: '%s', data: %s})",
+                                    $url,
+                                    Json::encode([
+                                        'child' => $context->key,
+                                        'childType' => $childType,
+                                        'parent' => $parent->getName(),
+                                        'type' => $type,
+                                    ])
+                                ),
+                            ]
+                        ),
+                        Html::button(
+                            content: $translator->translate(id: 'button.cancel', category: 'rbam'),
+                            attributes: [
+                                'class' => 'btn btn_cancel',
+                            ]
+                        ),
                     )
-                )
+                    ->closeText($translator->translate(id: 'label.close-dialog', category: 'rbam'),)
+                    ->content($translator->translate(
+                        sprintf('message.%s.add-child', $childType),
+                        [
+                            'item' => $context->key,
+                            'parent' => $parent->getName(),
+                        ],
+                        'rbam'
+                    ))
+                    ->title($translator->translate(
+                        sprintf('header.%s.add-child', $childType),
+                        [
+                            'item' => $context->key,
+                        ],
+                        'rbam'
+                    ))
+                    ->trigger(Html::button(
+                        content: $translator->translate(
+                            id: $type === $childType
+                                ? $rbamParameters->getButtons('add')['content']
+                                : $rbamParameters->getButtons('grant')['content']
+                        ),
+                        attributes: array_merge(
+                            $type === $childType
+                                ? $rbamParameters->getButtons('add')['attributes']
+                                : $rbamParameters->getButtons('grant')['attributes']
+                            ,
+                            [
+                                'type' => 'button',
+                            ]
+                        )
+                    ))
                     ->render()
             ],
             visibleButtons: [

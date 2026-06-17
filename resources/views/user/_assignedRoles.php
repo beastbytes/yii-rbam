@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 /**
+ * @var AssetManager $assetManager
  * @var RbamItem[] $assignedRoles
  * @var string[] $assignments
  * @var Csrf $csrf
@@ -15,17 +16,18 @@ declare(strict_types=1);
  * @var UserInterface $user
  */
 
+use BeastBytes\Yii\Rbam\Alpine\Modal\Modal;
 use BeastBytes\Yii\Rbam\DTO\Item as RbamItem;
 use BeastBytes\Yii\Rbam\PaginatorUrlCreator;
 use BeastBytes\Yii\Rbam\Rbac\Permission as RbamPermission;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use BeastBytes\Yii\Rbam\User\UserInterface;
+use Yiisoft\Assets\AssetManager;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Html\Html;
 use Yiisoft\Json\Json;
 use Yiisoft\Rbac\Assignment;
-use Yiisoft\Rbac\Role;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\User\CurrentUser;
@@ -61,38 +63,50 @@ echo GridView::widget()
     ->layout("{header}\n{toolbar}\n{summary}\n{items}\n{pager}")
     ->toolbar($currentUser->can(RbamPermission::userUpdate->getItemName()) && !empty($assignedRoles)
         ? Html::div(
-            content: Html::button(
-                content: $translator->translate(id: $rbamParameters->getButtons('revokeAll')['content']),
-                attributes: array_merge(
-                    $rbamParameters->getButtons('revokeAll')['attributes'],
-                    [
-                        'type' => 'button',
-                        '@click.prevent' => sprintf(
-                            "\$dispatch('modal', %s)",
-                            Json::encode([
-                                'buttons' => [
-                                    'continue' => [
-                                        'href' => $urlGenerator->generate('rbam.user.assignment.revoke'),
-                                        'data' => [],
-                                    ],
-                                ],
-                                'closeDialog' => $translator->translate(id: 'label.close-dialog', category: 'rbam'),
-                                'content' => $translator->translate(
-                                    'message.user.assignment.revoke-all',
-                                    [
-                                        'user' => $user->getName(),
-                                    ],
-                                    'rbam'
-                                ),
-                                'title' => $translator->translate(
-                                    id: 'header.user.assignment.revoke-all',
-                                    category: 'rbam'
-                                ),
-                            ])
-                        ),
-                    ]
+            content: (new Modal($assetManager))
+                ->button(
+                    Html::button(
+                        content: $translator->translate(id: 'button.continue', category: 'rbam'),
+                        attributes: [
+                            'class' => 'btn btn_continue',
+                            '@click' => sprintf(
+                                "rbam.action({href: '%s', data: {})",
+                                $urlGenerator->generate('rbam.user.assignment.revoke'),
+                            )
+                        ]
+                    ),
+                    Html::button(
+                        content: $translator->translate(id: 'button.cancel', category: 'rbam'),
+                        attributes: [
+                            'class' => 'btn btn_cancel',
+                        ]
+                    ),
                 )
-            ),
+                ->closeText($translator->translate(id: 'label.close-dialog', category: 'rbam'),)
+                ->content($translator->translate(
+                    'message.user.assignment.revoke-all',
+                    [
+                        'user' => $user->getName(),
+                    ],
+                    'rbam'
+                ))
+                ->title($translator->translate(
+                    id: 'header.user.assignment.revoke-all',
+                    category: 'rbam'
+                ))
+                ->trigger(Html::button(
+                    content: $translator->translate(
+                        id: $rbamParameters->getButtons('revoke')['content'],
+                        category: 'rbam'
+                    ),
+                    attributes: array_merge(
+                        $rbamParameters->getButtons('revoke')['attributes'],
+                        [
+                            'type' => 'button',
+                        ]
+                    )
+                ))
+            ,
             attributes: ['class' => 'toolbar']
         )
             ->render()
@@ -120,47 +134,54 @@ echo GridView::widget()
                 'rbam.user.assignment.revoke',
             ),
             buttons: [
-                'revoke' => static fn (string $url, DataContext $context) => Html::button(
-                    content: $translator->translate(
-                        id: $rbamParameters->getButtons('revoke')['content'],
-                        category: 'rbam'
-                    ),
-                    attributes: array_merge(
-                        $rbamParameters->getButtons('revoke')['attributes'],
-                        [
-                            'type' => 'button',
-                            '@click.prevent' => sprintf(
-                                "\$dispatch('modal', %s)",
-                                Json::encode([
-                                    'buttons' => [
-                                        'continue' => [
-                                            'href' => $url,
-                                            'data' => [
-                                                'item' => $context->data->getItem()->getName(),
-                                            ],
-                                        ],
-                                    ],
-                                    'closeDialog' => $translator->translate(id: 'label.close-dialog', category: 'rbam'),
-                                    'content' => $translator->translate(
-                                        'message.user.assignment.revoke',
-                                        [
-                                            'item' => $context->data->getItem()->getName(),
-                                            'user' => $user->getName(),
-                                        ],
-                                        'rbam'
-                                    ),
-                                    'title' => $translator->translate(
-                                        'header.user.assignment.revoke',
-                                        [
-                                            'item' => $context->data->getItem()->getName(),
-                                        ],
-                                        'rbam'
-                                    ),
-                                ])
-                            )
-                        ]
+                'revoke' => static fn (string $url, DataContext $context) => (new Modal($assetManager))
+                    ->button(
+                        Html::button(
+                            content: $translator->translate(id: 'button.continue', category: 'rbam'),
+                            attributes: [
+                                'class' => 'btn btn_continue',
+                                '@click' => sprintf(
+                                    "rbam.action({href: '%s', data: %s})",
+                                    $url,
+                                    Json::encode(['item' => $context->data->getItem()->getName()]),
+                                ),
+                            ]
+                        ),
+                        Html::button(
+                            content: $translator->translate(id: 'button.cancel', category: 'rbam'),
+                            attributes: [
+                                'class' => 'btn btn_cancel',
+                            ]
+                        ),
                     )
-                )
+                    ->closeText($translator->translate(id: 'label.close-dialog', category: 'rbam'),)
+                    ->content($translator->translate(
+                        'message.user.assignment.revoke',
+                        [
+                            'item' => $context->data->getItem()->getName(),
+                            'user' => $user->getName(),
+                        ],
+                        'rbam'
+                    ))
+                    ->title($translator->translate(
+                        'header.user.assignment.revoke',
+                        [
+                            'item' => $context->data->getItem()->getName(),
+                        ],
+                        'rbam'
+                    ))
+                    ->trigger(Html::button(
+                        content: $translator->translate(
+                            id: $rbamParameters->getButtons('revoke')['content'],
+                            category: 'rbam'
+                        ),
+                        attributes: array_merge(
+                            $rbamParameters->getButtons('revoke')['attributes'],
+                            [
+                                'type' => 'button',
+                            ]
+                        )
+                    ))
                     ->render()
             ],
             visibleButtons: [

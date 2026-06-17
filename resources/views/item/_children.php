@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 /**
+ * @var AssetManager $assetManager
  * @var RbamItem[] $children
  * @var string $childType
  * @var Csrf $csrf
@@ -15,9 +16,11 @@ declare(strict_types=1);
  * @var UrlGeneratorInterface $urlGenerator
  */
 
+use BeastBytes\Yii\Rbam\Alpine\Modal\Modal;
 use BeastBytes\Yii\Rbam\DTO\Item as RbamItem;
 use BeastBytes\Yii\Rbam\PaginatorUrlCreator;
 use BeastBytes\Yii\Rbam\RbamParameters;
+use Yiisoft\Assets\AssetManager;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Html\Html;
@@ -70,54 +73,63 @@ echo GridView::widget()
     ->layout("{header}\n{toolbar}\n{summary}\n{items}\n{pager}")
     ->toolbar(!empty($children)
         ? Html::div(
-            content: Html::button(
-                content: $translator->translate(
-                    id: $rbamParameters->getButtons('removeAll')['content'],
-                    category: 'rbam'
-                ),
-                attributes: array_merge(
-                    $rbamParameters->getButtons('removeAll')['attributes'],
-                    [
-                        'type' => 'button',
-                        '@click.prevent' => sprintf(
-                            "\$dispatch('modal', %s)",
-                            Json::encode([
-                                'buttons' => [
-                                    'continue' => [
-                                        'href' => $urlGenerator->generate(
-                                            'rbam.item.remove-child',
-                                            [
-                                                'parent' => $parent->getName(),
-                                                'type' => $type,
-                                            ]
-                                        ),
-                                        'data' => [
-                                            'childType' => $childType,
-                                            'parent' => $parent->getName(),
-                                            'type' => $type,
-                                        ],
-                                    ],
-                                ],
-                                'closeDialog' => $translator->translate(id: 'label.close-dialog'),
-                                'content' => $translator->translate(
-                                    sprintf('message.%s.remove-all-%ss', $type, $childType),
+            content: (new Modal($assetManager))
+                ->button(
+                    Html::button(
+                        content: $translator->translate(id: 'button.continue', category: 'rbam'),
+                        attributes: [
+                            'class' => 'btn btn_continue',
+                            '@click' => sprintf(
+                                "rbam.action({href: '%s', data: %s)",
+                                $urlGenerator->generate(
+                                    'rbam.item.remove-child',
                                     [
                                         'parent' => $parent->getName(),
-                                    ],
-                                    'rbam'
+                                        'type' => $type,
+                                    ]
                                 ),
-                                'title' => $translator->translate(
-                                    id: sprintf('header.%s.remove-all', $childType),
-                                    category: 'rbam'
-                                ),
-                            ])
-                        ),
-                    ]
+                                Json::encode([
+                                    'childType' => $childType,
+                                    'parent' => $parent->getName(),
+                                    'type' => $type,
+                                ])
+                            )
+                        ]
+                    ),
+                    Html::button(
+                        content: $translator->translate(id: 'button.cancel', category: 'rbam'),
+                        attributes: [
+                            'class' => 'btn btn_cancel',
+                        ]
+                    ),
                 )
-            ),
+                ->closeText($translator->translate(id: 'label.close-dialog', category: 'rbam'),)
+                ->content($translator->translate(
+                    sprintf('message.%s.remove-all-%ss', $type, $childType),
+                    [
+                        'parent' => $parent->getName(),
+                    ],
+                    'rbam'
+                ))
+                ->title($translator->translate(
+                    id: sprintf('header.%s.remove-all', $childType),
+                    category: 'rbam'
+                ))
+                ->trigger(Html::button(
+                    content: $translator->translate(
+                        id: $rbamParameters->getButtons('removeAll')['content'],
+                        category: 'rbam'
+                    ),
+                    attributes: array_merge(
+                        $rbamParameters->getButtons('removeAll')['attributes'],
+                        [
+                            'type' => 'button',
+                        ]
+                    )
+                ))
+            ,
             attributes: [
                 'class' => 'toolbar',
-                'x-data' => true,
             ]
         )
             ->render()
@@ -155,47 +167,59 @@ echo GridView::widget()
                 ]
             ),
             buttons: [
-                'remove' => static fn (string $url, DataContext $context) => Html::button(
-                    content: $translator->translate(id: $rbamParameters->getButtons('remove')['content']),
-                    attributes: array_merge(
-                        $rbamParameters->getButtons('remove')['attributes'],
-                        [
-                            'type' => 'button',
-                            '@click' => sprintf(
-                                "\$dispatch('modal', %s)",
-                                Json::encode([
-                                    'buttons' => [
-                                        'continue' => [
-                                            'href' => $url,
-                                            'data' => [
-                                                'child' => $context->key,
-                                                'childType' => $childType,
-                                                'parent' => $parent->getName(),
-                                                'type' => $type,
-                                            ]
-                                        ],
-                                    ],
-                                    'closeDialog' => $translator->translate(id: 'label.close-dialog'),
-                                    'content' => $translator->translate(
-                                        sprintf('message.%s.remove-child', $childType),
-                                        [
-                                            'child' => $context->key,
-                                            'parent' => $parent->getName(),
-                                        ],
-                                        'rbam'
-                                    ),
-                                    'title' => $translator->translate(
-                                        sprintf('header.%s.remove-child', $childType),
-                                        [
-                                            'child' => $context->key,
-                                        ],
-                                        'rbam'
-                                    ),
-                                ])
-                            ),
-                        ]
+                'remove' => static fn (string $url, DataContext $context) => (new Modal($assetManager))
+                    ->button(
+                        Html::button(
+                            content: $translator->translate(id: 'button.continue', category: 'rbam'),
+                            attributes: [
+                                'class' => 'btn btn_continue',
+                                '@click' => sprintf(
+                                    "rbam.action({href: '%s', data: %s})",
+                                    $url,
+                                    Json::encode([
+                                        'child' => $context->key,
+                                        'childType' => $childType,
+                                        'parent' => $parent->getName(),
+                                        'type' => $type,
+                                    ])
+                                ),
+                            ]
+                        ),
+                        Html::button(
+                            content: $translator->translate(id: 'button.cancel', category: 'rbam'),
+                            attributes: [
+                                'class' => 'btn btn_cancel',
+                            ]
+                        ),
                     )
-                )
+                    ->closeText($translator->translate(id: 'label.close-dialog', category: 'rbam'),)
+                    ->content($translator->translate(
+                        sprintf('message.%s.remove-child', $childType),
+                        [
+                            'child' => $context->key,
+                            'parent' => $parent->getName(),
+                        ],
+                        'rbam'
+                    ))
+                    ->title($translator->translate(
+                        sprintf('header.%s.remove-child', $childType),
+                        [
+                            'child' => $context->key,
+                        ],
+                        'rbam'
+                    ))
+                    ->trigger(Html::button(
+                        content: $translator->translate(
+                            id: $rbamParameters->getButtons('remove')['content'],
+                            category: 'rbam'
+                        ),
+                        attributes: array_merge(
+                            $rbamParameters->getButtons('remove')['attributes'],
+                            [
+                                'type' => 'button',
+                            ]
+                        )
+                    ))
                     ->render()
             ],
             visibleButtons: ['remove' => fn(RbamItem $item) => $item->isChild()],
