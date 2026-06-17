@@ -3,50 +3,69 @@
 namespace BeastBytes\Yii\Rbam\Alpine\Modal;
 
 use BeastBytes\Yii\Rbam\Alpine\AlpineAsset;
+use ReflectionClass;
 use Yiisoft\Assets\AssetManager;
+use Yiisoft\Html\Tag\Base\Tag;
 use Yiisoft\Html\Tag\Button;
 use Yiisoft\View\WebView;
 use Yiisoft\Widget\Widget;
 
-/**
- * Usage:
- *
- * Modal is a `content capture` widget; the content captured being the trigger for the Modal
- *
- * Initialise and set up the widget as required, then surround the trigger text with `begin()` and `end()` calls
- */
 final class Modal extends Widget
 {
+    private const string CLOSE_BUTTON = <<<'CLOSE_BUTTON'
+<button type="button" @click="$dialog.close()" class="close-button">
+    <span class="sr-only">%s</span>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" stroke="white" fill="currentColor" aria-hidden="true">
+        <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z"></path>
+    </svg>
+</button>
+CLOSE_BUTTON;
+
     /**
      * @var list<Button> $buttons
      */
     private array $buttons = [];
-    private string $containerClass = 'modal';
+    private ?string $closeButton = self::CLOSE_BUTTON;
+    private ?string $closeText = null;
+    private string $containerClass = 'alpine-modal';
     private string $content = '';
     private string $contentClass = 'content';
-    private ?string $description = null;
     private string $footerClass = 'footer';
     private string $overlayClass = 'overlay';
     private string $panelClass = 'panel';
     private ?string $title = null;
     private string $titleClass = 'title';
-    private Button $trigger;
+    private Tag $trigger;
 
-    public function __construct(AssetManager $assetManager, private WebView $view)
+    private string $template = '{title}{content}{footer}';
+
+    public function __construct(AssetManager $assetManager)
     {
-        $assetManager->register(AlpineAsset::class);
+        $assetManager->register(ModalAsset::class);
     }
 
     /**
-     * Buttons for the modal
+     * Button(s) for the modal
      *
-     * @param Button ...$button Buttons
-     * @return self A new instance with buttons
+     * If a button is to perform a JavaScript action when clicked, set the 'x-on:click' or '@click' attribute with
+     * the JavaScript
+     *
+     * All buttons close the modal
+     *
+     * @param Button ...$button Button(s)
+     * @return self A new instance with button(s)
      */
-    public function buttons(Button ...$button): self
+    public function button(Button ...$button): self
     {
         $new = clone $this;
         $new->buttons = $button;
+        return $new;
+    }
+
+    public function closeText(string $closeText): self
+    {
+        $new = clone $this;
+        $new->closeText = $closeText;
         return $new;
     }
 
@@ -69,21 +88,6 @@ final class Modal extends Widget
     {
         $new = clone $this;
         $new->content = $content;
-        return $new;
-    }
-
-    /**
-     * Set the dialog description
-     *
-     * If this method is not called, no description is generated
-     *
-     * @param string $description The dialog description
-     * @return self A new instance with the dialog description
-     */
-    public function description(string $description): self
-    {
-        $new = clone $this;
-        $new->description = $description;
         return $new;
     }
 
@@ -120,17 +124,10 @@ final class Modal extends Widget
         return $new;
     }
 
-    public function trigger(Button $trigger): self
+    public function trigger(Tag $trigger): self
     {
         $new = clone $this;
         $new->trigger = $trigger;
-        return $new;
-    }
-
-    public function triggerClass(string $triggerClass): self
-    {
-        $new = clone $this;
-        $new->triggerClass = $triggerClass;
         return $new;
     }
 
@@ -139,7 +136,7 @@ final class Modal extends Widget
         return sprintf(
             '<div x-data="{open:false}" class="%s">%s%s</div>',
             $this->containerClass,
-            $this->renderTrigger(),
+            $this->trigger->addAttributes(['@click' => 'open = true']),
             $this->renderDialog()
         );
     }
@@ -147,15 +144,7 @@ final class Modal extends Widget
     private function renderDialog(): string
     {
         return sprintf(
-            '<div x-dialog x-model="open">%s</div>',
-            $this->renderOverlay()
-        );
-    }
-
-    private function renderOverlay(): string
-    {
-        return sprintf(
-            '<div style="position:fixed;display:flex;inset:0;min-height:100vh;align-items:center;justify-content:center;" class="%s">%s</div>',
+            '<div x-dialog x-model="open" x-dialog:overlay x-transition.opacity class="%s">%s</div>',
             $this->overlayClass,
             $this->renderPanel()
         );
@@ -166,11 +155,16 @@ final class Modal extends Widget
         return sprintf(
             '<div x-dialog:panel class="%s">%s%s%s%s</div>',
             $this->panelClass,
+            $this->renderCloseButton(),
             $this->renderTitle(),
-            $this->renderDescription(),
             $this->renderContent(),
             $this->renderFooter()
         );
+    }
+
+    private function renderCloseButton(): string
+    {
+        return (is_string($this->closeText)) ? sprintf($this->closeButton, $this->closeText) : '';
     }
 
     private function renderContent(): string
@@ -182,17 +176,6 @@ final class Modal extends Widget
         );
     }
 
-    private function renderDescription(): string
-    {
-        return is_string($this->description)
-            ? sprintf(
-                '<div x-dialog:description style="display:none;">%s</div>',
-                $this->description
-            )
-            : ''
-        ;
-    }
-
     private function renderTitle(): string
     {
         return is_string($this->title)
@@ -202,16 +185,6 @@ final class Modal extends Widget
                 $this->title
             )
             : ''
-        ;
-    }
-
-    private function renderTrigger(): string
-    {
-        return $this->trigger
-            ->addAttributes([
-                'x-on:click' => 'open=true'
-            ])
-            ->render()
         ;
     }
 
@@ -229,48 +202,31 @@ final class Modal extends Widget
         $buttons = [];
 
         foreach ($this->buttons as $button) {
-            $buttons[] = $button->addAttributes([
-                'x-on:click' => 'open=false',
-            ])
+            $nottub = new ReflectionClass($button);
+
+            if ($nottub->hasProperty('attributes')) {
+                $attributes = $nottub
+                    ->getProperty('attributes')
+                    ->getValue($button)
+                ;
+            } else {
+                $attributes = [];
+            }
+
+            if (array_key_exists('@click', $attributes)) {
+                $attributes['@click'] = trim($attributes['@click'], ';') . '; open=false;';
+            } elseif (array_key_exists('x-on:click', $attributes)) {
+                $attributes['x-on:click'] = trim($attributes['x-on:click'], ';') . '; open=false;';
+            } else {
+                $attributes['@click'] = 'open=false;';
+            }
+
+            $buttons[] = $button
+                ->attributes($attributes)
                 ->render()
             ;
         }
 
         return implode('', $buttons);
     }
-
-    /*
-
-<div x-data="{open: false, detail: {}}" class="alpine-modal" id="modal" @modal.window="detail = $event.detail; open=true;">
-    <div x-dialog x-model="open" x-cloak class="dialog">
-        <div x-dialog:overlay x-transition.opacity class="overlay">
-            <div x-dialog:panel x-transition class="panel">
-                <button type="button" @click="$dialog.close()" class="close-button">
-                    <span x-text="detail.closeDialog" class="sr-only"></span>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" stroke="white" fill="currentColor" aria-hidden="true">
-                        <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z"></path>
-                    </svg>
-                </button>
-                <div x-dialog:title x-html="detail.title" class="title"></div>
-                <div x-html="detail.content" class="content"></div>
-                <div class="footer">
-                    <button type="button" @click="rbam.action($data.detail.buttons.continue)" class="btn btn_continue">
-                        <?= $translator->translate(id: 'button.continue') ?>
-                    </button>
-                    <button type="button" @click="$dialog.close()" class="btn btn_cancel">
-                        <?= $translator->translate(id: 'button.cancel') ?>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-    */
-
-
-
-
-
-
 }

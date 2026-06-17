@@ -1,0 +1,78 @@
+.alpine-modal {
+    --alpine-modal-border: 1px solid oklch(0.845 0 0);
+    --alpine-modal-border-color: oklch(0.845 0 0);
+    --alpine-modal-close-button-hover-color: oklch(1 0 0);
+    --alpine-modal-close-button-hover-background-color: oklch(0.638 0.212 32.357);
+    --alpine-modal-overlay: oklch(0.321 0 0 / 0.5);
+    --alpine-modal-panel-background-color: oklch(1 0 0);
+    --alpine-modal-panel-color: inherit;
+    --alpine-modal-panel-shadow: 5px 5px 15px oklch(0.321 0 0);
+
+    .overlay {
+        align-items: center;
+        background: var(--alpine-modal-overlay);
+        display: flex;
+        filter: blur();
+        inset: 0;
+        justify-content: center;
+        overflow-y: auto;
+        position: fixed;
+        z-index: 100;
+    }
+
+    .panel {
+        background: var(--alpine-modal-panel-background-color);
+        border: var(--alpine-modal-border);
+        border-radius: 0.5rem;
+        box-shadow: var(--alpine-modal-panel-shadow);
+        color: var(--alpine-modal-panel-color);
+        display: flex;
+        flex-direction: column;
+        max-width: 75%;
+        min-width: 33.333%;
+        padding: 1.5rem;
+        position: relative;
+        justify-content: center;
+
+        .close-button {
+            align-items: center;
+            background: transparent;
+            border: none;
+            border-radius: 0.375rem;
+            display: inline-flex;
+            font-weight: 500;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-right: 1rem;
+            margin-top: 1rem;
+            padding: 0.375rem;
+            position: absolute;
+            right: 0;
+            top: 0;
+
+            svg {
+                height: 1.25rem;
+                width: 1.25rem;
+            }
+
+            &:hover {
+                background: var(--alpine-modal-close-button-hover-background-color);
+                color: var(--alpine-modal-close-button-hover-color);
+            }
+        }
+
+        .title {
+            font-size: medium;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .footer {
+            border-top: var(--alpine-modal-border);
+            display: flex;
+            justify-content: space-around;
+            margin-top: 1rem;
+            padding-top: 1rem;
+        }
+    }
+}
