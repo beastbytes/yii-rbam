@@ -36,7 +36,6 @@ ContentDecorator::widget()
 
 <div class='rbam'>
     <?= $content ?>
-    <?= $this->render('./dialog') ?>
 </div>
 
 <?= ContentDecorator::end(); ?>
