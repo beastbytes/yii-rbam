@@ -12,17 +12,20 @@ use BeastBytes\Yii\Rbam\Rbac\Role as RbamRole;
 use BeastBytes\Yii\Rbam\Rule\RuleServiceInterface;
 use BeastBytes\Yii\Rbam\User\UserRepositoryInterface;
 use HttpSoft\Message\ServerRequest;
+use Pest\ArchPresets\Security;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\Files\FileHelper;
 use Yiisoft\Files\PathMatcher\PathMatcher;
 use Yiisoft\FormModel\FormHydrator;
+use Yiisoft\Http\Method;
 use Yiisoft\Rbac\Assignment;
 use Yiisoft\Rbac\AssignmentsStorageInterface;
 use Yiisoft\Rbac\ItemsStorageInterface;
 use Yiisoft\Rbac\Manager;
 use Yiisoft\Rbac\ManagerInterface;
 use Yiisoft\Rbac\Role;
+use Yiisoft\Security\Random;
 use Yiisoft\Session\Flash\FlashInterface;
 use Yiisoft\Session\SessionInterface;
 use Yiisoft\Translator\TranslatorInterface;
@@ -32,7 +35,7 @@ use Yiisoft\Yii\View\Renderer\WebViewRenderer;
 #[RoleAttribute(item: RbamRole::admin)]
 final class RbamController
 {
-    private const string CODE = 'bZc148QoubK0WjFJYngQwda';
+    private const int CODE_LENGTH = 16;
 
     public function __construct(
         private readonly AssignmentsStorageInterface $assignmentsStorage,
@@ -97,24 +100,30 @@ final class RbamController
         SessionInterface $session,
     ): ResponseInterface
     {
-        $formModel = new ClearForm($this->translator, self::CODE);
+        if ($session->has('rbam-code')) {
+            $formModel = new ClearForm($this->translator, $session->get('rbam-code'));
 
-        if ($formHydrator->populateFromPostAndValidate($formModel, $request, strict: false)) {
-            $this->assignmentsStorage->clear();
-            $this->itemsStorage->clear();
+            if ($formHydrator->populateFromPostAndValidate($formModel, $request, strict: false)) {
+                $session->remove('rbam-code');
+                $this->assignmentsStorage->clear();
+                $this->itemsStorage->clear();
 
-            return $redirect
-                ->toRoute('rbam.initialise')
-                ->create()
-            ;
+                return $redirect
+                    ->toRoute('rbam.initialise')
+                    ->create()
+                ;
+            }
         }
+
+        $code = Random::string(self::CODE_LENGTH);
+        $session->set('rbam-code', $code);
 
         return $this
             ->viewRenderer
             ->renderPartial(
                 '_clearForm',
                 [
-                    'formModel' => $formModel
+                    'formModel' => new ClearForm($this->translator, $code)
                 ]
             )
         ;
