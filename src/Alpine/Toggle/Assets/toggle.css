@@ -1,0 +1,53 @@
+.alpine-toggle {
+    --button-checked-colour: oklch(1 0 8);
+    --button-unchecked-colour: oklch(1 0 8);
+    --button-height: 1.25rem;
+    --button-width: 1.25rem;
+    --slider-checked-colour: oklch(0.25 0 8);
+    --slider-unchecked-colour: oklch(0.8 0 8);
+
+    /* Do not change */
+    --slider-height: calc(var(--button-height) + 0.5rem);
+    --slider-width: calc(var(--button-width) * 2 + 0.5rem);
+
+    label {
+        display: inline-block;
+        margin-left: 0.75rem;
+    }
+
+    .slider {
+        align-items: center;
+        border-radius: 9999px;
+        display: inline-flex;
+        flex-grow: 0;
+        flex-shrink: 0;
+        height: var(--slider-height);
+        outline-offset: 2px;
+        position: relative;
+        transition: all 0.333s ease;
+        width: var(--slider-width);
+
+        &.checked {
+            background-color: var(--slider-checked-colour);
+        }
+        &.unchecked {
+            background-color: var(--slider-unchecked-colour);
+        }
+    }
+
+    .button {
+        border-radius:50%;
+        height: var(--button-height);
+        transition: all 0.333s ease;
+        width: var(--button-width);
+
+        &.checked {
+            background-color: var(--button-checked-colour);
+            translate: 100% 0;
+        }
+        &.unchecked {
+            background-color: var(--button-unchecked-colour);
+            translate: 0 0;
+        }
+    }
+}
