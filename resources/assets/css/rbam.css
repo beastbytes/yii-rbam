@@ -36,7 +36,7 @@
         .header-menu {
             position: relative;
 
-            button {
+            .btn_menu {
                 background: none;
                 border: none;
                 cursor: pointer;
@@ -494,6 +494,12 @@
         border-collapse: collapse;
         border-spacing: 0;
 
+        .action {
+            align-items: center;
+            display: inline-flex;
+            justify-content: flex-start;
+        }
+
         .btn {
             height: 1.75rem;
             margin: 0 0.57em;
@@ -567,142 +573,6 @@
 
     .number {
         text-align: right;
-    }
-
-    .modal {
-        .dialog {
-            overflow-y: auto;
-            position: fixed;
-            z-index: 100;
-
-            .overlay {
-                align-items: center;
-                background: var(--overlay);
-                display: flex;
-                filter: blur();
-                inset: 0;
-                justify-content: center;
-                position: fixed;
-            }
-
-            .panel {
-                background: white;
-                border: var(--contaier-border);
-                border-radius: 0.5rem;
-                box-shadow: var(--shadow-dark);
-                display: flex;
-                flex-direction: column;
-                max-width: 75%;
-                min-width: 33.333%;
-                padding: 1.5rem;
-                position: relative;
-                justify-content: center;
-            }
-
-            .close-button {
-                align-items: center;
-                background: transparent;
-                border: none;
-                border-radius: 0.375rem;
-                display: inline-flex;
-                font-weight: 500;
-                gap: 0.5rem;
-                justify-content: center;
-                margin-right: 1rem;
-                margin-top: 1rem;
-                padding: 0.375rem;
-                position: absolute;
-                right: 0;
-                top: 0;
-
-                svg {
-                    height: 1.25rem;
-                    width: 1.25rem;
-                }
-
-                &:hover {
-                    background: var(--yii-red);
-                    color: white;
-                }
-            }
-
-            .title {
-                font-size: medium;
-                font-weight: bold;
-            }
-
-            .footer {
-                display: flex;
-                justify-content: space-around;
-
-                .btn {
-                    align-items: center;
-                    border-radius: 0.5rem;
-                    cursor: pointer;
-                    display: inline-flex;
-                    flex-shrink: 0;
-                    flex-wrap: wrap;
-                    font-size: 0.875rem;
-                    font-weight: 600;
-                    height: 3rem;
-                    justify-content: center;
-                    line-height: 1em;
-                    margin-right: 1.5em;
-                    min-height: 3rem;
-                    padding-left: 1rem;
-                    padding-right: 1rem;
-                    text-align: center;
-                    text-decoration-line: none;
-                    user-select: none;
-                }
-            }
-        }
-    }
-
-    .tabs {
-        margin-left: auto;
-        margin-right: auto;
-
-        .header {
-            align-items: center;
-            background: transparent;
-            border: none;
-            border-bottom: 2px solid transparent;
-            color: oklch(0.75 0 0);
-            display: flex;
-            padding: 0.75em 3em;
-            font-size: medium;
-
-            &.selected {
-                border-bottom-color: var(--yii-green);
-                color: oklch(0.45 0 0);
-                font-weight: bold;
-            }
-
-            &.unselected {
-                &:hover {
-                    border-bottom-color: var(--yii-blue);
-                    cursor: pointer;
-                }
-            }
-        }
-
-        .headers {
-            align-items: stretch;
-            display: flex;
-            gap: 3em;
-            overflow-x: auto;
-        }
-
-        .panel {
-            padding: 0.75rem 0.75rem;
-            width: 100%;
-        }
-
-        .panels {
-            border: var(--contaier-border);
-            width: 100%;
-        }
     }
 
     svg {
