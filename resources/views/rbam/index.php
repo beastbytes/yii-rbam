@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 /**
+ * @var AssetManager $assetManager
  * @var Csrf $csrf
  * @var CurrentUser $currentUser
  * @var int $permissions
@@ -15,8 +16,11 @@ declare(strict_types=1);
  * @var int $users
  */
 
+use BeastBytes\Yii\Rbam\Alpine\Modal\Modal;
 use BeastBytes\Yii\Rbam\Rbac\Permission as RbamPermission;
-use BeastBytes\Yii\Rbam\RbamParameters;use Yiisoft\Html\Html;
+use BeastBytes\Yii\Rbam\RbamParameters;
+use Yiisoft\Assets\AssetManager;
+use Yiisoft\Html\Html;
 use Yiisoft\Html\NoEncode;
 use Yiisoft\Json\Json;
 use Yiisoft\Rbac\Item;
@@ -27,7 +31,7 @@ use Yiisoft\View\WebView;
 use Yiisoft\Yii\View\Renderer\Csrf;
 
 $this->setTitle($translator->translate(id: 'label.rbam', category: 'rbam'));
-$this->registerJs(sprintf('rbam = new Rbam("rbam")'));
+$this->registerJs('rbam = new Rbam("rbam")');
 
 $breadcrumbs = [
     $this->getTitle()
@@ -93,7 +97,7 @@ if ($currentUser->can(RbamPermission::clear->getItemName())):
     $this->setBlock(
         'rbam-menu',
         '<div x-data x-menu class="header-menu">
-            <button x-menu:button>
+            <button x-menu:button class="btn_menu">
                 <span class="sr-only">' . $translator->translate(id: 'label.menu', category: 'rbam') . '</span>
     
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100% 100%">
@@ -107,25 +111,35 @@ if ($currentUser->can(RbamPermission::clear->getItemName())):
                 x-transition.origin.top.left
                 x-cloak
             >'
-            . Html::li(
-                content: $translator->translate(id: 'label.menu.clear', category: 'rbam'),
-                attributes: [
-                    'x-menu:item' => true,
-                    '@click' => sprintf(
-                        "\$dispatch('modal', %s)",
-                        Json::encode([
-                            'buttons' => [
-                                'continue' => [
-                                    'href' => $urlGenerator->generate('rbam.clear'),
-                                ]
-                            ],
-                            'closeDialog' => $translator->translate(id: 'label.close-dialog', category: 'rbam'),
-                            'content' => $translator->translate(id: 'message.rbac.clear', category: 'rbam'),
-                            'title' => $translator->translate(id: 'header.rbac.clear', category: 'rbam'),
-                        ])
+            . (new Modal($assetManager))
+                ->button(
+                    Html::button(
+                        content: $translator->translate(id: 'button.continue', category: 'rbam'),
+                        attributes: [
+                            'class' => 'btn btn_continue',
+                            '@click' => sprintf(
+                                "rbam.action({href: '%s', data: {}})",
+                                $urlGenerator->generate('rbam.clear'),
+                            ),
+                        ]
                     ),
-                ]
-            )
+                    Html::button(
+                        content: $translator->translate(id: 'button.cancel', category: 'rbam'),
+                        attributes: [
+                            'class' => 'btn btn_cancel',
+                        ]
+                    ),
+                )
+                ->closeText($translator->translate(id: 'label.close-dialog', category: 'rbam'),)
+                ->content($translator->translate(id: 'message.rbac.clear', category: 'rbam'))
+                ->title($translator->translate(id: 'header.rbac.clear', category: 'rbam'))
+                ->trigger(Html::li(
+                    content: $translator->translate(id: 'label.menu.clear', category: 'rbam'),
+                    attributes: [
+                        'type' => 'button',
+                        'x-menu:item' => true,
+                    ]
+                ))
             . '</ul>
         </div>'
     );

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 /**
+ * @var AssetManager $assetManager
  * @var string $csrf
  * @var int $currentPage
  * @var CurrentUser $currentUser
@@ -14,10 +15,12 @@ declare(strict_types=1);
  * @var UrlGeneratorInterface $urlGenerator
  */
 
+use BeastBytes\Yii\Rbam\Alpine\Modal\Modal;
 use BeastBytes\Yii\Rbam\PaginatorUrlCreator;
 use BeastBytes\Yii\Rbam\Rbac\Permission as RbamPermission;
 use BeastBytes\Yii\Rbam\RbamParameters;
 use BeastBytes\Yii\Rbam\Rule\RuleInterface;
+use Yiisoft\Assets\AssetManager;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Html\Html;
@@ -106,44 +109,52 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
                 ]
             ),
             buttons: [
-                'delete' => static fn (string $url, DataContext $context) => Html::button(
-                    content: $translator->translate(
-                        id: $rbamParameters->getButtons('remove')['content'],
-                        category: 'rbam'
-                    ),
-                    attributes: array_merge(
-                        $rbamParameters->getButtons('remove')['attributes'],
+                'delete' => static fn (string $url, DataContext $context) => (new Modal($assetManager))
+                    ->button(
+                        Html::button(
+                            content: $translator->translate(id: 'button.continue', category: 'rbam'),
+                            attributes: [
+                                'class' => 'btn btn_continue',
+                                '@click' => sprintf(
+                                    "rbam.action({href: '%s', data: {rule: '%s'}})",
+                                    $url,
+                                    $context->key,
+                                ),
+                            ]
+                        ),
+                        Html::button(
+                            content: $translator->translate(id: 'button.cancel', category: 'rbam'),
+                            attributes: [
+                                'class' => 'btn btn_cancel',
+                            ]
+                        ),
+                    )
+                    ->closeText($translator->translate(id: 'label.close-dialog', category: 'rbam'),)
+                    ->content($translator->translate(
+                        'message.rule.remove',
                         [
-                            'type' => 'button',
-                            '@click' => sprintf(
-                                "\$dispatch('modal', %s)",
-                                Json::encode([
-                                    'buttons' => [
-                                        'continue' => [
-                                            'href' => $url,
-                                            'data' => [
-                                                'rule' => $context->key,
-                                            ]
-                                        ],
-                                    ],
-                                    'closeDialog' => $translator->translate(id: 'label.close-dialog'),
-                                    'content' => $translator->translate(
-                                        'message.rule.remove',
-                                        [
-                                            'rule' => $context->key,
-                                        ],
-                                        'rbam'
-                                    ),
-                                    'title' => $translator->translate(
-                                        'header.rule.remove',
-                                        [
-                                            'rule' => $context->key,
-                                        ],
-                                        'rbam'
-                                    ),
-                                ])
-                            ),
-                        ]
+                            'rule' => $context->key,
+                        ],
+                        'rbam'
+                    ))
+                    ->title($translator->translate(
+                        'header.rule.remove',
+                        [
+                            'rule' => $context->key,
+                        ],
+                        'rbam'
+                    ))
+                    ->trigger(Html::button(
+                        content: $translator->translate(
+                            id: $rbamParameters->getButtons('remove')['content'],
+                            category: 'rbam'
+                        ),
+                        attributes: array_merge(
+                            $rbamParameters->getButtons('remove')['attributes'],
+                            [
+                                'type' => 'button',
+                            ]
+                        )
                     ))
                     ->render()
                 ,
@@ -169,7 +180,6 @@ $this->setParameter('breadcrumbs', $breadcrumbs);
             ],
             bodyAttributes: [
                 'class' => 'action',
-                'x-data' => true
             ]
         )
     )
