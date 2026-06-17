@@ -11,24 +11,24 @@ use Yiisoft\Widget\Widget;
 final class Tabs extends Widget
 {
     /** @var string $containerClass CSS class for the container tag */
-    private string $containerClass = 'tabs';
-    /** @var string $tabClass CSS class for tabs */
-    private string $tabClass = 'tab';
-    /** @var string $tabContainerClass CSS class for the tabs container */
-    private string $tabContainerClass = 'tabs';
+    private string $containerClass = 'alpine-tabs';
     /** @var string $panelClass CSS class for tab content panels */
     private string $panelClass = 'panel';
     /** @var string $panelContainerClass CSS class for tab content panels container */
     private string $panelContainerClass = 'panels';
     /** @var string $selectedTabClass CSS class for the selected tab */
     private string $selectedTabClass = 'selected';
+    /** @var string $tabClass CSS class for tabs */
+    private string $tabClass = 'tab';
+    /** @var string $tabContainerClass CSS class for the tabs container */
+    private string $tabContainerClass = 'tabs';
     private array $tabs = [];
     /** @var string $unselectedTabClass CSS class for unselected tabs */
     private string $unselectedTabClass = 'unselected';
 
     public function __construct(AssetManager $assetManager)
     {
-        $assetManager->register(AlpineAsset::class);
+        $assetManager->register(TabsAsset::class);
     }
 
     /**
