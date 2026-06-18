@@ -19,7 +19,7 @@ trait RuleTrait
 
         $lines = array_slice(file($reflectionClass->getFileName()), $offset, $length);
 
-        array_walk($lines, fn(string &$line) => $line = substr($line, 4, -1));
+        array_walk($lines, fn (string &$line) => $line = substr($line, 4, -1));
 
         return implode("\n", $lines);
     }

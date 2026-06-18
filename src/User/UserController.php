@@ -57,7 +57,7 @@ final class UserController
             ->userRepository
             ->findAll()
         ;
-        array_walk($users, fn(UserInterface &$user)
+        array_walk($users, fn (UserInterface &$user)
             => $user = (new RbamUser($user))
                 ->withPermissionCount(count($this->manager->getPermissionsByUserId($user->getId())))
                 ->withRoleCount(count($this->manager->getRolesByUserId($user->getId())))
@@ -187,7 +187,7 @@ final class UserController
         ksort($permissions, SORT_STRING);
         array_walk(
             $permissions,
-            fn(\Yiisoft\Rbac\Item &$item, $key, $ths) => $item
+            fn (\Yiisoft\Rbac\Item &$item, $key, $ths) => $item
                 = (new Item($item))->withParents($ths->getGrantedBy($item)), $this
         );
 
@@ -269,7 +269,7 @@ final class UserController
         ksort($assignedRoles, SORT_STRING);
         array_walk(
             $assignedRoles,
-            fn(Role &$item, string $key, array $defaultRoles) => $item = (new Item($item))
+            fn (Role &$item, string $key, array $defaultRoles) => $item = (new Item($item))
                 ->withIsDefaultRole(in_array($key, $defaultRoles))
             ,
             $this
@@ -280,7 +280,7 @@ final class UserController
         ksort($unassignedRoles, SORT_STRING);
         array_walk(
             $unassignedRoles,
-            fn(Role &$item, string $key, string $guestRole) => $item = (new RbamItem($item))
+            fn (Role &$item, string $key, string $guestRole) => $item = (new RbamItem($item))
                 ->withIsdGuestRole($key === $guestRole)
             ,
             $this
@@ -291,7 +291,7 @@ final class UserController
         ksort($permissionsGranted, SORT_STRING);
         array_walk(
             $permissionsGranted,
-            fn(Permission &$item, $key, $ths) => $item
+            fn (Permission &$item, $key, $ths) => $item
                 = (new Item($item))->withParents($ths->getGrantedBy($item)), $this
         );
 

@@ -205,7 +205,7 @@ final class RbamController
             }
 
             $userIds = explode(',', $formModel->getuserId());
-            array_walk($userIds, fn(string &$userId) => $userId = trim($userId));
+            array_walk($userIds, fn (string &$userId) => $userId = trim($userId));
             foreach ($userIds as $userId) {
                 $manager->assign(RbamRole::admin->getItemName(), $userId);
             }

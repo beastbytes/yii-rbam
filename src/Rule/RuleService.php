@@ -45,7 +45,7 @@ class RuleService implements RuleServiceInterface
     public function getRules(): array
     {
         $rules = array_flip($this->getRuleClasses());
-        array_walk($rules, fn(string &$rule) => $rule = new $rule());
+        array_walk($rules, fn (string &$rule) => $rule = new $rule());
         return $rules;
     }
 

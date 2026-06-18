@@ -97,17 +97,17 @@ final class ItemController
         if (is_string($filter)) {
             $items = array_filter(
                 $items,
-                fn(string $name) => str_contains(strtolower($name), strtolower($filter)),
+                fn (string $name) => str_contains(strtolower($name), strtolower($filter)),
                 ARRAY_FILTER_USE_KEY
             );
         }
 
-        uksort($items, fn(string $a, string $b) => $a <=> $b);
+        uksort($items, fn (string $a, string $b) => $a <=> $b);
 
         if ($type === Item::TYPE_PERMISSION) {
             array_walk(
                 $items,
-                fn(Item &$item, $key, $ths) => $item = (new RbamItem($item))->withParents($ths->getGrantedBy($item)),
+                fn (Item &$item, $key, $ths) => $item = (new RbamItem($item))->withParents($ths->getGrantedBy($item)),
                 $this
             );
         } else {
@@ -123,7 +123,7 @@ final class ItemController
 
             array_walk(
                 $items,
-                fn(Item &$item, $key, $roles) => $item = (new RbamItem($item))
+                fn (Item &$item, $key, $roles) => $item = (new RbamItem($item))
                     ->withIsDefaultRole(in_array($key, $roles['defaultRoles']))
                     ->withIsdGuestRole($key === $roles['guestRole'])
                 ,
@@ -493,8 +493,8 @@ final class ItemController
             ->itemsStorage
             ->getAllChildPermissions($item->getName())
         ;
-        uksort($children, fn(string $a, string $b) => $a <=> $b);
-        array_walk($children, fn(Item &$item) => $item = new RbamItem($item));
+        uksort($children, fn (string $a, string $b) => $a <=> $b);
+        array_walk($children, fn (Item &$item) => $item = new RbamItem($item));
 
         return $this
             ->viewRenderer
@@ -542,7 +542,7 @@ final class ItemController
         as $user) {
             $assignment = array_find(
                 $rbacAssignments,
-                fn(Assignment $assignment) => $assignment->getUserId() === $user->getId()
+                fn (Assignment $assignment) => $assignment->getUserId() === $user->getId()
             );
 
             $assignments[] = new RbamAssignment(
@@ -557,18 +557,18 @@ final class ItemController
             ->itemsStorage
             ->getAllChildPermissions($name)
         ;
-        uksort($permissions, fn(string $a, string $b) => $a <=> $b);
+        uksort($permissions, fn (string $a, string $b) => $a <=> $b);
         array_walk(
             $permissions,
-            fn(Item &$item, $key, $ths) => $item = (new RbamItem($item))->withParents($ths->getGrantedBy($item)), $this
+            fn (Item &$item, $key, $ths) => $item = (new RbamItem($item))->withParents($ths->getGrantedBy($item)), $this
         );
 
         $children = $this
             ->itemsStorage
             ->getAllChildRoles($name)
         ;
-        uksort($children, fn(string $a, string $b) => $a <=> $b);
-        array_walk($children, fn(Item &$item) => $item = new RbamItem($item));
+        uksort($children, fn (string $a, string $b) => $a <=> $b);
+        array_walk($children, fn (Item &$item) => $item = new RbamItem($item));
 
         return $this
             ->viewRenderer
@@ -641,7 +641,7 @@ final class ItemController
         as $user) {
             $assignment = array_find(
                 $rbacAssignments,
-                fn(Assignment $assignment) => $assignment->getUserId() === $user->getId()
+                fn (Assignment $assignment) => $assignment->getUserId() === $user->getId()
             );
 
             $assignments[] = new RbamAssignment(
@@ -688,10 +688,10 @@ final class ItemController
                 ->manager
                 ->getPermissionsByRoleName($name)
             ;
-            uksort($items, fn(string $a, string $b) => $a <=> $b);
+            uksort($items, fn (string $a, string $b) => $a <=> $b);
             array_walk(
                 $items,
-                fn(Item &$item, $key, $ths) => $item = (new RbamItem($item))->withParents($ths->getGrantedBy($item)),
+                fn (Item &$item, $key, $ths) => $item = (new RbamItem($item))->withParents($ths->getGrantedBy($item)),
                 $this
             );
         } else {
@@ -699,8 +699,8 @@ final class ItemController
                 ->manager
                 ->getChildRoles($name)
             ;
-            uksort($items, fn(string $a, string $b) => $a <=> $b);
-            array_walk($items, fn(Item &$item) => $item = new RbamItem($item));
+            uksort($items, fn (string $a, string $b) => $a <=> $b);
+            array_walk($items, fn (Item &$item) => $item = new RbamItem($item));
         }
 
         return $this
@@ -744,7 +744,7 @@ final class ItemController
         ksort($children);
         array_walk(
             $children,
-            fn(&$child) =>
+            fn (&$child) =>
             $child = (new RbamItem($child))->withIsChild($this->manager->hasChild($parent, $child->getName()))
         );
 
@@ -1066,13 +1066,13 @@ final class ItemController
         ksort($children);
         array_walk(
             $children,
-            fn(&$child) =>
+            fn (&$child) =>
                 $child = (new RbamItem($child))->withIsChild($this->manager->hasChild($parent, $child->getName()))
         );
 
         $orphans = array_filter(
             $orphans,
-            fn(string $orphan) => $this->manager->canAddChild($parent, $orphan),
+            fn (string $orphan) => $this->manager->canAddChild($parent, $orphan),
             ARRAY_FILTER_USE_KEY
         );
         ksort($orphans);
@@ -1089,7 +1089,7 @@ final class ItemController
 
         array_walk(
             $orphans,
-            fn(Item &$item, $key, $roles) => $item = (new RbamItem($item))
+            fn (Item &$item, $key, $roles) => $item = (new RbamItem($item))
                 ->withIsDefaultRole(in_array($key, $roles['defaultRoles']))
                 ->withIsdGuestRole($key === $roles['guestRole'])
             ,
