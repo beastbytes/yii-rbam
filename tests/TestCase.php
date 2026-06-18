@@ -6,7 +6,6 @@ use BeastBytes\Yii\Rbam\Support\User\UserRepository;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 use Tests\Support\ActionButtonInterface;
 use Tests\Support\TabInterface;
-use Tests\Support\ViewGridActionButton;
 use Tests\Support\RbacTrait;
 
 abstract class TestCase extends BaseTestCase {
