@@ -1,5 +1,6 @@
 <?php
 
+use Tests\Support\ViewGridActionButton;
 use Tests\TestCase;
 
 afterAll(function () {
@@ -74,7 +75,7 @@ test('Delete', function () {
 
     $page->assertSee('ANew');
 
-    $page->click('.grid tr:nth-child(1) button:nth-child(3)');
+    $page->click($this->actionButton(1, ViewGridActionButton::delete));
     $page->assertSee('Remove ANew Rule');
     $page->click('Continue');
 

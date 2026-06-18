@@ -1,6 +1,7 @@
 <?php
 
 use BeastBytes\Yii\Rbam\Rbac\Permission;
+use Tests\Support\ItemActionButton;
 use Tests\TestCase;
 
 afterAll(function () {
@@ -88,7 +89,7 @@ test('Delete', function () {
 
     $page->assertSee('A New RBAC Permission');
 
-    $page->click('.grid tr:nth-child(1) button:nth-child(3)');
+    $page->click($this->actionButton('#permission', 1, ItemActionButton::remove));
     $page->assertSee('Remove A New RBAC Permission Permission');
     $page->click('Continue');
 
