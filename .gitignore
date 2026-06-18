@@ -1,6 +1,9 @@
 # phpstorm project files
 .idea
 
+# Pest Screenshots
+/tests/Browser/Screenshots
+
 # VitePress generated documentation
 .vitepress/dist
 
@@ -52,9 +55,6 @@ composer.lock
 
 # Node
 package-lock.json
-
-# phpDocumentor cache
-/Writerside/cache
 
 /dev
 /runtime
