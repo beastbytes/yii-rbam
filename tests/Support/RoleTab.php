@@ -2,8 +2,6 @@
 
 namespace Tests\Support;
 
-use Tests\Support\TabInterface;
-
 enum RoleTab: int implements TabInterface
 {
     case diagram = 1;

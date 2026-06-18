@@ -2,8 +2,6 @@
 
 namespace Tests\Support;
 
-use Yiisoft\Rbac\AssignmentsStorageInterface;
-
 enum ItemActionButton: int implements ActionButtonInterface
 {
     case view = 1;
