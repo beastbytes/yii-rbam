@@ -225,7 +225,6 @@ echo GridView::widget()
             visibleButtons: ['remove' => fn(RbamItem $item) => $item->isChild()],
             bodyAttributes: [
                 'class' => 'action',
-                'x-data' => true,
             ],
         ),
     )

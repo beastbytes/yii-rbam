@@ -145,7 +145,6 @@ echo GridView::widget()
             ],
             bodyAttributes: [
                 'class' => 'action',
-                'x-data' => true
             ],
             visible: $currentUser->can(RbamPermission::userUpdate->getItemName())
         ),
