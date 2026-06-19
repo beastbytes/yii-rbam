@@ -13,7 +13,7 @@ return [
     ManagerInterface::class => [
         'class' => Manager::class,
         'setDefaultRoleNames()' => [array_map(
-            fn(array $defaultRole): string => $defaultRole['name'],
+            fn (array $defaultRole): string => $defaultRole['name'],
             $params['yiisoft/rbac']['defaultRoles']
         )],
         'setGuestRoleName()' => [$params['yiisoft/rbac']['guestRole']['name']],
