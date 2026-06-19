@@ -4,8 +4,8 @@ namespace Tests;
 
 use BeastBytes\Yii\Rbam\Support\User\UserRepository;
 use PHPUnit\Framework\TestCase as BaseTestCase;
-use Tests\Support\ActionButtonInterface;
-use Tests\Support\TabInterface;
+use Tests\Support\ActionButton;
+use Tests\Support\Tab;
 use Tests\Support\RbacTrait;
 
 abstract class TestCase extends BaseTestCase {
@@ -27,29 +27,29 @@ abstract class TestCase extends BaseTestCase {
     }
 
     //------ Selectors ------//
-    protected function actionButton(string $grid, int $row, ActionButtonInterface $actionButton): string
+    protected function actionButton(string $grid, int $row, ActionButton $actionButton): string
     {
-        return trim(sprintf(
-            '%s .grid > tbody > tr:nth-child(%d) > td.action > button:nth-child(%d)',
+        return sprintf(
+            '#%s .grid > tbody > tr:nth-child(%d) > td.action button.btn_%s',
             $grid,
             $row,
-            $actionButton->value
-        ));
+            $actionButton->name
+        );
     }
 
     protected function gridBody(string $grid): string
     {
-        return sprintf('%s > .grid > tbody', $grid);
+        return sprintf('#%s > .grid > tbody', $grid);
     }
 
     protected function gridCell(string $grid, int $row, int $column): string
     {
-        return sprintf('%s > .grid > tbody > tr:nth-child(%d) > td:nth-child(%d)', $grid, $row, $column);
+        return sprintf('#%s > .grid > tbody > tr:nth-child(%d) > td:nth-child(%d)', $grid, $row, $column);
     }
 
-    protected function tab(TabInterface $tab): string
+    protected function tab(Tab $tab): string
     {
-        return sprintf('.tabs .tab:nth-child(%d)', $tab->value);
+        return sprintf('.tabs .tab.%s', $tab->value);
     }
 
     protected function getPageSize(): int
@@ -70,14 +70,14 @@ abstract class TestCase extends BaseTestCase {
     {
         if (is_string($page)) {
             return match ($page) {
-                'first' => sprintf('%s > nav:nth-child(4) > a:nth-child(1)', $grid),
-                'last' => sprintf('%s > nav:nth-child(4) > a:nth-last-child(1)', $grid),
-                'next' => sprintf('%s > nav:nth-child(4) > a:nth-last-child(2)', $grid),
-                'prev', 'previous' => sprintf('%s > nav:nth-child(4) > a:nth-child(2)', $grid),
+                'first' => sprintf('#%s > nav:nth-child(4) > a:nth-child(1)', $grid),
+                'last' => sprintf('#%s > nav:nth-child(4) > a:nth-last-child(1)', $grid),
+                'next' => sprintf('#%s > nav:nth-child(4) > a:nth-last-child(2)', $grid),
+                'prev', 'previous' => sprintf('#%s > nav:nth-child(4) > a:nth-child(2)', $grid),
             };
         }
 
-        return sprintf('%s > nav:nth-child(4) > a:nth-child(%d)', $grid, $page + 2);
+        return sprintf('#%s > nav:nth-child(4) > a:nth-child(%d)', $grid, $page + 2);
     }
 
     private function userRepository(): UserRepository
