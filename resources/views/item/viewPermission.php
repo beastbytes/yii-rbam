@@ -174,11 +174,17 @@ echo DetailView::widget()
 echo Tabs::widget([$assetManager])
     ->tabs(
         [
-            'tab' => $translator->translate(id: 'label.diagram', category: 'rbam'),
+            'tab' => [
+                'class' => 'tab_diagram',
+                'content' => $translator->translate(id: 'label.diagram', category: 'rbam'),
+            ],
             'panel' => $diagram->render(),
         ],
         [
-            'tab' => $translator->translate(id: 'label.child-permissions', category: 'rbam'),
+            'tab' => [
+                'class' => 'tab_child_permissions',
+                'content' => $translator->translate(id: 'label.child-permissions', category: 'rbam'),
+            ],
             'panel' => $this->render(
                 '_items',
                 [
@@ -218,7 +224,10 @@ echo Tabs::widget([$assetManager])
             ),
         ],
         [
-            'tab' => $translator->translate(id: 'label.users.permitted'),
+            'tab' => [
+                'class' => 'tab_permitted_users',
+                'content' => $translator->translate(id: 'label.users.permitted'),
+            ],
             'panel' => $this->render(
                 '_permittedUsers',
                 [
