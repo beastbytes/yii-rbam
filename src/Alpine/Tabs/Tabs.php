@@ -6,6 +6,8 @@ namespace BeastBytes\Yii\Rbam\Alpine\Tabs;
 
 use BeastBytes\Yii\Rbam\Alpine\AlpineAsset;
 use Yiisoft\Assets\AssetManager;
+use Yiisoft\Html\Html;
+use Yiisoft\Html\NoEncode;
 use Yiisoft\Widget\Widget;
 
 final class Tabs extends Widget
@@ -22,6 +24,11 @@ final class Tabs extends Widget
     private string $tabClass = 'tab';
     /** @var string $tabContainerClass CSS class for the tabs container */
     private string $tabContainerClass = 'tabs';
+    /** @var list<array{
+     *      panel: string|array{content:string, class?: string, attributes?: array{string, string}},
+     *      tab: string|array{content:string, class?: string, attributes?: array{string, string}}
+     * }>
+     */
     private array $tabs = [];
     /** @var string $unselectedTabClass CSS class for unselected tabs */
     private string $unselectedTabClass = 'unselected';
@@ -32,7 +39,10 @@ final class Tabs extends Widget
     }
 
     /**
-     * @param array{tab: string, panel: string} ...$tabs
+     * @param array{
+     *     panel: string|array{content:string, class?: string, attributes?: array{string, string}},
+     *     tab: string|array{content:string, class?: string, attributes?: array{string, string}}
+     * } ...$tabs
      * @return self
      */
     public function addTabs(array ...$tabs): self
@@ -86,7 +96,10 @@ final class Tabs extends Widget
 
 
     /**
-     * @param array{tab: string, panel: string} ...$tabs
+     * @param array{
+     *     panel: string|array{content:string, class?: string, attributes?: array{string, string}},
+     *     tab: string|array{content:string, class?: string, attributes?: array{string, string}}
+     * } ...$tabs
      * @return self
      */
     public function tabs(array ...$tabs): self
@@ -120,13 +133,35 @@ final class Tabs extends Widget
         $tabs = [];
 
         foreach ($this->tabs as $tab) {
-            $tabs[] = sprintf(
-                '<button x-tabs:tab type="button" :class="$tab.isSelected ? \'%s\' : \'%s\'" class="%s">%s</button>',
-                $this->selectedTabClass,
-                $this->unselectedTabClass,
-                $this->tabClass,
-                $tab['tab']
-            );
+            $button = Html::button()
+                ->attributes([
+                    'x-tabs:tab' => true,
+                    'type' => 'button',
+                    'class' => $this->tabClass,
+                    ':class' => sprintf(
+                        '$tab.isSelected ? \'%s\' : \'%s\'',
+                        $this->selectedTabClass,
+                        $this->unselectedTabClass,
+                    ),
+                ])
+            ;
+
+            if (is_string($tab['tab'])) {
+                $tabs[] = $button->content($tab['tab']);
+            } else {
+                $button = $button
+                    ->content($tab['tab']['content'])
+                ;
+
+                if (isset($tab['tab']['attributes'])) {
+                    $button = $button->addAttributes($tab['tab']['attributes']);
+                }
+                if (isset($tab['tab']['class'])) {
+                    $button = $button->addClass($tab['tab']['class']);
+                }
+
+                $tabs[] = $button;
+            }
         }
 
         return implode('', $tabs);
@@ -137,11 +172,30 @@ final class Tabs extends Widget
         $panels = [];
 
         foreach ($this->tabs as $tab) {
-            $panels[] = sprintf(
-                '<section x-tabs:panel class="%s">%s</section>',
-                $this->panelClass,
-                $tab['panel']
-            );
+            $panel = Html::section()
+                ->attributes([
+                    'x-tabs:panel' => true,
+                    'class' => $this->panelClass
+                ])
+                ->encode(false)
+            ;
+
+            if (is_string($tab['panel'])) {
+                $panels[] = $panel->content($tab['panel']);
+            } else {
+                $panel = $panel
+                    ->content($tab['panel']['content'])
+                ;
+
+                if (isset($tab['panel']['attributes'])) {
+                    $panel = $panel->addAttributes($tab['panel']['attributes']);
+                }
+                if (isset($tab['panel']['class'])) {
+                    $panel = $panel->addClass($tab['panel']['class']);
+                }
+
+                $panels[] = $panel;
+            }
         }
 
         return implode('', $panels);
