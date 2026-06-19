@@ -1,7 +1,7 @@
 <?php
 
 use BeastBytes\Yii\Rbam\Rbac\Role;
-use Tests\Support\ItemActionButton;
+use Tests\Support\ActionButton;
 use Tests\TestCase;
 
 afterAll(function () {
@@ -92,7 +92,7 @@ test('Delete', function () {
 
     $page->assertSee('A New RBAC Role');
 
-    $page->click($this->actionButton('#role', 1, ItemActionButton::remove));
+    $page->click($this->actionButton('role', 1, ActionButton::remove));
     $page->assertSee('Remove A New RBAC Role Role');
     $page->click('Continue');
 
