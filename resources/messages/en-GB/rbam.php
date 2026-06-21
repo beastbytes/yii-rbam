@@ -131,7 +131,7 @@ return [
     'message.initialise' => '<p>If the Application uses RBAM\'s Permission and Role PHP Attributes, RBAM can initialise its RBAC items and hierarchy</p><p>The default is to initialise RBAM only; the application RBAC items and hierarchy can then be created manually using RBAM</p>',
     'message.initialise-application' => '<p>See <a href="https://github.com/yiisoft/files/tree/master#path-matchers" target="_blank">Path Matcher documentation</a> for details of how specify `Except` and `Only`. In both case, multiple entries can be given using a comma separated list </p>',
     'message.no-rule' => '---',
-    'message.permission.add-child-premission' => '<p>Add the <i>{item}</i> Permission as a child of the {parent} Permission?</p>',
+    'message.permission.add-child-permission' => '<p>Add the <i>{item}</i> Permission as a child of the {parent} Permission?</p>',
     'message.permission.none-found' => 'No Permissions found',
     'message.permission.none-granted' => 'No Permissions granted',
     'message.permission.remove' => '<p>Removing the <i>{item}</i> Permission is permanent and can not be undone</p>',
