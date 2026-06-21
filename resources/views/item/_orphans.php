@@ -129,7 +129,7 @@ echo GridView::widget()
                     )
                     ->closeText($translator->translate(id: 'label.close-dialog', category: 'rbam'),)
                     ->content($translator->translate(
-                        sprintf('message.%s.add-child', $childType),
+                        sprintf('message.%s.add-child-%s', $type, $childType),
                         [
                             'item' => $context->key,
                             'parent' => $parent->getName(),
@@ -137,7 +137,7 @@ echo GridView::widget()
                         'rbam'
                     ))
                     ->title($translator->translate(
-                        sprintf('header.%s.add-child', $childType),
+                        sprintf('header.%s.add-child-%s', $type, $childType),
                         [
                             'item' => $context->key,
                         ],
