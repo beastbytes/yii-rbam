@@ -61,7 +61,13 @@ echo GridView::widget()
     ->tableAttributes(['class' => 'grid'])
     ->tbodyAttributes(['class' => 'grid-body'])
     ->layout("{header}\n{toolbar}\n{summary}\n{items}\n{pager}")
-    ->toolbar($currentUser->can(RbamPermission::userUpdate->getItemName()) && !empty($assignedRoles)
+    ->toolbar(
+        $currentUser->can(RbamPermission::userUpdate->getItemName())
+        && (array_reduce(
+            $assignedRoles,
+            fn (bool $carry, RbamItem $role) => $carry || (!$role->isDefaultRole() && !$role->isGuestRole()),
+            false
+        ))
         ? Html::div(
             content: (new Modal($assetManager))
                 ->button(
@@ -70,7 +76,7 @@ echo GridView::widget()
                         attributes: [
                             'class' => 'btn btn_continue',
                             '@click' => sprintf(
-                                "rbam.action({href: '%s', data: {})",
+                                "rbam.action({href: '%s', data: {}})",
                                 $urlGenerator->generate('rbam.user.assignment.revoke'),
                             )
                         ]
@@ -96,11 +102,11 @@ echo GridView::widget()
                 ))
                 ->trigger(Html::button(
                     content: $translator->translate(
-                        id: $rbamParameters->getButtons('revoke')['content'],
+                        id: $rbamParameters->getButtons('revokeAll')['content'],
                         category: 'rbam'
                     ),
                     attributes: array_merge(
-                        $rbamParameters->getButtons('revoke')['attributes'],
+                        $rbamParameters->getButtons('revokeAll')['attributes'],
                         [
                             'type' => 'button',
                         ]
