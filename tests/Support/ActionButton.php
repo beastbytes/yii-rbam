@@ -6,6 +6,7 @@ enum ActionButton
 {
     case add;
     case assign;
+    case grant;
     case remove;
     case revoke;
     case update;
