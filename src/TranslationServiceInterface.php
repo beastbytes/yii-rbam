@@ -13,7 +13,7 @@ interface TranslationServiceInterface
     public const string TYPE_RULE = 'rule';
 
     public function deleteItem(Item $item): void;
-    public function deleteRule(string $name): void;
+    public function deleteRule(RuleInterface $rule): void;
     public function getItemTranslations(Item $item): array;
     public function getRuleTranslations(RuleInterface $rule): array;
     public function save(array $translations): void;

@@ -25,27 +25,26 @@ final readonly class TranslationService implements TranslationServiceInterface
     public function deleteItem(Item $item): void
     {
         $categorySource = $this->getCategorySource('rbac-item');
+        $key = $item->getDescription();
 
         foreach ($this->getLocales() as $locale) {
             $messages = $categorySource->getMessages($locale);
-            if (array_key_exists($item->getName(), $messages)) {
-                unset($messages[$item->getName()]);
-            }
-            if (array_key_exists($item->getDescription(), $messages)) {
-                unset($messages[$item->getDescription()]);
+            if (array_key_exists($key, $messages)) {
+                unset($messages[$key]);
             }
             $categorySource->write($locale, $messages);
         }
     }
 
-    public function deleteRule(string $name): void
+    public function deleteRule(RuleInterface $rule): void
     {
         $categorySource = $this->getCategorySource('rbac-rule');
+        $key = $rule->getDescription();
 
         foreach ($this->getLocales() as $locale) {
             $messages = $categorySource->getMessages($locale);
-            if (array_key_exists($name, $messages)) {
-                unset($messages[$name]);
+            if (array_key_exists($key, $messages)) {
+                unset($messages[$key]);
             }
             $categorySource->write($locale, $messages);
         }
@@ -132,7 +131,7 @@ final readonly class TranslationService implements TranslationServiceInterface
         foreach ($this->getLocales() as $locale) {
             $messages = $categorySource->getMessages($locale);
 
-            if ($oldDescription !== $newDescription) {
+            if ($oldDescription !== $newDescription && array_key_exists($oldDescription, $messages)) {
                 $messages[$newDescription] = $messages[$oldDescription];
                 unset($messages[$oldDescription]);
             }
