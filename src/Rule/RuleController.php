@@ -149,7 +149,7 @@ final class RuleController
     #[PermissionAttribute(item: RbamPermission::ruleDelete)]
     public function delete(
         ServerRequestInterface $request,
-        TranslationService $translationService,
+        TranslationServiceInterface $translationService,
     ): ResponseInterface
     {
         $parsedBody = $request->getParsedBody();
@@ -172,8 +172,8 @@ final class RuleController
             }
         }
 
+        $translationService->deleteRule($this->ruleService->getRule($parsedBody['rule']));
         $this->ruleService->delete($parsedBody['rule']);
-        $translationService->deleteRule($parsedBody['rule']);
 
         return $this
             ->viewRenderer
