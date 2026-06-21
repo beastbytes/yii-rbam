@@ -30,7 +30,7 @@ test('Add Permission', function () {
     $page->assertDontSeeIn($this->gridBody('children'), 'A New Permission');
     $page->assertSeeIn($this->gridCell('orphans', 1, 1), 'A New Permission');
 
-    $page->click($this->actionButton('orphans', 1, ActionButton::add));
+    $page->click($this->actionButton('orphans', 1, ActionButton::grant));
     $page->press($this->continueButton('orphans', 1));
     $page->assertSeeIn($this->gridCell('children', 1, 1), 'A New Permission');
     $page->assertDontSeeIn($this->gridBody('orphans'), 'A New Permission');
@@ -58,8 +58,8 @@ test('Add Child Role', function () {
 
     $page->click($this->actionButton('orphans', 1, ActionButton::add));
     $page->press($this->continueButton('orphans', 1));
-    $page->assertSeeIn($this->gridCell('#children', 1, 1), 'A New Role');
-    $page->assertDontSeeIn($this->gridBody('#orphans'), 'A New Role');
+    $page->assertSeeIn($this->gridCell('children', 1, 1), 'A New Role');
+    $page->assertDontSeeIn($this->gridBody('orphans'), 'A New Role');
 
     $page = visit(sprintf('http://localhost:8000/rbam/role/%s', rawurlencode('Another New Role')));
     $page->press($this->tab(Tab::childRoles));
