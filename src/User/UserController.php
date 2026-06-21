@@ -280,7 +280,7 @@ final class UserController
         ksort($unassignedRoles, SORT_STRING);
         array_walk(
             $unassignedRoles,
-            fn (Role &$item, string $key, string $guestRole) => $item = (new RbamItem($item))
+            fn (Role &$item, string $key, ?string $guestRole) => $item = (new RbamItem($item))
                 ->withIsdGuestRole($key === $guestRole)
             ,
             $this
