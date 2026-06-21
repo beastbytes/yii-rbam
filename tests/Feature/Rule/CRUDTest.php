@@ -1,5 +1,6 @@
 <?php
 
+use Tests\Support\ActionButton;
 use Tests\Support\ViewGridActionButton;
 use Tests\TestCase;
 
@@ -75,9 +76,8 @@ test('Delete', function () {
 
     $page->assertSee('ANew');
 
-    $page->click($this->actionButton(1, ViewGridActionButton::delete));
-    $page->assertSee('Remove ANew Rule');
-    $page->click('Continue');
+    $page->click($this->actionButton('rules', 1, ActionButton::remove));
+    $page->press($this->continueButton('rules', 1));
 
     $page->assertSee('Rules');
     $page->assertSeeLink('Create Rule');

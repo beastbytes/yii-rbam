@@ -30,8 +30,8 @@ test('Add Permission', function () {
     $page->assertDontSeeIn($this->gridBody('children'), 'A New Permission');
     $page->assertSeeIn($this->gridCell('orphans', 1, 1), 'A New Permission');
 
-    $page->press($this->actionButton('orphans', 1, ActionButton::add));
-    $page->press('Continue');
+    $page->click($this->actionButton('orphans', 1, ActionButton::add));
+    $page->press($this->continueButton('orphans', 1));
     $page->assertSeeIn($this->gridCell('children', 1, 1), 'A New Permission');
     $page->assertDontSeeIn($this->gridBody('orphans'), 'A New Permission');
 
@@ -56,8 +56,8 @@ test('Add Child Role', function () {
     $page->assertDontSeeIn($this->gridBody('children'), 'A New Role');
     $page->assertSeeIn($this->gridCell('orphans', 1, 1), 'A New Role');
 
-    $page->press($this->actionButton('orphans', 1, ActionButton::add));
-    $page->press('Continue');
+    $page->click($this->actionButton('orphans', 1, ActionButton::add));
+    $page->press($this->continueButton('orphans', 1));
     $page->assertSeeIn($this->gridCell('#children', 1, 1), 'A New Role');
     $page->assertDontSeeIn($this->gridBody('#orphans'), 'A New Role');
 
@@ -78,8 +78,8 @@ test('Remove Child Role', function () {
     $page->assertSeeIn($this->gridCell('children', 1, 1), 'A New Role');
     $page->assertDontSeeIn($this->gridBody('orphans'), 'A New Role');
 
-    $page->press($this->actionButton('children', 1, ActionButton::remove));
-    $page->press('Continue');
+    $page->click($this->actionButton('children', 1, ActionButton::remove));
+    $page->press($this->continueButton('children', 1));
     $page->assertDontSeeIn($this->gridBody('children'), 'A New Role');
     $page->assertSeeIn($this->gridCell('orphans', 1,1), 'A New Role');
 
@@ -104,7 +104,7 @@ test('Remove Permission', function () {
     $page->assertDontSeeIn($this->gridBody('orphans'), 'A New Permission');
 
     $page->press($this->actionButton('children', 1, ActionButton::remove));
-    $page->press('Continue');
+    $page->press($this->continueButton('children', 1));
     $page->assertDontSeeIn($this->gridBody('children'), 'A New Permission');
     $page->assertSeeIn($this->gridCell('orphans', 1, 1), 'A New Permission');
 

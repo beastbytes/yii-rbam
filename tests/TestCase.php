@@ -23,6 +23,7 @@ abstract class TestCase extends BaseTestCase {
 
     public static function beforeAll(): void
     {
+        self::clearRbac();
         self::initRbac();
     }
 
@@ -30,16 +31,21 @@ abstract class TestCase extends BaseTestCase {
     protected function actionButton(string $grid, int $row, ActionButton $actionButton): string
     {
         return sprintf(
-            '#%s .grid > tbody > tr:nth-child(%d) > td.action button.btn_%s',
+            '#%s .grid > tbody > tr:nth-child(%d) > td.action .btn_%s',
             $grid,
             $row,
             $actionButton->name
         );
     }
 
-    protected function gridBody(string $grid): string
+    protected function continueButton(string $grid, int $row): string
     {
-        return sprintf('#%s > .grid > tbody', $grid);
+        return sprintf('#%s > .grid > tbody > tr:nth-child(%d) > td.action div.alpine-modal div.footer button.btn_continue', $grid, $row);
+    }
+
+    protected function gridBody(string $grid, int $column = 1): string
+    {
+        return sprintf('#%s > .grid > tbody td:nth-child(%d)', $grid, $column);
     }
 
     protected function gridCell(string $grid, int $row, int $column): string

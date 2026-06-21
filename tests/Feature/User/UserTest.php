@@ -41,7 +41,7 @@ test('Index', function () {
 test('View User', function () {
     $page = visit('http://localhost:8000/rbam/users');
     $page->click($this->paginatorPage('users', userPage(TestCase::CURRENT_USER)));
-    $page->press($this->ActionButton(
+    $page->click($this->ActionButton(
         'users',
         TestCase::CURRENT_USER % TestCase::PAGE_SIZE,
         ActionButton::view
@@ -63,8 +63,8 @@ test('Assign Role', function () {
     $page->assertSeeIn($this->gridBody('unassigned-roles'), Role::itemManager->getItemName());
     $page->assertDontSeeIn($this->gridBody('permission'), 'RBAM Permission View');
 
-    $page->press($this->actionButton('unassigned-roles', 2, ActionButton::assign));
-    $page->press('Continue');
+    $page->click($this->actionButton('unassigned-roles', 2, ActionButton::assign));
+    $page->press($this->continueButton('unassigned-roles', 2));
 
     $page->assertSeeIn($this->gridBody('assigned-roles'), Role::itemManager->getItemName());
     $page->assertDontSeeIn($this->gridBody('unassigned-roles'), Role::itemManager->getItemName());
@@ -93,12 +93,12 @@ test('Revoke Role', function () {
     $page = visit(sprintf('http://localhost:8000/rbam/user/%s', USER_ID));
 
     $page->assertSeeIn($this->gridBody('assigned-roles'), Role::itemManager->getItemName());
-    $page->assertSeeIn($this->gridBody('assigned-roles'), 'Revoke');
+    $page->assertPresent('#assigned-roles .grid > tbody > tr:first-child > td:nth-child(3) .btn_revoke');
     $page->assertDontSeeIn($this->gridBody('unassigned-roles'), Role::itemManager->getItemName());
     $page->assertSeeIn($this->gridBody('permission'), Permission::itemView->getItemName());
 
-    $page->press($this->actionButton('assigned-roles', 1, ActionButton::revoke));
-    $page->press('Continue');
+    $page->click($this->actionButton('assigned-roles', 1, ActionButton::revoke));
+    $page->press($this->continueButton('assigned-roles', 1));
 
     $page->assertDontSeeIn($this->gridBody('assigned-roles'), Role::itemManager->getItemName());
     $page->assertSeeIn($this->gridBody('unassigned-roles'), Role::itemManager->getItemName());
@@ -119,16 +119,17 @@ test('Revoke All Roles', function () {
     $page->assertDontSeeIn($this->gridBody('assigned-roles'), Role::itemManager->getItemName());
     $page->assertDontSeeIn($this->gridBody('assigned-roles'), Role::ruleManager->getItemName());
 
-    $page->press($this->actionButton('unassigned-roles', 2, ActionButton::assign));
-    $page->press('Continue');
-    $page->press($this->actionButton('unassigned-roles', 2, ActionButton::assign));
-    $page->press('Continue');
+    // Two clicks to assign two Roles
+    $page->click($this->actionButton('unassigned-roles', 2, ActionButton::assign));
+    $page->press($this->continueButton('unassigned-roles', 2));
+    $page->click($this->actionButton('unassigned-roles', 2, ActionButton::assign));
+    $page->press($this->continueButton('unassigned-roles', 2));
 
     $page->assertSeeIn($this->gridBody('assigned-roles'), Role::itemManager->getItemName());
     $page->assertSeeIn($this->gridBody('assigned-roles'), Role::ruleManager->getItemName());
 
     $page->press('Revoke All');
-    $page->press('Continue');
+    $page->press('#assigned-roles .toolbar .btn_continue');
 
     $page->assertDontSeeIn($this->gridBody('assigned-roles'), Role::itemManager->getItemName());
     $page->assertDontSeeIn($this->gridBody('assigned-roles'), Role::ruleManager->getItemName());
