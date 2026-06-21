@@ -112,7 +112,7 @@ echo GridView::widget()
                     )
                     ->closeText($translator->translate(id: 'label.close-dialog', category: 'rbam'),)
                     ->content($translator->translate(
-                        'message.user.assignment.revoke',
+                        'message.user.assign-role',
                         [
                             'item' => $context->data->getItem()->getName(),
                             'user' => $user->getName(),
@@ -120,7 +120,7 @@ echo GridView::widget()
                         'rbam'
                     ))
                     ->title($translator->translate(
-                        'header.user.assignment.revoke',
+                        'header.user.assign-role',
                         [
                             'item' => $context->data->getItem()->getName(),
                         ],
