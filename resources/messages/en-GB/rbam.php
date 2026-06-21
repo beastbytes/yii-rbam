@@ -55,6 +55,7 @@ return [
     'header.rule.create' => 'Create Rule',
     'header.rule.translate' => 'Translate Rule',
     'header.rule.update' => 'Update Rule',
+    'header.user.assign-role' => 'Assign Role',
     'header.user.assignment.revoke' => 'Revoke Assignment',
     'header.user.assignment.revoke-all' => 'Revoke All Assignments',
 
@@ -169,5 +170,4 @@ return [
     'rbac.title' => 'Initialising RBAC Permissions and Roles',
 
     'title.rbam' => 'Role Based Access Manager',
-    'title.revoke-all' => 'Revoke All Roles',
 ];
