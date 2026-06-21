@@ -4,6 +4,7 @@
   "description": "Role Based Access Management",
   "type": "module",
   "devDependencies": {
+    "playwright": "^1.61.0",
     "vitepress": "2.0.0-alpha.17"
   },
   "scripts": {
