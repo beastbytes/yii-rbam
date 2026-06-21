@@ -271,40 +271,6 @@
         margin-top: 7.5em;
     }
 
-    .flashes {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
-
-    .flash {
-        border-radius: 0.5rem;
-        opacity: 1;
-        margin: 1em 3em;
-        padding: 1.5rem 0.75rem;
-        text-align: center;
-
-        &.error {
-            background-color: var(--yii-red);
-            color: aliceblue;
-        }
-
-        &.info {
-            background-color: var(--yii-blue);
-            color: aliceblue;
-        }
-
-        &.success {
-            background-color: var(--yii-green);
-            color: aliceblue;
-        }
-
-        &.warning {
-            background-color: var(--yii-orange);
-            color: aliceblue;
-        }
-    }
-
     .flex {
         display: flex;
     }
