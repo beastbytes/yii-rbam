@@ -50,7 +50,6 @@ return [
             '@dev' => '@root/dev',
             '@layout' => '@views/layout',
             '@messages' => '@resources/messages',
-            '@public' => '@root/public',
             '@rbac' => '@root/rbac',
             '@rbacRules' => '@root/rbac/rules',
             '@rbacTranslations' => '@root/rbac/translations',
