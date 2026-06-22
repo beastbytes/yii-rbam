@@ -53,9 +53,6 @@ c3.php
 # Composer
 composer.lock
 
-# Node
-package-lock.json
-
 /dev
 /runtime
 /config/environments
