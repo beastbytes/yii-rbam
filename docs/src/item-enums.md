@@ -8,8 +8,8 @@ Yii's RBAC documentation describes using string backed enums to define RBAC item
 RBAM requires Item Enums to implement [Item Interface](#item-interface).
 :::
 
-Item Enums can be used with RBAM's [Access Checker Middleware](./middleware/access-checker) to provide access checking in route definitions,
-and RBAM's [PHP Attributes](./attributes).
+Item Enums can be used with RBAM's [Access Checker Middleware](src/middleware/access-checker) to provide access checking in route definitions,
+and RBAM's [PHP Attributes](attributes.md).
 
 ItemEnums can have a private constant named `DESCRIPTION` which is used if the item's description is generated
 (as opposed to being specified in the PHP Attribute).
@@ -47,5 +47,5 @@ $itemName = Role::itemManager->getItemName(); // itemName === 'rbam.item.manager
 ```
 
 ## Item Interface
-Item Enums must implement [ItemInterface](./api/item-interface) to get the fully qualified Item name.
-[ItemTrait](./api/item-trait) provides a concrete implementation.
+Item Enums must implement [ItemInterface](src/api/item-interface) to get the fully qualified Item name.
+[ItemTrait](src/api/item-trait) provides a concrete implementation.

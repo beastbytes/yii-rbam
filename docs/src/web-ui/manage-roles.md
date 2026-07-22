@@ -8,7 +8,7 @@ The Roles home page contains a button to create a new Role and a paged list of R
 the following information is given for each Role:
 
 * Name of the Role
-* Description of the Role - translated to the current locale (see [Internationalisation](../i18n))
+* Description of the Role - translated to the current locale (see [Internationalisation](../i18n.md))
 * Name of the Rule, if any, that applies to the Role
 * Date and time the Role was created
 * Date and time the Role was last updated

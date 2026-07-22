@@ -2,7 +2,7 @@
 Before RBAM can be used, RBAC must be initialised.
 
 As a minium, RBAM's RBAC items and hierarchy must be initialised,
-however RBAM can also initialise application RBAC items if it uses RBAM's [PHP Attributes](../attributes)
+however RBAM can also initialise application RBAC items if it uses RBAM's [PHP Attributes](../attributes.md)
 to define Permissions and Roles.
 
 Initialisation is from RBAM's initialisation page. Navigate to `/rbam/initialise` and enter the user ID of the user
@@ -18,7 +18,7 @@ Initialise RBAM RBAC
 ## Initialising Application RBAC Items
 
 For RBAM to initialise the application's RBAC items and hierarchy (as well as RBAM) the application *must* use
-RBAM's [PHP Attributes](../attributes) to define Permissions and Roles.
+RBAM's [PHP Attributes](../attributes.md) to define Permissions and Roles.
 If they are not used, application RBAC items and hierarchy can be created manually using RBAM.
 
 If RBAM is to initialise the application's RBAC items, specify the following:

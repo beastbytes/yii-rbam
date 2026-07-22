@@ -1,17 +1,17 @@
 # RBAC PHP Attributes
 RBAM provides three (3) PHP Attributes:
 
-* Prefix - for defining a prefix to all Item names in [Item Enums](./item-enums)
+* Prefix - for defining a prefix to all Item names in [Item Enums](item-enums.md)
 * Permission - for defining a Permission in application code
 * Role - for defining a Role in application code
 
-See [Prefix Attribute](./item-enums#prefix-attribute) for details of the `Prefix` attribute.
+See [Prefix Attribute](item-enums.md#prefix-attribute) for details of the `Prefix` attribute.
 
 The rest of this section provides details of the `Permission` and `Role` attributes.
 
 ## Permission and Role Attributes
 These attributes are used in application code to define Permissions at the method level and Roles at the class
-level and are used by RBAM to initialise RBAC. The attributes use [Item Enums](item-enums).
+level and are used by RBAM to initialise RBAC. The attributes use [Item Enums](item-enums.md).
 
 Permission defined on class methods are children of Roles defined on the class.
 

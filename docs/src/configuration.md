@@ -3,7 +3,7 @@
 RBAM does not have a HTML layout; instead it relies on the application layout to generate a complete HTML document.
 An alias to the application layout must be configured in `$params['beastbytes/yii-rbam']['applicationLayout']`.
 
-See [Application Integration](./application-integration) for details about the layout.
+See [Application Integration](application-integration.md) for details about the layout.
 
 ## Buttons
 The buttons in RBAM can be configured in `$params['beastbytes/yii-rbam']['buttons']`.

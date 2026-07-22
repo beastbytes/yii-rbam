@@ -8,7 +8,7 @@ The Rules home page contains a button to create a new Rule and a paged list of R
 the following information is given for each Rule:
 
 * Name of the Rule
-* Description of the Rule - translated to the current locale (see [Internationalisation](../i18n))
+* Description of the Rule - translated to the current locale (see [Internationalisation](../i18n.md))
 * Buttons to `View`, `Update`, or `Remove` the Rule
 
 ![Rules](../images/rule_index.png)

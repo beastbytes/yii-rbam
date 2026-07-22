@@ -23,4 +23,4 @@ RBAM item descriptions simply have `.description` appended to the name; e.g. `rb
 Using a hierarchical naming convention such as this helps keep items organised.
 
 ### RBAC Item Enums
-Using Enums to define RBAC items helps to ensure a consistent naming convention. See [Item Enums](./item-enums) for details.
+Using Enums to define RBAC items helps to ensure a consistent naming convention. See [Item Enums](item-enums.md) for details.

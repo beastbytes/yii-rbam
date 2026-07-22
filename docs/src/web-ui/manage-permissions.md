@@ -8,7 +8,7 @@ The Permissions home page contains a button to create a new Permission and a pag
 the following information is given for each Permission:
 
 * Name of the Permission
-* Description of the Permission - translated to the current locale (see [Internationalisation](../i18n))
+* Description of the Permission - translated to the current locale (see [Internationalisation](../i18n.md))
 * Name of the Rule, if any, that applies to the Permission
 * Name of the Role(s) that grant the Permission
 * Date and time the Permission was created

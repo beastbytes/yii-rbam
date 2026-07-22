@@ -5,7 +5,7 @@
 /tests/Browser/Screenshots
 
 # VitePress generated documentation
-.vitepress/dist
+docs/.vitepress/dist
 
 # netbeans project files
 nbproject
