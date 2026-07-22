@@ -1,12 +1,14 @@
 import { defineConfig } from 'vitepress'
 
+let currentYear = new Date().getFullYear();
+
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   lang: 'en-GB',
-  srcDir: "./docs",
+  srcDir: 'src',
   
-  title: "Role Based Access Manager",
-  description: "A web UI for Yii3 Role Based Access Control (RBAC)",
+  title: 'Role Based Access Manager',
+  description: 'A web UI for Yii3 Role Based Access Control (RBAC)',
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
@@ -67,7 +69,7 @@ export default defineConfig({
     ],
 
     footer: {
-      copyright: 'Copyright © 2026-present BeaatBytes'
+      copyright: 'Copyright © 2026-${currentYear} BeaatBytes'
     }
   }
 })
