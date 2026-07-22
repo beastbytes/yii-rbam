@@ -1,8 +1,8 @@
 # Application Integration
 There are some prerequisites for RBAM to integrate into an application:
 
-* There __*must*__ be class that implements [BeastBytes\Yii\Rbam\User\UserRepositoryInterface](src/api/user-repository-interface)
-* Objects returned by [BeastBytes\Yii\Rbam\User\UserRepositoryInterface](src/api/user-repository-interface) __*must*__ implement [BeastBytes\Yii\Rbam\User\UserInterface](src/api/user-interface)
+* There __*must*__ be class that implements [BeastBytes\Yii\Rbam\User\UserRepositoryInterface](./api/user-repository-interface)
+* Objects returned by [BeastBytes\Yii\Rbam\User\UserRepositoryInterface](./api/user-repository-interface) __*must*__ implement [BeastBytes\Yii\Rbam\User\UserInterface](./api/user-interface)
 
 # Application Layout
 RBAM provides a header block named `rbam-header`; it contains breadcrumbs and the menu on the RBAM dashboard.

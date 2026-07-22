@@ -14,7 +14,7 @@ See [Web UI](web-ui/web-ui)
 The package also contains access checker middleware that can be used in route definitions to determine if
 the current user is permitted to access the requested resource.
 
-See [Access Checker Middleware](src/middleware/access-checker)
+See [Access Checker Middleware](./middleware/access-checker)
 
 ### PHP Attributes
 The package defines PHP Attributes that can be used in application source code to define RBAC Permissions and Roles.
