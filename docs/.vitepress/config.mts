@@ -5,6 +5,7 @@ let currentYear = new Date().getFullYear();
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   lang: 'en-GB',
+  base: '/yii-rbam/',
   srcDir: 'src',
   
   title: 'Role Based Access Manager',
