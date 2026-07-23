@@ -70,7 +70,7 @@ export default defineConfig({
     ],
 
     footer: {
-      copyright: 'Copyright © 2026-${currentYear} BeaatBytes'
+      copyright: `Copyright © 2026-${currentYear} BeastBytes`
     }
   }
 })
